@@ -1,0 +1,30 @@
+<div class="board" style="height: 100%;background-image: url('/assets/nouveauBoard.png'); background-size: cover;">
+  <div style="height: 45%;">
+    <h1 style="position: absolute;">Adversaire</h1>
+    @if (matchService.adversaryData) {
+      <div>
+        <app-battlefield [cards]="matchService.adversaryData.battleField"></app-battlefield>
+        <app-enemyhand [cards]="matchService.adversaryData.hand"></app-enemyhand>
+      </div>
+    }
+  </div>
+  <div style="height: 45%;">
+    <h1 style="position: absolute;">Mon jeu</h1>
+    @if (matchService.playerData) {
+      <div>
+        <app-battlefield [cards]="matchService.playerData.battleField"></app-battlefield>
+      </div>
+    }
+
+  </div>
+</div>
+@if (matchService.playerData) {
+  <div>
+    <app-playerhand [cards]="matchService.playerData.hand"></app-playerhand>
+    <button mat-raised-button [disabled]="!matchService.isCurrentPlayerTurn" class="endturn" color="accent" style="margin-right: 20px;" (click)="endTurn()">Terminer</button>
+    <button mat-raised-button class="surrender" color="warn" style="margin-right: 20px;" (click)="surrender()">Abandonner</button>
+    <app-health [enemy]="true" [maxhealth]="matchService.adversaryData!.maxhealth" [health]="matchService.adversaryData!.health" [mana]="matchService.adversaryData!.mana" [playername]="matchService.adversaryData!.playerName"></app-health>
+    <app-health [maxhealth]="matchService.playerData!.maxhealth" [health]="matchService.playerData!.health" [mana]="matchService.playerData!.mana" [playername]="matchService.playerData!.playerName"></app-health>
+  </div>
+}
+

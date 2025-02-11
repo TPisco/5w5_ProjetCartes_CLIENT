@@ -1,0 +1,38 @@
+.board {
+    height: 100%;
+    transform: scale(0.8) perspective(200vh) rotateX(40deg);
+}
+
+.end {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #0008;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column
+}
+
+.endtext {
+    font-size: 100px;
+    line-height: 125px;
+}
+
+.endturn {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+.surrendertext {
+  font-size: 60px;
+  line-height: 75px;
+}
+
+.surrender {
+	position: absolute;
+	bottom: 40px;
+	right: 0;
+}

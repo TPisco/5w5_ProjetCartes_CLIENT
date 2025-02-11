@@ -1,0 +1,14 @@
+<span [class.enemyhealth]="enemy" [class.playerhealth]="!enemy">
+  <div class="range"
+    [class.damage]="animate"
+    [style.--from]="(oldhealth/maxhealth*100)+'%'"
+    [style.--to]="(health/maxhealth*100)+'%'"
+    [style.--maxhealth]="maxhealth"
+    [style.--health]="health"
+    [style.--bar]="getWidth()+'%'">
+    <div class="range__label" style="font-size: 16px;">
+      {{mana}} <i class="fas fa-gem"></i><span style="margin-left: 16px;color: lightseagreen;">{{playername}}</span>
+    </div>
+    <div class="health"></div>
+  </div>
+</span>

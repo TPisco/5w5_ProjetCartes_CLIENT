@@ -1,0 +1,8 @@
+.container {
+  padding: 5px; 
+  display: flex;
+  position: relative;
+  width: fit-content;
+  margin: auto;
+  transform: scale(0.7);
+}

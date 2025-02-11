@@ -1,0 +1,28 @@
+.infinite-card {
+    width: 250px;
+    height: 300px;
+    background-size: cover;
+    background-position: center;
+  }
+
+.red {
+  color: red;
+}
+
+.infinite-card-content{
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  align-content: center;
+  height: 100%;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.infinite-card-mana-cost {
+  background-size: cover;
+  font-size: 20px;
+  margin-bottom: 0px;
+}

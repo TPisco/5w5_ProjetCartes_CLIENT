@@ -1,0 +1,8 @@
+<div style="display: flex;position: absolute; width: 100%; bottom: 0px;">
+
+  <div class="container">
+    @for (card of cards; track card) {
+      <app-card [card]="card.card" [id]="card.id" class="card fadeIn" (click)="click(card.id)"></app-card>
+    }
+  </div>
+</div>
