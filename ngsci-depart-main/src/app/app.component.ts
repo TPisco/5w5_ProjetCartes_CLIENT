@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatchService } from './services/match.service';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,12 +18,13 @@ import { MatButtonModule } from '@angular/material/button';
     MatChipsModule,
     RouterOutlet,
     MatButtonModule,
+    RouterLink
   ],
 })
 export class AppComponent {
   title = 'supercartesinfinies';
 
-  constructor(public router: Router, public matchService: MatchService) {}
+  constructor(public router: Router, public matchService: MatchService) { }
 
   isLogged() {
     // TODO: Gérer l'affichage du joueur lorsqu'il est connecté
