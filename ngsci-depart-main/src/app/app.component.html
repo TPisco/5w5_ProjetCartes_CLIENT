@@ -2,7 +2,7 @@
 <mat-toolbar style="display: flex;">
   <mat-icon style="margin-right: 8px" routerLink="/">class</mat-icon>
   <a routerLink="/"><span>Super Cartes Infinies</span></a>
-
+  <button id="Magasin" routerLink="magasin">Magasin</button>
   <button id="MesCartes" routerLink="OwnedCards">Mes cartes</button>
   <span style="flex: 1 1 auto;"></span>
   @if (isLogged()) {
@@ -13,7 +13,7 @@
   @if (isLogged()) {
   <button mat-raised-button color="warn" (click)="logout()">Se déconnecter</button>
   }
-
 </mat-toolbar>
+  
 }
 <router-outlet></router-outlet>
