@@ -1,16 +1,19 @@
 @if (matchService.match == null) {
-  <mat-toolbar style="display: flex;" >
-    <mat-icon style="margin-right: 8px" routerLink="/">class</mat-icon>
-    <a routerLink="/"><span>Super Cartes Infinies</span></a>
-    <span style="flex: 1 1 auto;"></span>
-    @if (isLogged()) {
-      <mat-chip style="margin-right: 20px;">
-        {{getUsername()}}
-      </mat-chip>
-    }
-    @if (isLogged()) {
-      <button mat-raised-button color="warn" (click)="logout()">Se déconnecter</button>
-    }
-  </mat-toolbar>
+<mat-toolbar style="display: flex;">
+  <mat-icon style="margin-right: 8px" routerLink="/">class</mat-icon>
+  <a routerLink="/"><span>Super Cartes Infinies</span></a>
+
+  <button id="MesCartes" routerLink="OwnedCards">Mes cartes</button>
+  <span style="flex: 1 1 auto;"></span>
+  @if (isLogged()) {
+  <mat-chip style="margin-right: 20px;">
+    {{getUsername()}}
+  </mat-chip>
+  }
+  @if (isLogged()) {
+  <button mat-raised-button color="warn" (click)="logout()">Se déconnecter</button>
+  }
+
+</mat-toolbar>
 }
 <router-outlet></router-outlet>
