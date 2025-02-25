@@ -26,15 +26,28 @@
 
   <!-- Boucle ngFor affichage carte -->
   <div _ngcontent-ng-c1308917473 class="cards-container">
-    <app-card *ngFor="let c of listCards" class="card fadeIn ng-star-inserted">
-      <mat-card-content class="mat-mdc-card-content">
-        <img src="{{c.imageUrl}}" alt="Image de la carte" width="250px" height="300px">
-        <td>Nom : {{c.name}} </td>
+    <mat-card *ngFor="let c of listCards">
+
+      <mat-card-header _ngcontent-ng-c2357935512>
+        <div _ngcontent-ng-c2357935512 mat-card-avatar class="mat-mdc-card-header infinite-card-mana-cost">
+          <div _ngcontent-ng-c2357935512>{{c.cost}}</div>
+        </div>
+        <div class="mat-mdc-card-header-text">
+          <mat-card-title _ngcontent-ng-c2357935512 class="mat-mdc-card-title">{{c.name}} </mat-card-title>
+        </div>
+
+      </mat-card-header>
+      <mat-card>
+        <img src="{{c.imageUrl}}" alt="Image de la carte" width="300px" height="300px">
+
         <P>Attaque: {{c.attack}}</P>
         <P>PV: {{c.health}}</P>
-        <p>Mana : {{c.cost}}</p>
-      </mat-card-content>
-    </app-card>
+
+      </mat-card>
+
+
+    </mat-card>
+
   </div>
 
 

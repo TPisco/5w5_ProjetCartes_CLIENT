@@ -58,6 +58,7 @@ div {
     unicode-bidi: isolate;
 }
 
+
 .mat-app-background {
     background-color: var(--mat-app-background-color, var(--mat-app-background, transparent));
     color: var(--mat-app-text-color, var(--mat-app-on-background, inherit));
@@ -106,4 +107,42 @@ body {
 .mat-typography {
     font: 400 1rem / 1.5rem Roboto, sans-serif;
     letter-spacing: .031rem;
+}
+
+.mat-mdc-card-title,
+.mat-mdc-card-subtitle {
+    display: block;
+    margin: 0;
+}
+
+.mat-mdc-card-title {
+    font-family: var(--mat-card-title-text-font, var(--mat-app-title-large-font));
+    line-height: var(--mat-card-title-text-line-height, var(--mat-app-title-large-line-height));
+    font-size: var(--mat-card-title-text-size, var(--mat-app-title-large-size));
+    letter-spacing: var(--mat-card-title-text-tracking, var(--mat-app-title-large-tracking));
+    font-weight: var(--mat-card-title-text-weight, var(--mat-app-title-large-weight));
+}
+
+html {
+    --mdc-elevated-card-container-color: #1e1a1d;
+    --mdc-elevated-card-container-elevation: 0px 2px 1px -1px rgba(0, 0, 0, .2), 0px 1px 1px 0px rgba(0, 0, 0, .14), 0px 1px 3px 0px rgba(0, 0, 0, .12);
+    --mdc-elevated-card-container-shape: 12px;
+    --mdc-outlined-card-container-color: #161215;
+    --mdc-outlined-card-outline-color: #4e444b;
+    --mdc-outlined-card-container-elevation: 0px 0px 0px 0px rgba(0, 0, 0, .2), 0px 0px 0px 0px rgba(0, 0, 0, .14), 0px 0px 0px 0px rgba(0, 0, 0, .12);
+    --mdc-outlined-card-container-shape: 12px;
+    --mdc-outlined-card-outline-width: 1px;
+    --mat-card-subtitle-text-color: #e9e0e4;
+    --mat-card-title-text-font: Roboto, sans-serif;
+    --mat-card-title-text-line-height: 1.75rem;
+    --mat-card-title-text-size: 1.375rem;
+    --mat-card-title-text-tracking: 0;
+    --mat-card-title-text-weight: 400;
+    --mat-card-subtitle-text-font: Roboto, sans-serif;
+    --mat-card-subtitle-text-line-height: 1.5rem;
+    --mat-card-subtitle-text-size: 1rem;
+    --mat-card-subtitle-text-tracking: .009rem;
+    --mat-card-subtitle-text-weight: 500;
+
+
 }
