@@ -23,3 +23,87 @@ h1 {
 h3 {
     font-size: x-large;
 }
+
+.card {}
+
+@media (min-width: 900px) {
+    .cards-container[_ngcontent-ng-c1308917473] {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 600px) {
+    .cards-container[_ngcontent-ng-c1308917473] {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 450px) {
+    .cards-container[_ngcontent-ng-c1308917473] {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+.cards-container[_ngcontent-ng-c1308917473] {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1rem;
+    justify-items: center;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+div {
+    display: block;
+    unicode-bidi: isolate;
+}
+
+.mat-app-background {
+    background-color: var(--mat-app-background-color, var(--mat-app-background, transparent));
+    color: var(--mat-app-text-color, var(--mat-app-on-background, inherit));
+}
+
+
+.mat-typography {
+    font: 400 1rem / 1.5rem Roboto, sans-serif;
+    letter-spacing: .031rem;
+}
+
+mat-card[_ngcontent-ng-c2357935512] mat-card-content[_ngcontent-ng-c2357935512] {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    align-content: center;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.mat-mdc-card-content:last-child {
+    padding-bottom: 16px;
+}
+
+.mat-mdc-card-content {
+    display: block;
+    padding: 0 16px;
+}
+
+.mat-body-large,
+.mat-typography .mat-body-large,
+.mat-typography {
+    font: 400 1rem / 1.5rem Roboto, sans-serif;
+    letter-spacing: .031rem;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, Helvetica Neue, sans-serif;
+}
+
+.mat-body-large,
+.mat-typography .mat-body-large,
+.mat-typography {
+    font: 400 1rem / 1.5rem Roboto, sans-serif;
+    letter-spacing: .031rem;
+}
