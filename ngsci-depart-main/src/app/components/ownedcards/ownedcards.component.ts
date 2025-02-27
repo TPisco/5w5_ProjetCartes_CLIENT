@@ -6,18 +6,24 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { Card } from 'src/app/models/models';
 import { ApiService } from 'src/app/services/api.service';
 import { CardComponent } from '../card/card.component';
+import { SortComponent } from '../sort/sort.component';
 
 @Component({
   selector: 'app-ownedcards',
   templateUrl: './ownedcards.component.html',
   styleUrls: ['./ownedcards.component.css'],
   standalone: true,
-  imports: [RouterModule, RouterOutlet, FormsModule, CommonModule, MatCardModule, CardComponent]
+  imports: [RouterModule, RouterOutlet, FormsModule, CommonModule, MatCardModule, CardComponent, SortComponent]
 
 })
 export class OwnedcardsComponent implements OnInit {
 
   public listOwnedCards: Card[] = [];
+  public listCards: Card[] = [];
+
+  sortedCards: Card[] = [...this.listCards];
+  sortProperty: keyof Card = 'attack';
+  sortOrder: 'asc' | 'desc' = 'asc';
   constructor(public service: ApiService) { }
 
   async ngOnInit() {
