@@ -81,6 +81,8 @@ export class MatchComponent implements OnInit {
     if (this.matchService.matchData?.winningPlayerId)
       return this.matchService.matchData!.winningPlayerId === this.matchService.playerData!.playerId
     return false;
+    this.isMatchEnded = true;
+    this.endMessage = 'Victoire !';
   }
 
   isMatchCompleted() {
