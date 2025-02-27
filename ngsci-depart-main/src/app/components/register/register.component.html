@@ -1,0 +1,40 @@
+<div id="register">
+    <div>Inscription</div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+        <label for="registerEmail">Email</label>
+        <input type="email" id="registerEmail" formControlName="email" placeholder="exemple@mail.com" />
+
+        <!-- Message d'erreur pour l'email -->
+        <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+            <small *ngIf="registerForm.get('email')?.hasError('required')">L'email est requis.</small>
+            <small *ngIf="registerForm.get('email')?.hasError('email')">Le format de l'email est invalide.</small>
+        </div>
+
+        <label for="registerPassword">Mot de passe</label>
+        <input type="password" id="registerPassword" formControlName="password" placeholder="Mot de passe" />
+
+        <!-- Message d'erreur pour le mot de passe -->
+        <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+            <small *ngIf="registerForm.get('password')?.hasError('required')">Le mot de passe est requis.</small>
+            <small *ngIf="registerForm.get('password')?.hasError('minlength')">Le mot de passe doit contenir au moins 5
+                caractères.</small>
+            <small *ngIf="registerForm.get('password')?.hasError('pattern')">Le mot de passe doit contenir au moins une
+                majuscule, une minuscule et un chiffre.</small>
+        </div>
+
+        <label for="registerPasswordConfirm">Confirmer le mot de passe</label>
+        <input type="password" id="registerPasswordConfirm" formControlName="confirmPassword"
+            placeholder="Confirmer le mot de passe" />
+
+        <!-- Message d'erreur pour la confirmation du mot de passe -->
+        <div *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid">
+            <small *ngIf="registerForm.get('confirmPassword')?.hasError('required')">La confirmation du mot de passe est
+                requise.</small>
+            <small *ngIf="registerForm.hasError('mismatch')">Les mots de passe ne correspondent pas.</small>
+        </div>
+
+        <button type="submit" [disabled]="registerForm.invalid">S'inscrire</button>
+    </form>
+</div>
