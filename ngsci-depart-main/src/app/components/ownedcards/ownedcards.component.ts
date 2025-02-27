@@ -19,9 +19,9 @@ import { SortComponent } from '../sort/sort.component';
 export class OwnedcardsComponent implements OnInit {
 
   public listOwnedCards: Card[] = [];
-  public listCards: Card[] = [];
 
-  sortedCards: Card[] = [...this.listCards];
+
+  sortedCards: Card[] = [...this.listOwnedCards];
   sortProperty: keyof Card = 'attack';
   sortOrder: 'asc' | 'desc' = 'asc';
   constructor(public service: ApiService) { }
