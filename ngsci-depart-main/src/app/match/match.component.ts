@@ -69,6 +69,9 @@ export class MatchComponent implements OnInit {
     this.matchService.applyEvent(fakeEndMatchEvent);
     this.isMatchEnded = true;
     this.endMessage = 'Vous avez perdu !';
+    setTimeout(() => {
+      this.endMatch();
+    }, 5000);
   }
 
   endMatch() {
