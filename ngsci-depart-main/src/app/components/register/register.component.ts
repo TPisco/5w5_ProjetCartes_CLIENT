@@ -1,3 +1,5 @@
+import { Router, RouterLink } from '@angular/router';
+import { ApiService } from './../../services/api.service';
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -9,15 +11,15 @@ import { MatError } from '@angular/material/form-field';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule ,CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [ReactiveFormsModule, CommonModule, CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  loginForm: FormGroup;
+  RegisterForm: FormGroup<any>;
 
-  constructor(private fb: FormBuilder) {
-    this.loginForm = this.fb.group({
+  constructor(private fb: FormBuilder, public ApiService: ApiService, public router: Router) {
+    this.RegisterForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [
         Validators.required,
@@ -27,8 +29,8 @@ export class RegisterComponent {
       confirmPassword: ['', Validators.required]
     }, { validators: this.passwordMatchValidator });
 
-    this.loginForm.valueChanges.subscribe(() => {
-      console.log(this.loginForm.value);
+    this.RegisterForm.valueChanges.subscribe(() => {
+      console.log(this.RegisterForm.value);
     });
   }
 
@@ -42,14 +44,23 @@ export class RegisterComponent {
 
   // Accesseurs pour faciliter l'accès aux contrôles du formulaire
   get email() {
-    return this.loginForm.get('email');
+    return this.RegisterForm.get('email');
   }
 
   get password() {
-    return this.loginForm.get('password');
+    return this.RegisterForm.get('password');
   }
 
   get confirmPassword() {
-    return this.loginForm.get('confirmPassword');
+    return this.RegisterForm.get('confirmPassword');
   }
+
+  //  async Register(): Promise<void> {
+  //    try {
+  //      await this.ApiService.register(this.email, this.password, this.confirmPassword)
+  //      this.router.navigate(["/login"]);
+  //    } catch (error) {
+  //      console.error("REGISTER ERROR", error)
+  //    }
+  //  }
 }

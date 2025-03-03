@@ -1,113 +1,119 @@
 <div class="register-container">
-    <h2>Inscription</h2>
-  
-    <!-- Formulaire de connexion -->
-    <form [formGroup]="loginForm">
-  
-      <!-- Champ Email -->
-      <mat-form-field appearance="fill" class="form-field">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" placeholder="exemple@gmail.com" />
-        <mat-error *ngIf="email?.hasError('required')">L'email est requis.</mat-error>
-        <mat-error *ngIf="email?.hasError('email')">Le format de l'email est invalide.</mat-error>
-        <mat-error *ngIf="email?.hasError('gmailError')">L'email doit être un Gmail.</mat-error>
-      </mat-form-field>
-  
-      <!-- Champ Mot de Passe -->
-      <mat-form-field appearance="fill" class="form-field">
-        <mat-label>Mot de passe</mat-label>
-        <input matInput type="password" formControlName="password" placeholder="Mot de passe" />
-        <mat-error *ngIf="password?.hasError('required')">Le mot de passe est requis.</mat-error>
-        <mat-error *ngIf="password?.hasError('minlength')">Le mot de passe doit contenir au moins 5 caractères.</mat-error>
-        <mat-error *ngIf="password?.hasError('pattern')">Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre.</mat-error>
-      </mat-form-field>
-  
-      <!-- Champ Confirmer le Mot de Passe -->
-      <mat-form-field appearance="fill" class="form-field">
-        <mat-label>Confirmer le mot de passe</mat-label>
-        <input matInput type="password" formControlName="confirmPassword" placeholder="Confirmer le mot de passe" />
-        <mat-error *ngIf="confirmPassword?.hasError('required')">La confirmation du mot de passe est requise.</mat-error>
-        <mat-error *ngIf="loginForm.hasError('mismatch')">Les mots de passe ne correspondent pas.</mat-error>
-      </mat-form-field>
-  
-      <!-- Bouton de soumission -->
-      <button mat-raised-button type="submit" [disabled]="loginForm.invalid">S'inscrire</button>
-  
-    </form>
-  </div>
-  
-  <!-- Styles CSS intégrés -->
-  <style>
-/* Conteneur du formulaire */
-.register-container {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  <h2>Inscription</h2>
 
-/* Style général des champs */
-.mat-form-field {
-  width: 100%;
-  display: block;
-  margin-bottom: 16px;
-  min-height: 110px; /* Espace réservé pour les erreurs */
-}
+  <!-- Formulaire de connexion -->
+  <form [formGroup]="RegisterForm">
 
-/* Champ de saisie */
-.mat-form-field .mat-input-element {
-  padding: 10px;
-  font-size: 14px;
-}
+    <!-- Champ Email -->
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" placeholder="exemple@gmail.com" />
+      <mat-error *ngIf="email?.hasError('required')">L'email est requis.</mat-error>
+      <mat-error *ngIf="email?.hasError('email')">Le format de l'email est invalide.</mat-error>
+      <mat-error *ngIf="email?.hasError('gmailError')">L'email doit être un Gmail.</mat-error>
+    </mat-form-field>
 
-/* Gestion des messages d'erreur */
-.mat-error {
-  font-size: 12px;
-  white-space: normal; /* Permet le retour à la ligne */
-  display: block; /* Force l'affichage sous le champ */
-  min-height: 35px; /* Réserve un espace suffisant pour 2 lignes */
-  line-height: 1.4;
-  word-break: break-word; /* Coupe les mots longs pour éviter les débordements */
-}
+    <!-- Champ Mot de Passe -->
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Mot de passe</mat-label>
+      <input matInput type="password" formControlName="password" placeholder="Mot de passe" />
+      <mat-error *ngIf="password?.hasError('required')">Le mot de passe est requis.</mat-error>
+      <mat-error *ngIf="password?.hasError('minlength')">Le mot de passe doit contenir au moins 5
+        caractères.</mat-error>
+      <mat-error *ngIf="password?.hasError('pattern')">Le mot de passe doit contenir au moins une majuscule, une
+        minuscule et un chiffre.</mat-error>
+    </mat-form-field>
 
-/* Bouton */
-button {
-  width: 100%;
-  padding: 12px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 20px;
-}
+    <!-- Champ Confirmer le Mot de Passe -->
+    <mat-form-field appearance="fill" class="form-field">
+      <mat-label>Confirmer le mot de passe</mat-label>
+      <input matInput type="password" formControlName="confirmPassword" placeholder="Confirmer le mot de passe" />
+      <mat-error *ngIf="confirmPassword?.hasError('required')">La confirmation du mot de passe est requise.</mat-error>
+      <mat-error *ngIf="RegisterForm.hasError('mismatch')">Les mots de passe ne correspondent pas.</mat-error>
+    </mat-form-field>
 
-button:hover {
-  background-color: #45a049;
-}
+    <!-- Bouton de soumission -->
+    <button mat-raised-button type="submit" [disabled]="RegisterForm.invalid">S'inscrire</button>
 
-/* Titre */
-h2 {
-  font-size: 24px;
-  margin-bottom: 16px;
-  color: #333;
-}
+  </form>
+</div>
 
-/* Ajustement du formulaire */
-.register-container form {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  width: 100%;
-}
-  </style>
-  
+<!-- Styles CSS intégrés -->
+<style>
+  /* Conteneur du formulaire */
+  .register-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Style général des champs */
+  .mat-form-field {
+    width: 100%;
+    display: block;
+    margin-bottom: 16px;
+    min-height: 110px;
+    /* Espace réservé pour les erreurs */
+  }
+
+  /* Champ de saisie */
+  .mat-form-field .mat-input-element {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  /* Gestion des messages d'erreur */
+  .mat-error {
+    font-size: 12px;
+    white-space: normal;
+    /* Permet le retour à la ligne */
+    display: block;
+    /* Force l'affichage sous le champ */
+    min-height: 35px;
+    /* Réserve un espace suffisant pour 2 lignes */
+    line-height: 1.4;
+    word-break: break-word;
+    /* Coupe les mots longs pour éviter les débordements */
+  }
+
+  /* Bouton */
+  button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+
+  /* Titre */
+  h2 {
+    font-size: 24px;
+    margin-bottom: 16px;
+    color: #333;
+  }
+
+  /* Ajustement du formulaire */
+  .register-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+</style>
