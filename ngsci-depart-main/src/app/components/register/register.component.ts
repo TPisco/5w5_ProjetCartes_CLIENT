@@ -1,61 +1,55 @@
-import { ApiService } from './../../services/api.service';
-import { group } from '@angular/animations';
+import { Component } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Route, Router } from '@angular/router';
-import { lastValueFrom } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatError } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule ,CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
-  registerForm!: FormGroup;
+export class RegisterComponent {
+  loginForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, public ApiService: ApiService, public router: Router) { }
-
-  ngOnInit(): void {
-    this.registerForm = this.formBuilder.group({
+  constructor(private fb: FormBuilder) {
+    this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(5),
-      Validators.pattern(/[A-Z]/),
-      Validators.pattern(/[a-z]/),
-      Validators.pattern(/\d/)]],
-      confirmPassword: ['', [Validators.required]],
-    }, {
-      validator: this.passwordMatchValidator
+      password: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/) // Doit contenir au moins une minuscule, une majuscule et un chiffre
+      ]],
+      confirmPassword: ['', Validators.required]
+    }, { validators: this.passwordMatchValidator });
+
+    this.loginForm.valueChanges.subscribe(() => {
+      console.log(this.loginForm.value);
     });
   }
 
-  passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
-    var password = group.get('password')?.value;
-    var confirmPassword = group.get('confirmPassword')?.value;
-    return password == confirmPassword ? null : { 'mismatch': true };
+
+  // Validateur pour vérifier si les mots de passe correspondent
+  passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { mismatch: true };
   }
 
-  onSubmit(): void {
-    if (this.registerForm.valid) {
-      console.log('Form submitted', this.registerForm.value);
-    }
-    else {
-      console.log('Form is invalid')
-    }
+  // Accesseurs pour faciliter l'accès aux contrôles du formulaire
+  get email() {
+    return this.loginForm.get('email');
   }
 
-  registerEmail: string = "";
-  registerPassword: string = "";
-  registerPasswordConfirm: string = "";
-
-  async register(): Promise<void> {
-    await this.ApiService.register(this.registerEmail, this.registerPassword, this.registerPasswordConfirm)
-    this.router.navigate(["/"]);
+  get password() {
+    return this.loginForm.get('password');
   }
 
-
+  get confirmPassword() {
+    return this.loginForm.get('confirmPassword');
+  }
 }
-
-
