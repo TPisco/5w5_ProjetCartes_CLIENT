@@ -25,7 +25,15 @@ export class LoginComponent {
     });
   }
 
-  ngOnInit() { }
+  token : string | null = "";
+  playerid : string | null = ""
+  username : string | null = "";
+
+  ngOnInit(): void { 
+      this.token = sessionStorage.getItem("token")
+      this.token = sessionStorage.getItem("playerid")
+      this.token = sessionStorage.getItem("username")
+  }
 
   Email: string = "";
   Password: string = "";

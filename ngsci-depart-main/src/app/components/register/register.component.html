@@ -18,7 +18,7 @@
       <mat-label>Mot de passe</mat-label>
       <input matInput type="password" formControlName="password" placeholder="Mot de passe" />
       <mat-error *ngIf="password?.hasError('required')">Le mot de passe est requis.</mat-error>
-      <mat-error *ngIf="password?.hasError('minlength')">Le mot de passe doit contenir au moins 5
+      <mat-error *ngIf="password?.hasError('minlength')">Le mot de passe doit contenir au moins 8
         caractères.</mat-error>
       <mat-error *ngIf="password?.hasError('pattern')">Le mot de passe doit contenir au moins une majuscule, une
         minuscule et un chiffre.</mat-error>
@@ -33,7 +33,7 @@
     </mat-form-field>
 
     <!-- Bouton de soumission -->
-    <button mat-raised-button type="submit" [disabled]="RegisterForm.invalid">S'inscrire</button>
+    <button mat-raised-button type="submit" [disabled]="RegisterForm.invalid" (click)="Register()">S'inscrire</button>
 
   </form>
 </div>

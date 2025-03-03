@@ -55,12 +55,13 @@ export class RegisterComponent {
     return this.RegisterForm.get('confirmPassword');
   }
 
-  //  async Register(): Promise<void> {
-  //    try {
-  //      await this.ApiService.register(this.email, this.password, this.confirmPassword)
-  //      this.router.navigate(["/login"]);
-  //    } catch (error) {
-  //      console.error("REGISTER ERROR", error)
-  //    }
-  //  }
+   async Register(): Promise<void> {
+     try {
+      const {email, password, confirmPassword } = this.RegisterForm.value;
+       await this.ApiService.register(email, password, confirmPassword)
+       this.router.navigate(["/login"]);
+     } catch (error) {
+       console.error("ERREUR LORS DE L'ENREGISTREMENT", error)
+     }
+   }
 }

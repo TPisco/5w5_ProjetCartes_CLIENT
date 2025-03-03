@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { Card, Player } from '../models/models';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class ApiService {
   serverUrl = "http://localhost:5276/";
 
 
-  constructor(public http: HttpClient) { }
+  constructor(public http: HttpClient, public router : Router) { }
 
   async getAllCards(): Promise<Card[]> {
     let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetAllCards'));
@@ -26,9 +27,9 @@ export class ApiService {
 
   async register(email: string, password: string, passwordConfirm: string): Promise<void> {
     let registerDTO = {
-      emai: email,
-      password: password,
-      passwordConfirm: passwordConfirm
+      Email: email,
+      Password: password,
+      PasswordConfirm: passwordConfirm
     };
 
     let x = await lastValueFrom(this.http.post<any>(this.serverUrl + "api/Players/Register", registerDTO))
@@ -38,16 +39,17 @@ export class ApiService {
   async login(email: string, password: string): Promise<void> {
 
     let loginDTO = {
-      email: email,
-      password: password
+      Email: email,
+      Password: password
     };
 
     let x = await lastValueFrom(this.http.post<any>(this.serverUrl + "api/Players/Login", loginDTO));
     console.log(x);
 
-    // N'hésitez pas à ajouter d'autres infos dans le stockage local... 
-    // Cela pourrait vous aider pour la partie admin / modérateur
-    localStorage.setItem("token", x.token);
-    localStorage.setItem("courriel", x.username);
+    sessionStorage.setItem("token", x.token);
+    sessionStorage.setItem("playerId", x.playerId);
+    sessionStorage.setItem("username", x.username);
+
   }
+
 }

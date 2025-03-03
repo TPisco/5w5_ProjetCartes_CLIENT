@@ -18,6 +18,15 @@ export class HomeComponent implements OnInit {
 
   }
 
+  isLogged() {
+    // TODO: Gérer l'affichage du joueur lorsqu'il est connecté
+   if (sessionStorage.getItem("token") != null)
+   {
+    return true
+   }
+      return false;
+  }
+
   joinMatch() {
     // TODO: Anuglar: Afficher un dialogue qui montre que l'on attend de joindre un match
     // TODO: Hub: Se connecter au Hub et joindre un match
