@@ -14,7 +14,7 @@
 
 <mat-form-field>
     <mat-label>Trier par type</mat-label>
-    <mat-select (selectionChange)="onSortPropertyChange($event.value)">
+    <mat-select [(ngModel)]="sortOrderProperty" (selectionChange)="onSortPropertyChange($event.value)">
         <mat-option value="attack" default>Attaque</mat-option>
         <mat-option value="health">Points de vie</mat-option>
         <mat-option value="cost">Coût en Mana</mat-option>
@@ -23,7 +23,7 @@
 
 <mat-form-field>
     <mat-label>Ordre</mat-label>
-    <mat-select (selectionChange)="onSortOrderChange($event.value)">
+    <mat-select [(ngModel)]="sortOrder" (selectionChange)="onSortOrderChange($event.value)">
         <mat-option value="asc" default>Croissant</mat-option>
         <mat-option value="desc">Décroissant</mat-option>
 
