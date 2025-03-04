@@ -52,4 +52,8 @@ export class AppComponent {
     sessionStorage.removeItem("username");
     this.router.navigate(["/login"])
   }
+
+  async Test(): Promise<void> {
+    this.ApiServices.test();
+  }
 }

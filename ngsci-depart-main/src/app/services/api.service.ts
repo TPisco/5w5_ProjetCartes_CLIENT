@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { Card, Player } from '../models/models';
@@ -36,10 +36,10 @@ export class ApiService {
     console.log(x);
   }
 
-  async login(email: string, password: string): Promise<void> {
+  async login(username: string, password: string): Promise<void> {
 
     let loginDTO = {
-      Email: email,
+      Username: username,
       Password: password
     };
 
@@ -52,4 +52,17 @@ export class ApiService {
 
   }
 
+  async test(): Promise<void> {
+    let token = sessionStorage.getItem("token");
+    let httpOptions = {
+      headers : new HttpHeaders({
+        'Content-Type' : 'application/json',
+        'Authorization' : 'Bearer ' + token
+      })
+    };
+
+    let x = await lastValueFrom(this.http.get<any>(this.serverUrl + "api/Players/PrivateData", httpOptions))
+    console.log(x);
+    
+  }
 }

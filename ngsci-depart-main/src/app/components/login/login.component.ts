@@ -37,10 +37,21 @@ export class LoginComponent {
 
   Email: string = "";
   Password: string = "";
+
   async login(): Promise<void> {
-    await this.ApiService.login(this.Email, this.Password)
-    this.router.navigate(["/"])
+    if (this.loginForm.valid) {
+      const email = this.loginForm.value.email;
+      const password = this.loginForm.value.password;
+    try {
+      await this.ApiService.login(this.Email, this.Password)
+      this.router.navigate(["/"])
+      console.log("Login réussi")
+    } catch (error) {
+      console.error("Erreur de login :", error)
+    }
   }
+    }
+
 
   emailValidator(control: AbstractControl): ValidationErrors | null {
     const email = control.value;
