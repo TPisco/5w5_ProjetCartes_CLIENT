@@ -46,8 +46,12 @@ export class LoginComponent {
       await this.ApiService.login(this.Email, this.Password)
       this.router.navigate(["/"])
       console.log("Login réussi")
-    } catch (error) {
-      console.error("Erreur de login :", error)
+    } catch (error: any) {
+      console.log(error)
+       console.log(error?.error.message)
+
+       this.loginForm.get('email')?.setErrors({ invalidCredentials: true });
+       this.loginForm.get('password')?.setErrors({ invalidCredentials: true });
     }
   }
     }

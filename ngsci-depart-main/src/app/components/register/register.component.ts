@@ -55,13 +55,21 @@ export class RegisterComponent {
     return this.RegisterForm.get('confirmPassword');
   }
 
+
    async Register(): Promise<void> {
      try {
       const { email, password, confirmPassword } = this.RegisterForm.value;
        await this.ApiService.register(email, password, confirmPassword)
-       this.router.navigate(["/login"]);
-     } catch (error) {
-       console.error("ERREUR LORS DE L'ENREGISTREMENT", error)
-     }
+     } catch (error: any) {
+       console.log(error)
+       console.log(error?.error.message)
+
+       if (error?.error?.message?.includes('already taken.')) {
+        this.RegisterForm.get('email')?.setErrors({ EmailTaken: true });
+      }
+      else {
+        this.RegisterForm.get('email')?.setErrors({ ServerError: error?.error?.message });
+      }
+     }  
    }
 }

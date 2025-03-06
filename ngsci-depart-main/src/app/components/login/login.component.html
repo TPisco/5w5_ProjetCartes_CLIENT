@@ -12,6 +12,8 @@
       <!-- Erreurs pour l'email -->
       <mat-error *ngIf="loginForm.controls['email'].hasError('required')">L'email est requis.</mat-error>
       <mat-error *ngIf="loginForm.controls['email'].hasError('email')">Le format de l'email est invalide.</mat-error>
+      <mat-error *ngIf="loginForm.controls['email'].hasError('invalidCredentials')">L'email est incorrect.</mat-error>
+
     </mat-form-field>
 
     <!-- Champ Mot de Passe -->
@@ -21,6 +23,7 @@
 
       <!-- Erreurs pour le mot de passe -->
       <mat-error *ngIf="loginForm.controls['password'].hasError('required')">Le mot de passe est requis.</mat-error>
+      <mat-error *ngIf="loginForm.controls['password'].hasError('invalidCredentials')">le mot de passe est incorrect.</mat-error>
     </mat-form-field>
 
     <!-- Bouton de soumission -->
