@@ -1,24 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
- 
+
 html, body { height: 100%; }
- 
+
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
- 
+
 a {
     text-decoration: none;
     color: inherit;
 }
- 
+
 @keyframes fadeIn {
   0% { opacity: 0; }
   100% { opacity: 1; }
 }
- 
+
 @keyframes fadeOut {
   0% { opacity: 1; }
   100% { opacity: 0; }
 }
- 
+
 .card.fadeIn
 {
   animation: fadeIn 0.3s;
@@ -27,7 +27,7 @@ a {
   -o-animation: fadeIn 0.3s;
   -ms-animation: fadeIn 0.3s;
 }
- 
+
 .card.fadeOut
 {
   animation: fadeOut 0.3s;
@@ -36,7 +36,7 @@ a {
   -o-animation: fadeOut 0.3s;
   -ms-animation: fadeOut 0.3s;
 }
- 
+
 .card.attack{
   animation: attack 0.5s;
   -webkit-animation: attack 0.5s;
@@ -44,7 +44,7 @@ a {
   -o-animation: attack 0.5s;
   -ms-animation: attack 0.5s;
 }
- 
+
 .card.reverseAttack{
   animation: attackReverse 0.5s;
   -webkit-animation: attackReverse 0.5s;
@@ -52,7 +52,7 @@ a {
   -o-animation: attackReverse 0.5s;
   -ms-animation: attackReverse 0.5s;
 }
- 
+
 @keyframes attack {
   0% {
     transform: translateY(0%);
@@ -67,7 +67,7 @@ a {
     transform: translateY(0%);
   }
 }
- 
+
 @keyframes attackReverse {
   0% {
     transform: translateY(0%);
@@ -82,3 +82,6 @@ a {
     transform: translateY(0%);
   }
 }
+
+
+
