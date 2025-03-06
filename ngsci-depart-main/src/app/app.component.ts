@@ -6,6 +6,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
+import { ApiService } from './services/api.service';
 
 @Component({
   selector: 'app-root',
@@ -23,18 +24,36 @@ import { MatButtonModule } from '@angular/material/button';
 export class AppComponent {
   title = 'supercartesinfinies';
 
-  constructor(public router: Router, public matchService: MatchService) {}
+  constructor(public router: Router, public matchService: MatchService, public ApiServices : ApiService) {
+    if (!this.isLogged()){
+      this.router.navigate(["/login"])
+    }
+  }
 
   isLogged() {
     // TODO: Gérer l'affichage du joueur lorsqu'il est connecté
-    return true;
+   if (sessionStorage.getItem("token") != null)
+   {
+    return true
+   }
+      return false;
   }
 
   getUsername() {
+    if (sessionStorage.getItem("username") != null) {
+      return sessionStorage.getItem("username")
+    }
     return 'USERNAME';
   }
 
   async logout() {
-    // TODO: Gérer le logout
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("playerId");
+    sessionStorage.removeItem("username");
+    this.router.navigate(["/login"])
+  }
+
+  async Test(): Promise<void> {
+    this.ApiServices.test();
   }
 }
