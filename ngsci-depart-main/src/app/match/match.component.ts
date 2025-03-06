@@ -1,5 +1,5 @@
 import { FakerService } from './../services/faker.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { MatchData, PlayerData } from '../models/models';
 import { MatchService } from './../services/match.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,22 +9,41 @@ import { MatButtonModule } from '@angular/material/button';
 import { PlayerhandComponent } from './playerhand/playerhand.component';
 import { EnemyhandComponent } from './enemyhand/enemyhand.component';
 import { BattlefieldComponent } from './battlefield/battlefield.component';
+import { CommonModule } from '@angular/common';
+import * as signalR from "@microsoft/signalr";
 
 
 @Component({
-    selector: 'app-match',
-    templateUrl: './match.component.html',
-    styleUrls: ['./match.component.css'],
-    standalone: true,
-    imports: [BattlefieldComponent, EnemyhandComponent, PlayerhandComponent, MatButtonModule, HealthComponent]
+  selector: 'app-match',
+  templateUrl: './match.component.html',
+  styleUrls: ['./match.component.css'],
+  standalone: true,
+  imports: [CommonModule, BattlefieldComponent, EnemyhandComponent, PlayerhandComponent, MatButtonModule, HealthComponent]
 })
 export class MatchComponent implements OnInit {
-
-  constructor(private route: ActivatedRoute, public router: Router, public matchService:MatchService, public apiService:ApiService, public faker:FakerService) { }
+  isMatchEnded: boolean = false;
+  endMessage: string = '';
+  private hubConnection?: signalR.HubConnection;
+  taskname:string = "";
+  constructor(private route: ActivatedRoute, public router: Router, public matchService: MatchService, public apiService: ApiService, public faker: FakerService) { }
 
   async ngOnInit() {
-    let matchId:number  = parseInt(this.route.snapshot.params["id"]);
+    let matchId: number = parseInt(this.route.snapshot.params["id"]);
     // TODO Tâche Hub: Se connecter au Hub et obtenir le matchData
+      this.hubConnection =new signalR.HubConnectionBuilder()
+      .withUrl('http://localhost:5276/matchHub')
+      .build();
+
+      //Montrer le nombre de personnes connectées
+      this.hubConnection.on('UserCount',(data) => {
+        console.log(data);
+      })
+      //On se connecte ensuite
+      this.hubConnection
+      .start()
+      .then( () => {
+        console.log('La connexion est fonctionnelle!');
+      })
 
     // Test: À retirer une fois que le Hub est fonctionnel
     let cards = await this.apiService.getPlayersCards();
@@ -32,6 +51,9 @@ export class MatchComponent implements OnInit {
 
     let fakeStartMatchEvent = this.faker.createFakeStartMatchEvent();
     this.matchService.applyEvent(fakeStartMatchEvent);
+
+
+
   }
 
   async endTurn() {
@@ -62,17 +84,25 @@ export class MatchComponent implements OnInit {
   fakeSurrender() {
     let fakeEndMatchEvent = this.faker.createFakeEndMatchEvent(this.matchService.adversaryData!);
     this.matchService.applyEvent(fakeEndMatchEvent);
+    this.isMatchEnded = true;
+    this.endMessage = 'Vous avez perdu !';
+    setTimeout(() => {
+      this.endMatch();
+    }, 5000);
   }
 
   endMatch() {
     this.matchService.clearMatch();
+
     this.router.navigate(['/'])
   }
 
   isVictory() {
-    if(this.matchService.matchData?.winningPlayerId)
+    if (this.matchService.matchData?.winningPlayerId)
       return this.matchService.matchData!.winningPlayerId === this.matchService.playerData!.playerId
     return false;
+    this.isMatchEnded = true;
+    this.endMessage = 'Victoire !';
   }
 
   isMatchCompleted() {
