@@ -34,6 +34,8 @@ export class ApiService {
 
     let x = await lastValueFrom(this.http.post<any>(this.serverUrl + "api/Players/Register", registerDTO))
     console.log(x);
+
+    
   }
 
   async login(username: string, password: string): Promise<void> {

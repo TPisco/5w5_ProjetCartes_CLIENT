@@ -37,84 +37,142 @@
     <button mat-raised-button type="submit" [disabled]="RegisterForm.invalid" (click)="Register()">S'inscrire</button>
 
   </form>
+
+  <div class="login-link">
+    <button mat-button (click)="navigateToLogin()">Retour à la connexion</button>
+  </div>
 </div>
 
 <!-- Styles CSS intégrés -->
 <style>
   /* Conteneur du formulaire */
+.register-container {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Titre */
+h2 {
+  font-size: 28px;
+  margin-bottom: 24px;
+  color: #3f51b5;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Style général des champs */
+.mat-form-field {
+  width: 100%;
+  display: block;
+  margin-bottom: 20px;
+  min-height: 120px; /* Espace pour les erreurs et alignement */
+}
+
+/* Champ de saisie */
+.mat-form-field .mat-input-element {
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  transition: border-color 0.3s ease;
+}
+
+/* L'effet au survol des champs */
+.mat-form-field .mat-input-element:focus {
+  border-color: #3f51b5;
+  box-shadow: 0 0 5px rgba(63, 81, 181, 0.3);
+}
+
+/* Gestion des messages d'erreur */
+.mat-error {
+  font-size: 13px;
+  color: #e74c3c;
+  display: block;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* Bouton */
+button {
+  width: 100%;
+  padding: 14px;
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s ease-in-out;
+  margin-top: 20px;
+}
+
+/* Effet au survol du bouton */
+button:hover {
+  background-color: #303f9f;
+  transform: translateY(-2px); /* Effet de levée */
+}
+
+/* Bouton désactivé */
+button[disabled] {
+  background-color: #9e9e9e;
+  cursor: not-allowed;
+}
+
+/* Ajustement du formulaire */
+.register-container form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+/* Liens de redirection */
+.login-link {
+  margin-top: 20px;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.login-link a {
+  color: #3f51b5;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+  color: #303f9f;
+}
+
+/* Réduction des espaces et améliorations responsives */
+@media (max-width: 600px) {
   .register-container {
-    background-color: #fff;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
 
-  /* Style général des champs */
-  .mat-form-field {
-    width: 100%;
-    display: block;
-    margin-bottom: 16px;
-    min-height: 110px;
-    /* Espace réservé pour les erreurs */
-  }
-
-  /* Champ de saisie */
-  .mat-form-field .mat-input-element {
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  /* Gestion des messages d'erreur */
-  .mat-error {
-    font-size: 12px;
-    white-space: normal;
-    /* Permet le retour à la ligne */
-    display: block;
-    /* Force l'affichage sous le champ */
-    min-height: 35px;
-    /* Réserve un espace suffisant pour 2 lignes */
-    line-height: 1.4;
-    word-break: break-word;
-    /* Coupe les mots longs pour éviter les débordements */
-  }
-
-  /* Bouton */
-  button {
-    width: 100%;
-    padding: 12px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 20px;
-  }
-
-  button:hover {
-    background-color: #45a049;
-  }
-
-  /* Titre */
   h2 {
     font-size: 24px;
     margin-bottom: 16px;
-    color: #333;
   }
 
-  /* Ajustement du formulaire */
-  .register-container form {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
+  .mat-form-field .mat-input-element {
+    padding: 10px;
   }
+
+  button {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
 </style>

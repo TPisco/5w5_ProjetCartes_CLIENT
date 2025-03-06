@@ -42,6 +42,10 @@ export class RegisterComponent {
     return password === confirmPassword ? null : { mismatch: true };
   }
 
+  navigateToLogin() {
+    this.router.navigate(['/login'])
+  }
+
   // Accesseurs pour faciliter l'accès aux contrôles du formulaire
   get email() {
     return this.RegisterForm.get('email');
