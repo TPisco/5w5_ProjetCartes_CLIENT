@@ -4,6 +4,9 @@
   <a routerLink="/"><span>Super Cartes Infinies</span></a>
   <button id="Magasin" mat-raised-button color="accent" routerLink="magasin">Magasin</button>
   <button id="MesCartes" mat-raised-button color="accent" routerLink="OwnedCards">Mes cartes</button>
+  <button mat-raised-button (click)="Test()">Test</button>
+
+
   <span style="flex: 1 1 auto;"></span>
   @if (isLogged()) {
   <mat-chip style="margin-right: 20px;">

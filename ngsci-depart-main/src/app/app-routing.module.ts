@@ -6,6 +6,9 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { MagasinComponent } from './components/magasin/magasin.component';
 import { OwnedcardsComponent } from './components/ownedcards/ownedcards.component';
 import { AppComponent } from './app.component';
+import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/login/login.component';
+
 
 const routes: Routes = [
   { path: 'match/:id', component: MatchComponent },
@@ -15,6 +18,8 @@ const routes: Routes = [
       { path: '', component: WelcomeComponent },
       { path: 'magasin', component: MagasinComponent },
       { path: 'OwnedCards', component: OwnedcardsComponent },
+      { path: 'register', component: RegisterComponent },
+      { path: 'login', component: LoginComponent },
       { path: 'app', component: AppComponent }
     ]
   },
@@ -26,3 +31,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
+

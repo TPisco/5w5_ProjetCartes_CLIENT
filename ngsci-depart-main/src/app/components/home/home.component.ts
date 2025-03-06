@@ -22,6 +22,16 @@ export class HomeComponent implements OnInit {
 
   }
 
+
+  isLogged() {
+    // TODO: Gérer l'affichage du joueur lorsqu'il est connecté
+    if (sessionStorage.getItem("token") != null) {
+      return true
+    }
+    return false;
+  }
+
+
   joinMatch() {
 
 
