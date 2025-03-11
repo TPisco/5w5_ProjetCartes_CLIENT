@@ -8,6 +8,7 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CardComponent } from '../card/card.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-sort',
@@ -21,15 +22,12 @@ export class SortComponent {
   @Input() cards: Card[] = []; // decorate the property with @Input()
 
 
-
-
   sortedCards: Card[] = [...this.cards];
   sortProperty: keyof Card = 'attack';
   sortOrderProperty: 'attack' | 'health' | 'cost' = 'attack';
   sortOrder: 'asc' | 'desc' = 'asc';
 
   async ngOnInit() {
-
     this.sortedCards = [...this.cards];
     this.onSortPropertyChange('attack');
     this.onSortOrderChange('asc');
