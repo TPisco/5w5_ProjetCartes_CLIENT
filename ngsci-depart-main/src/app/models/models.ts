@@ -45,3 +45,11 @@ export interface PlayerData {
     battleField: PlayableCard[];
     graveyard: PlayableCard[];
 }
+
+export interface JoinMatchData{
+    match:Match;
+    playerA:Player;
+    playerB:Player;
+    Started:boolean;
+    otherPlayerConnectionId:string;
+}

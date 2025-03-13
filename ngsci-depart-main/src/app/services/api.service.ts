@@ -8,8 +8,8 @@ import { Card } from '../models/models';
 })
 export class ApiService {
 
-  serverUrl = "https://localhost:7179/";
-  //serverUrl = "http://localhost:5276/";
+  //serverUrl = "https://localhost:7179/";
+  serverUrl = "http://localhost:5276/";
 
 
   constructor(public http: HttpClient) { }

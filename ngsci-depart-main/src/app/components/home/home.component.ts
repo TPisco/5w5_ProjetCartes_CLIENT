@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import * as signalR from "@microsoft/signalr"
+import { JoinMatchData } from 'src/app/models/models';
 
 @Component({
   selector: 'app-home',
@@ -19,10 +20,11 @@ export class HomeComponent implements OnInit {
   isConnected:Boolean = false;
   searchMessage: string = '';
   private hubConnection?: signalR.HubConnection
+  matchData? : JoinMatchData;
   constructor(public router: Router, public match: MatchService) { }
 
-  ngOnInit() {
-    this.setupSignalRConnection();
+  async ngOnInit() {
+    await this.setupSignalRConnection();
   }
 
 
@@ -35,69 +37,89 @@ export class HomeComponent implements OnInit {
   }
 
 
-  private setupSignalRConnection() {
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:7179/match', {
-        accessTokenFactory: () => sessionStorage.getItem("token")! // Provide the token
-      })
-      .build();
+  private async setupSignalRConnection() {
 
-    // Listen for "JoiningMatch" event
-    this.hubConnection.on('JoiningMatch', (joiningMatchData: any) => {
-      this.isSearchingMatch = false; // Stop searching once match is found
-      this.searchMessage = 'Match trouvé!';
-      let matchId = joiningMatchData.match.id; // Get the match ID
-      this.router.navigate(['/match/' + matchId]); // Navigate to match page
-    });
+    if (this.hubConnection && this.hubConnection.state === signalR.HubConnectionState.Connected) {
+      return;
+    }
 
-    // Start connection
-    this.hubConnection.start()
+    this.hubConnection = new signalR.HubConnectionBuilder().withUrl('http://localhost:5276/matchHub', 
+      { accessTokenFactory: () => localStorage.getItem("token")! }
+    ).build();
+
+    
+    this.hubConnection!.start()
       .then(() => {
-        console.log('SignalR connection established');
+        console.log("connection established");
       })
       .catch(err => {
         console.error('Error while starting connection: ', err);
+        throw err
       });
+
+
+   
+    this.hubConnection = await this.getConnection();
+    if(!this.hubConnection){
+      console.error("Connection did not work");
+      return;
+    }
+
+
+    // Listen for "JoiningMatch" event
+    this.hubConnection!.on("JoiningMatch", (joiningMatchData: JoinMatchData) => {
+      this.matchData = joiningMatchData;
+      if(this.matchData){
+        this.router.navigate(["/match", this.matchData.match.id]);
+        sessionStorage.setItem("matchData", JSON.stringify(joiningMatchData));
+      }
+    });
+
+
+    this.hubConnection!.on("WaitingOtherPlayer", (data) => {
+      console.log(data);
+  });
   }
 
 
+  getConnection(): Promise<signalR.HubConnection | undefined> {
+    return Promise.resolve(this.hubConnection ?? undefined);
+  }
 
   
-  joinMatch() {
-    if (this.hubConnection?.state !== signalR.HubConnectionState.Connected) {
 
-      this.hubConnection?.start()
-        .then(() => {
-          console.log('SignalR connection established');
-          this.sendJoinMatchRequest();
-        })
-        .catch(err => {
-          console.error('Error while starting connection: ', err);
-        });
-    } else {
 
-      this.sendJoinMatchRequest();
+  async joinMatch(userIsConnected : Boolean) {
+    if(!this.hubConnection){
+      console.error("Connection did not work");
+      return;
     }
-  }
 
-
-
-  // Send the join match request to the SignalR Hub
-  private sendJoinMatchRequest() {
     this.isSearchingMatch = true;
     this.searchMessage = 'Recherche d\'un match...';
 
-    // Call the server method to join a match (send the user info, etc.)
-    this.hubConnection?.invoke('onJoinMatchAsync', sessionStorage.getItem("userId"), this.hubConnection!.connectionId, null)
-      .catch(err => console.error('Error while sending join match request: ' + err));
 
-    // Optionally handle a timeout scenario if no match is found within a reasonable time
+
+    let userId:string = userIsConnected ? "User1Id" : "User2Id";
+
+    if(userIsConnected){
+      sessionStorage.setItem("playerId", "1");
+    }else{
+      sessionStorage.setItem("playerId", "2");
+    }
+
+    await this.hubConnection!.invoke("onJoinMatchAsync", userId, this.hubConnection!.connectionId, null)
+    .catch(err => console.error('Error while sending join match request: ' + err));
+
+
     setTimeout(() => {
       if (this.isSearchingMatch) {
         this.searchMessage = 'Aucun match trouvé. Essayez à nouveau.';
         this.isSearchingMatch = false;
       }
-    }, 5000); // 5-second timeout for demonstration
+    }, 5000);
   }
+
+
 }
 
