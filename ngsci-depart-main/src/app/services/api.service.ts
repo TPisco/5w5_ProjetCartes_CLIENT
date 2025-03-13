@@ -45,14 +45,14 @@ export class ApiService {
 
     let loginDTO = {
       Username: username,
-      Password: password
+      Password: password,
     };
 
     let x = await lastValueFrom(this.http.post<any>(this.serverUrl + "api/Players/Login", loginDTO));
     console.log(x);
 
     sessionStorage.setItem("token", x.token);
-    sessionStorage.setItem("playerId", x.playerId);
+    sessionStorage.setItem("playerid", x.playerId);
     sessionStorage.setItem("username", x.username);
 
   }
