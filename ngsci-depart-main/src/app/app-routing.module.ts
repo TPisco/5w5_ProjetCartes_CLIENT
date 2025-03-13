@@ -8,6 +8,7 @@ import { OwnedcardsComponent } from './components/ownedcards/ownedcards.componen
 import { AppComponent } from './app.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
+import { loginGuard } from './login.guard';
 
 
 const routes: Routes = [
@@ -15,9 +16,9 @@ const routes: Routes = [
 
   {
     path: '', component: HomeComponent, children: [
-      { path: '', component: WelcomeComponent },
-      { path: 'magasin', component: MagasinComponent },
-      { path: 'OwnedCards', component: OwnedcardsComponent },
+      { path: '', component: WelcomeComponent ,canActivate: [loginGuard]},
+      { path: 'magasin', component: MagasinComponent ,canActivate: [loginGuard]},
+      { path: 'OwnedCards', component: OwnedcardsComponent ,canActivate: [loginGuard]},
       { path: 'register', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
       { path: 'app', component: AppComponent }
