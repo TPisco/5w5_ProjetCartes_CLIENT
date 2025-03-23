@@ -51,6 +51,7 @@ export class HomeComponent implements OnInit {
 
     // Listen for "JoiningMatch" event
     this.hubConnection!.on("JoiningMatchData", (joiningMatchData: JoinMatchData) => {
+      console.log(joiningMatchData);
       this.matchData = joiningMatchData;
       if (this.matchData) {
         this.router.navigate(["/match", this.matchData.match.id]);
@@ -84,7 +85,7 @@ export class HomeComponent implements OnInit {
       sessionStorage.setItem("playerId", "2");
     }
 
-    await this.hubConnection!.invoke("onJoinMatchAsync", null)
+    await this.hubConnection!.invoke("onJoinMatchAsync",  userId, this.hubConnection!.connectionId, null)
       .catch(err => console.error('Error while sending join match request: ' + err));
 
   }

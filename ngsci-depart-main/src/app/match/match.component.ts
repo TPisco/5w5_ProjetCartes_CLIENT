@@ -25,6 +25,8 @@ export class MatchComponent implements OnInit {
   isMatchEnded: boolean = false;
   endMessage: string = '';
   private hubConnection?: signalR.HubConnection;
+  currentPlayerId : string = sessionStorage.getItem("playerId")!;
+
   matchData?: JoinMatchData;
   taskname: string = "";
   constructor(private route: ActivatedRoute, public router: Router, public matchService: MatchService, public apiService: ApiService, public faker: FakerService, public hub: HubServiceService) { }
@@ -56,7 +58,7 @@ export class MatchComponent implements OnInit {
         //Possibly have to change this
         winningPlayerId: -1
       }
-      this.matchService.playMatch(matchData1, +this.hubConnection!);
+      this.matchService.playMatch(matchData1, +this.currentPlayerId!);
       this.matchService.applyEvent(data);
     });
 
