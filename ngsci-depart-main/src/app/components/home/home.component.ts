@@ -75,17 +75,7 @@ export class HomeComponent implements OnInit {
     this.isSearchingMatch = true;
     this.searchMessage = 'Recherche d\'un match...';
 
-
-
-    let userId: string = userIsConnected ? "User1Id" : "User2Id";
-
-    if (userIsConnected) {
-      sessionStorage.setItem("playerId", "1");
-    } else {
-      sessionStorage.setItem("playerId", "2");
-    }
-
-    await this.hubConnection!.invoke("onJoinMatchAsync",  userId, this.hubConnection!.connectionId, null)
+    await this.hubConnection!.invoke("onJoinMatchAsync", null)
       .catch(err => console.error('Error while sending join match request: ' + err));
 
   }

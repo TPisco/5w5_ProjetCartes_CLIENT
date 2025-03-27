@@ -29,7 +29,7 @@ export class SortComponent {
   sortOrder: 'asc' | 'desc' = 'asc';
 
   async ngOnInit() {
-
+    console.log(this.cards)
     this.sortedCards = [...this.cards];
     this.onSortPropertyChange('attack');
     this.onSortOrderChange('asc');
@@ -38,7 +38,7 @@ export class SortComponent {
   }
 
   onSortPropertyChange(event: any) {
-    console.log(event);
+    // console.log(event);
     this.sortProperty = event;
 
 
@@ -46,16 +46,16 @@ export class SortComponent {
   }
 
   onSortOrderChange(event: any) {
-    console.log(event);
+    // console.log(event);
     this.sortOrder = event;
     this.sortCards();
   }
 
   sortCards() {
-    console.log(this.sortedCards)
+    
     this.sortedCards = [...this.cards].sort((a, b) => {
       if (a[this.sortProperty] < b[this.sortProperty]) {
-        console.log(this.sortedCards)
+        // console.log(this.sortedCards)
         return this.sortOrder === 'asc' ? -1 : 1;
       }
       if (a[this.sortProperty] > b[this.sortProperty]) {
