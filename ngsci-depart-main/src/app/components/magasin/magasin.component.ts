@@ -29,6 +29,7 @@ export class MagasinComponent implements OnInit {
 
   async ngOnInit() {
     this.listCards = await this.service.getAllCards();
+    console.log('yoyo', this.listCards)
 
     if (this.listCards == null) {
       console.log("La liste ne contient aucune carte.")
