@@ -25,7 +25,7 @@ export class MatchComponent implements OnInit {
   isMatchEnded: boolean = false;
   endMessage: string = '';
   private hubConnection?: signalR.HubConnection;
-  currentPlayerId : string = sessionStorage.getItem("playerId")!;
+  currentPlayerId: string = sessionStorage.getItem("playerId")!;
 
   matchData?: JoinMatchData;
   taskname: string = "";
@@ -45,29 +45,12 @@ export class MatchComponent implements OnInit {
 
     this.matchData = await this.hub.getMatch();
 
-    if (this.matchData)
-      this.hubConnection!.invoke("onStartMatchAsync", this.matchData?.match).catch(err => console.error(err));
-
-    this.hubConnection!.on("startMatchInfo", async (data) => {
-      this.matchData = await this.hub.getMatch();
-
-      let matchData1: MatchData = {
-        match: this.matchData!.match,
-        playerA: this.matchData!.playerA,
-        playerB: this.matchData!.playerB,
-        //Possibly have to change this
-        winningPlayerId: -1
-      }
-      this.matchService.playMatch(matchData1, +this.currentPlayerId!);
-      this.matchService.applyEvent(data);
-    });
-
-    this.hubConnection!.on("PlayerEndTurn", (data) => {
+    this.hubConnection!.on("EndTurn", (data) => {
       console.log(data)
       this.matchService.applyEvent(data);
     });
 
-    this.hubConnection!.on("SurrenderReturn", (data) => {
+    this.hubConnection!.on("Surrender", (data) => {
       console.log(data)
       this.matchService.applyEvent(data);
       sessionStorage.removeItem("matchData");
@@ -82,14 +65,9 @@ export class MatchComponent implements OnInit {
 
   async endTurn() {
 
-    let userId = JSON.parse(sessionStorage.getItem("playerId")!);
-    if (userId == "1")
-      userId = "User1Id"
-    else if (userId == "2") {
-      userId = "User2Id"
-    }
 
-    this.hubConnection!.invoke("onEndTurnAsync", userId, this.matchData?.match.id)
+
+    this.hubConnection!.invoke("onEndTurnAsync", this.matchData?.match.id)
       .catch(err => {
         console.log("Error found : " + err);
       });
@@ -114,14 +92,9 @@ export class MatchComponent implements OnInit {
 
   surrender() {
 
-    let userId = JSON.parse(sessionStorage.getItem("playerId")!);
-    if (userId == "1")
-      userId = "User1Id"
-    else if (userId == "2")
-      userId = "User2Id"
 
 
-    this.hubConnection!.invoke("onSurrenderAsync", userId, this.matchData?.match.id).catch(err => console.error(err));
+    this.hubConnection!.invoke("onSurrenderAsync", this.matchData?.match.id).catch(err => console.error(err));
 
 
     // TODO Tâche Hub: Faire l'action sur le Hub et retirer fakeSurrender

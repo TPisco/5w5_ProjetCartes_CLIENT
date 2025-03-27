@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import * as signalR from "@microsoft/signalr"
-import { JoinMatchData } from 'src/app/models/models';
+import { JoinMatchData, MatchData } from 'src/app/models/models';
 import { HubServiceService } from 'src/app/services/hubService.service';
 
 @Component({
@@ -22,10 +22,25 @@ export class HomeComponent implements OnInit {
   searchMessage: string = '';
   private hubConnection?: signalR.HubConnection
   matchData?: JoinMatchData;
-  constructor(public router: Router, public match: MatchService, public hub: HubServiceService) { }
+  currentPlayerId: string = sessionStorage.getItem("playerId")!;
+  constructor(public router: Router, public match: MatchService, public hub: HubServiceService, public matchService: MatchService) { }
 
   async ngOnInit() {
     await this.setupSignalRConnection();
+
+    this.hubConnection!.on("StartMatch", async (data) => {
+      this.matchData = await this.hub.getMatch();
+
+      let matchData1: MatchData = {
+        match: this.matchData!.match,
+        playerA: this.matchData!.playerA,
+        playerB: this.matchData!.playerB,
+        //Possibly have to change this
+        winningPlayerId: -1
+      }
+      this.matchService.playMatch(matchData1, +this.currentPlayerId!);
+      this.matchService.applyEvent(data);
+    });
   }
 
 
@@ -60,8 +75,13 @@ export class HomeComponent implements OnInit {
     });
 
 
-    this.hubConnection!.on("WaitingOtherPlayer", (data) => {
-      console.log(data);
+    this.hubConnection!.on("joiningMatch", (joiningMatchData: JoinMatchData) => {
+      console.log(joiningMatchData);
+      this.matchData = joiningMatchData;
+      if (this.matchData) {
+        this.router.navigate(["/match", this.matchData.match.id]);
+        sessionStorage.setItem("matchData", JSON.stringify(joiningMatchData));
+      }
     });
   }
 
