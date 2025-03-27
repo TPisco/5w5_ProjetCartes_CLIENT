@@ -15,19 +15,19 @@ export class ApiService {
   constructor(public http: HttpClient) { }
 
   async getAllCards(): Promise<Card[]> {
-    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl+'api/card/GetAllCards'));
+    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetAllCards'));
     return result;
   }
 
   async getPlayersCards(): Promise<Card[]> {
     let token = sessionStorage.getItem("token");
     let httpOptions = {
-      headers : new HttpHeaders({
-        'Content-Type' : 'application/json',
-        'Authorization' : 'Bearer ' + token
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
       })
     };
-    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl+'api/card/GetPlayersCards',httpOptions));
+    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetPlayersCards', httpOptions));
     return result;
   }
 
@@ -37,39 +37,41 @@ export class ApiService {
       Password: password,
       PasswordConfirm: passwordConfirm
     };
- 
+
     let x = await lastValueFrom(this.http.post<any>(this.serverUrl + "api/Players/Register", registerDTO))
     console.log(x);
+
+    this.login(email, password)
   }
- 
+
   async login(username: string, password: string): Promise<void> {
- 
+
     let loginDTO = {
       Username: username,
       Password: password
     };
- 
+
     let x = await lastValueFrom(this.http.post<any>(this.serverUrl + "api/Players/Login", loginDTO));
     console.log(x);
- 
+
     sessionStorage.setItem("token", x.token);
     sessionStorage.setItem("playerId", x.playerId);
     sessionStorage.setItem("username", x.username);
- 
+
   }
- 
+
   async test(): Promise<any> {
     let token = sessionStorage.getItem("token");
     let httpOptions = {
-      headers : new HttpHeaders({
-        'Content-Type' : 'application/json',
-        'Authorization' : 'Bearer ' + token
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
       })
     };
- 
+
     let x = await lastValueFrom(this.http.get<any>(this.serverUrl + "api/Players/PrivateData", httpOptions))
     console.log(x);
     return x
   }
- 
+
 }
