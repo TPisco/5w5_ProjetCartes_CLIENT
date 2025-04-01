@@ -1,6 +1,6 @@
 import { FakerService } from './../services/faker.service';
 import { Component, OnInit, signal } from '@angular/core';
-import { JoinMatchData, MatchData, PlayerData } from '../models/models';
+import { MatchData, PlayerData } from '../models/models';
 import { MatchService } from './../services/match.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../services/api.service';
@@ -27,7 +27,7 @@ export class MatchComponent implements OnInit {
   private hubConnection?: signalR.HubConnection;
   currentPlayerId: string = sessionStorage.getItem("playerId")!;
 
-  matchData?: JoinMatchData;
+  // matchData?: MatchData;
   taskname: string = "";
   constructor(private route: ActivatedRoute, public router: Router, public matchService: MatchService, public apiService: ApiService, public faker: FakerService, public hub: HubServiceService) { }
 
@@ -43,7 +43,7 @@ export class MatchComponent implements OnInit {
     }
 
 
-    this.matchData = await this.hub.getMatch();
+    // this.matchData = await this.hub.getMatch();
 
     this.hubConnection!.on("EndTurn", (data) => {
       console.log(data)
@@ -67,7 +67,7 @@ export class MatchComponent implements OnInit {
 
 
 
-    this.hubConnection!.invoke("onEndTurnAsync", this.matchData?.match.id)
+    this.hubConnection!.invoke("onEndTurnAsync", this.matchService.matchData?.match.id)
       .catch(err => {
         console.log("Error found : " + err);
       });
@@ -94,7 +94,7 @@ export class MatchComponent implements OnInit {
 
 
 
-    this.hubConnection!.invoke("onSurrenderAsync", this.matchData?.match.id).catch(err => console.error(err));
+    this.hubConnection!.invoke("onSurrenderAsync", this.matchService.matchData?.match.id).catch(err => console.error(err));
 
 
     // TODO Tâche Hub: Faire l'action sur le Hub et retirer fakeSurrender

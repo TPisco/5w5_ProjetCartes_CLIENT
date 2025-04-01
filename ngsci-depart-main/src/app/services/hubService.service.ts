@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as signalR from "@microsoft/signalr"
-import { JoinMatchData } from '../models/models';
+import { MatchData } from '../models/models';
+// import { JoinMatchData } from '../models/models';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class HubServiceService {
 
   constructor() { }
   private hubConnection?: signalR.HubConnection;
-  matchData?: JoinMatchData
+  matchData?: MatchData
   url: string = "https://localhost:5276/matchHub";
   //url : string = "https://localhost:7219/matchHub";
 
@@ -43,7 +44,7 @@ export class HubServiceService {
     return Promise.resolve(this.hubConnection ?? undefined);
   }
 
-  getMatch(): Promise<JoinMatchData | undefined> {
+  getMatch(): Promise<MatchData | undefined> {
     let storedMatchData = sessionStorage.getItem("matchData");
     if (storedMatchData) {
       this.matchData = JSON.parse(storedMatchData);

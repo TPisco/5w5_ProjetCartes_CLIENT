@@ -56,6 +56,7 @@ export class ApiService {
 
     sessionStorage.setItem("token", x.token);
     sessionStorage.setItem("playerId", x.playerId);
+    sessionStorage.setItem("userIntId", x.userIntId);
     sessionStorage.setItem("username", x.username);
 
   }

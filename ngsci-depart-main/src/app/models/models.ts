@@ -13,10 +13,10 @@ export interface Card {
 }
 
 export interface MatchData {
-    match:Match;
+    match: Match;
     playerA: Player;
     playerB: Player;
-    winningPlayerId:number;
+    winningPlayerId: number;
 }
 
 export interface Match {
@@ -34,8 +34,8 @@ export interface PlayableCard {
 }
 
 export interface PlayerData {
-    id:number;
-	  health: number;
+    id: number;
+    health: number;
     maxhealth: number;
     mana: number;
     playerId: number;
@@ -46,10 +46,10 @@ export interface PlayerData {
     graveyard: PlayableCard[];
 }
 
-export interface JoinMatchData{
-    match:Match;
-    playerA:Player;
-    playerB:Player;
-    Started:boolean;
-    otherPlayerConnectionId:string;
-}
+// export interface JoinMatchData{
+//     match:Match;
+//     playerA:Player;
+//     playerB:Player;
+//     Started:boolean;
+//     otherPlayerConnectionId:string;
+// }
