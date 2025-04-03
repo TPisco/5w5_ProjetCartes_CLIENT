@@ -8,6 +8,7 @@ import * as signalR from "@microsoft/signalr"
 // import { JoinMatchData, MatchData } from 'src/app/models/models';
 import { HubServiceService } from 'src/app/services/hubService.service';
 import { MatchData } from 'src/app/models/models';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-home',
@@ -25,8 +26,7 @@ export class HomeComponent implements OnInit {
   // joiningmatchData?: JoinMatchData;
   // matchData?: MatchData
   currentPlayerId: string = sessionStorage.getItem("playerId")!;
-  userIntId: number = +sessionStorage.getItem("userIntId")!;
-  constructor(public router: Router, public match: MatchService, public hub: HubServiceService, public matchService: MatchService) { }
+  constructor(public router: Router, public match: MatchService, public hub: HubServiceService, public matchService: MatchService, private apiService: ApiService) { }
 
   async ngOnInit() {
     await this.setupSignalRConnection();
@@ -59,8 +59,11 @@ export class HomeComponent implements OnInit {
 
       // this.matchService.matchData = joiningMatchData;
 
-      this.matchService.playMatch(joiningMatchData, this.userIntId)
+      const playerId = this.apiService.decodeJwt().PlayerId
 
+      console.log(playerId);
+
+      this.matchService.playMatch(joiningMatchData, playerId)
 
       if (this.matchService.matchData) {
         this.router.navigate(["/match", this.matchService.matchData.match.id]);
@@ -92,7 +95,7 @@ export class HomeComponent implements OnInit {
     this.hubConnection!.on("StartMatch", async (data) => {
       // this.joiningmatchData = await this.hub.getMatch();
 
-      this.matchService.playMatch(this.matchService.matchData!, +this.currentPlayerId!);
+      // this.matchService.playMatch(this.matchService.matchData!, +this.currentPlayerId!);
       this.matchService.applyEvent(data);
     });
 

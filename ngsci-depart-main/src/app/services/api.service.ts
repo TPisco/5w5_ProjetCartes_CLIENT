@@ -75,4 +75,39 @@ export class ApiService {
     return x
   }
 
+  decodeJwt(): any {
+    // Séparer le JWT en 3 parties (header, payload, signature)
+    const parts = sessionStorage.getItem("token")?.split('.');
+
+    if (parts == null) {
+      console.error('JWT mal formé');
+      return null;
+    }
+
+    // Si le JWT est mal formé
+    if (parts.length !== 3) {
+      console.error('JWT mal formé');
+      return null;
+    }
+
+    // Décoder la partie payload du JWT (qui est en base64url)
+    const base64Url = parts[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Remplace les caractères spécifiques de Base64 URL
+
+    try {
+      // Décoder en Base64
+      const decodedData = atob(base64); // atob() décode une chaîne Base64 en string
+
+      // Parser la chaîne JSON
+      const jsonData = JSON.parse(decodedData);
+
+      // Retourner la propriété PlayerId
+      return jsonData;
+    } catch (error) {
+      console.error('Erreur lors du décodage du JWT', error);
+      return null;
+    }
+  }
+
+
 }

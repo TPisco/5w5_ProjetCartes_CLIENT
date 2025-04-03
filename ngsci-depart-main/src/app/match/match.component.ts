@@ -72,6 +72,7 @@ export class MatchComponent implements OnInit {
         console.log("Error found : " + err);
       });
 
+
     // TODO Tâche Hub: Faire l'action sur le Hub et retirer fakeEndTurn
     //this.fakeEndTurn();
   }
