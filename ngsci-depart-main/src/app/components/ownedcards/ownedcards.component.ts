@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule, RouterOutlet } from '@angular/router';
-import { Card } from 'src/app/models/models';
+import { Card, Deck } from 'src/app/models/models';
 import { ApiService } from 'src/app/services/api.service';
 import { CardComponent } from '../card/card.component';
 import { SortComponent } from '../sort/sort.component';
@@ -19,7 +19,8 @@ import { SortComponent } from '../sort/sort.component';
 export class OwnedcardsComponent implements OnInit {
 
   public listOwnedCards: Card[] = [];
-
+  //Ajout d'un deck initial
+public decks: Deck[] = [];
 
   sortedCards: Card[] = [...this.listOwnedCards];
   sortProperty: keyof Card = 'attack';

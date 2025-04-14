@@ -12,6 +12,13 @@ export interface Card {
     imageUrl: string;
 }
 
+export interface Deck {
+    id: string; 
+    name: string; 
+    deckCards: Card[]; 
+    isCurrent: boolean; 
+  }
+
 export interface MatchData {
     match:Match;
     playerA: Player;
