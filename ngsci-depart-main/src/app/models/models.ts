@@ -13,11 +13,28 @@ export interface Card {
 }
 
 export interface Deck {
-    id: string; 
+    id: number; 
     name: string; 
-    deckCards: Card[]; 
+    deckCards:DeckCards[] ;
     isCurrent: boolean; 
   }
+//TODO : Ajouter un model pour DeckCards
+  export interface DeckCards{
+    ownedCard: OwnedCards;
+    deck :Deck;
+
+  }
+
+//TODO : Ajouter un model pour OwnedCards
+//Renvoyer model 
+//Test : Ajout du model OwnedCards, à supprimer si cela ne fonctionne pas
+export interface OwnedCards{
+    id: number;
+    cardId : Number;
+    card : Card;
+    player : Player;
+    
+}
 
 export interface MatchData {
     match:Match;
