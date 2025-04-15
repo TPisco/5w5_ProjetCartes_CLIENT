@@ -74,12 +74,12 @@ export class MatchService {
 
       case "GainMana": {
         // TODO
-        if(this.isCurrentPlayerTurn){
+        if (this.isCurrentPlayerTurn) {
           this.playerData!.mana += event.mana;
-          }
-          else{ 
-            this.adversaryData!.mana += event.mana
-          }
+        }
+        else {
+          this.adversaryData!.mana += event.mana
+        }
         break;
       }
 
@@ -106,6 +106,7 @@ export class MatchService {
       case "EndMatch": {
         this.matchData!.winningPlayerId = event.winningPlayerId;
         this.match!.isMatchCompleted = true;
+        this.clearMatch();
         break;
       }
     }
