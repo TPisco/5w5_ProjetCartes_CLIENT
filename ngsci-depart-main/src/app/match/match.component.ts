@@ -11,6 +11,7 @@ import { EnemyhandComponent } from './enemyhand/enemyhand.component';
 import { BattlefieldComponent } from './battlefield/battlefield.component';
 import { CommonModule } from '@angular/common';
 import * as signalR from "@microsoft/signalr";
+import { HubServiceService } from '../services/hubService.service';
 
 
 @Component({
@@ -24,41 +25,56 @@ export class MatchComponent implements OnInit {
   isMatchEnded: boolean = false;
   endMessage: string = '';
   private hubConnection?: signalR.HubConnection;
-  taskname:string = "";
-  constructor(private route: ActivatedRoute, public router: Router, public matchService: MatchService, public apiService: ApiService, public faker: FakerService) { }
+  currentPlayerId: string = sessionStorage.getItem("playerId")!;
+
+  // matchData?: MatchData;
+  taskname: string = "";
+  constructor(private route: ActivatedRoute, public router: Router, public matchService: MatchService, public apiService: ApiService, public faker: FakerService, public hub: HubServiceService) { }
 
   async ngOnInit() {
     let matchId: number = parseInt(this.route.snapshot.params["id"]);
     // TODO Tâche Hub: Se connecter au Hub et obtenir le matchData
-      this.hubConnection =new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:5276/matchHub')
-      .build();
+    this.hubConnection = await this.hub.getConnection();
 
-      //Montrer le nombre de personnes connectées
-      this.hubConnection.on('UserCount',(data) => {
-        console.log(data);
-      })
-      //On se connecte ensuite
-      this.hubConnection
-      .start()
-      .then( () => {
-        console.log('La connexion est fonctionnelle!');
-      })
 
-    // Test: À retirer une fois que le Hub est fonctionnel
-    let cards = await this.apiService.getPlayersCards();
-    this.matchService.playTestMatch(cards);
+    if (!this.hubConnection) {
+      await this.hub.startHub();
+      this.hubConnection = await this.hub.getConnection();
+    }
 
-    let fakeStartMatchEvent = this.faker.createFakeStartMatchEvent();
-    this.matchService.applyEvent(fakeStartMatchEvent);
+
+    // this.matchData = await this.hub.getMatch();
+
+    this.hubConnection!.on("EndTurn", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+
+    this.hubConnection!.on("Surrender", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+      sessionStorage.removeItem("matchData");
+      this.router.navigate(['/']);
+    });
 
 
 
   }
 
+
+
   async endTurn() {
+
+
+
+    this.hubConnection!.invoke("onEndTurnAsync", this.matchService.matchData?.match.id)
+      .catch(err => {
+        console.log("Error found : " + err);
+      });
+
+
     // TODO Tâche Hub: Faire l'action sur le Hub et retirer fakeEndTurn
-    this.fakeEndTurn();
+    //this.fakeEndTurn();
   }
 
   // Pour permettre de tester le visuel du gameplay avant d'avoir fait la logique sur le serveur
@@ -76,8 +92,14 @@ export class MatchComponent implements OnInit {
   }
 
   surrender() {
+
+
+
+    this.hubConnection!.invoke("onSurrenderAsync", this.matchService.matchData?.match.id).catch(err => console.error(err));
+
+
     // TODO Tâche Hub: Faire l'action sur le Hub et retirer fakeSurrender
-    this.fakeSurrender();
+    //this.fakeSurrender();
   }
 
   // Pour permettre de tester le visuel du gameplay avant d'avoir fait la logique sur le serveur
@@ -98,11 +120,15 @@ export class MatchComponent implements OnInit {
   }
 
   isVictory() {
-    if (this.matchService.matchData?.winningPlayerId)
+    if (this.matchService.matchData?.winningPlayerId) {
       return this.matchService.matchData!.winningPlayerId === this.matchService.playerData!.playerId
-    return false;
-    this.isMatchEnded = true;
-    this.endMessage = 'Victoire !';
+      return false;
+    }
+    else {
+      this.isMatchEnded = true;
+      this.endMessage = 'Victoire !';
+      return true
+    }
   }
 
   isMatchCompleted() {

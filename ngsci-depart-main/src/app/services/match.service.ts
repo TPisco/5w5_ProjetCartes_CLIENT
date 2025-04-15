@@ -1,5 +1,5 @@
+import { PlayerData } from './../models/models';
 import { Card, MatchData, PlayableCard } from 'src/app/models/models';
-import { PlayerData } from '../models/models';
 import { Injectable } from '@angular/core';
 import { Match } from '../models/models';
 import { FakerService } from './faker.service';
@@ -48,6 +48,7 @@ export class MatchService {
       this.adversaryData = this.match.playerDataB!;
       this.adversaryData.playerName = matchData.playerB.name;
       this.isCurrentPlayerTurn = this.match.isPlayerATurn;
+      console.log('player A');
     }
     else {
       this.playerData = this.match.playerDataB!;
@@ -55,6 +56,7 @@ export class MatchService {
       this.adversaryData = this.match.playerDataA!;
       this.adversaryData.playerName = matchData.playerA.name;
       this.isCurrentPlayerTurn = !this.match.isPlayerATurn;
+      console.log('player B');
     }
     this.playerData.maxhealth = this.playerData.health;
     this.adversaryData.maxhealth = this.adversaryData.health;
@@ -72,15 +74,23 @@ export class MatchService {
 
       case "GainMana": {
         // TODO
-        this.playerData!.mana += event.mana;
+        if(this.isCurrentPlayerTurn){
+          this.playerData!.mana += event.mana;
+          }
+          else{ 
+            this.adversaryData!.mana += event.mana
+          }
         break;
       }
 
+
       case "PlayerEndTurn": {
+
         if (this.match) {
           this.match.isPlayerATurn = !this.match.isPlayerATurn;
           this.isCurrentPlayerTurn = event.playerId != this.currentPlayerId;
         }
+
 
         break;
       }

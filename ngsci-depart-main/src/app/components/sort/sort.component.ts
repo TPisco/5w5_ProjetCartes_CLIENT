@@ -38,7 +38,7 @@ export class SortComponent implements OnInit {
   }
 
   onSortPropertyChange(event: any) {
-    console.log(event);
+    // console.log(event);
     this.sortProperty = event;
 
 
@@ -46,7 +46,7 @@ export class SortComponent implements OnInit {
   }
 
   onSortOrderChange(event: any) {
-    console.log(event);
+    // console.log(event);
     this.sortOrder = event;
     this.sortCards();
   }
