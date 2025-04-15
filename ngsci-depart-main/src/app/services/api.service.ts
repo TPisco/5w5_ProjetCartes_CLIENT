@@ -1,7 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { Card } from '../models/models';
+import { Card, Player } from '../models/models';
+import { Router } from '@angular/router';
+
+
 
 @Injectable({
   providedIn: 'root'

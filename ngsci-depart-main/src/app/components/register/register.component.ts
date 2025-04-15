@@ -64,7 +64,7 @@ export class RegisterComponent {
     try {
       const { email, password, confirmPassword } = this.RegisterForm.value;
       await this.ApiService.register(email, password, confirmPassword)
-
+      await this.ApiService.login(email, password)
       this.router.navigate(['/'])
     } catch (error: any) {
       console.log(error)

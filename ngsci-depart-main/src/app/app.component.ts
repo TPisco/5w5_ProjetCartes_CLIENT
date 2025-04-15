@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { ApplicationConfig, Component, provideZoneChangeDetection } from '@angular/core';
 import { MatchService } from './services/match.service';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { provideRouter, Router, RouterLink, RouterOutlet } from '@angular/router';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from './services/api.service';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpRequest } from '@microsoft/signalr';
 
 
 @Component({
@@ -35,11 +37,7 @@ export class AppComponent {
 
   isLogged() {
     // TODO: Gérer l'affichage du joueur lorsqu'il est connecté
-    if (sessionStorage.getItem("token") != null) {
-      return true
-    }
-    return false;
-
+    return sessionStorage.getItem("token") != null
   }
 
   getUsername() {
@@ -62,6 +60,8 @@ export class AppComponent {
     this.ApiServices.test();
 
   }
+
+
 }
 
 
