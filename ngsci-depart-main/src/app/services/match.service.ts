@@ -74,11 +74,12 @@ export class MatchService {
 
       case "GainMana": {
         // TODO
-        if (event.PlayerId != this.adversaryData?.id) {
-          this.adversaryData!.mana += event.mana
-          console.log(event.mana)
-        }
-        console.log(event.PlayerId)
+        if(this.isCurrentPlayerTurn){
+          this.playerData!.mana += event.mana;
+          }
+          else{ 
+            this.adversaryData!.mana += event.mana
+          }
         break;
       }
 
