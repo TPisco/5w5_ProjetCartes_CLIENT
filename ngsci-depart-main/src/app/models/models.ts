@@ -13,7 +13,7 @@ export interface Card {
 }
 
 export interface Deck {
-    id: number; 
+    id?: number; 
     name: string; 
     deckCards:DeckCards[] ;
     isCurrent: boolean; 

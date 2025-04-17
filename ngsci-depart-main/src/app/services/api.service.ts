@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { Card, Player } from '../models/models';
+import { Card, Deck, Player } from '../models/models';
 import { Router } from '@angular/router';
 
 
@@ -28,6 +28,21 @@ export class ApiService {
     let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl+'api/card/GetPlayersCards', {headers}));
     return result;
   }
+
+async getPlayerDecks(): Promise<Deck[]>{
+    let result = await lastValueFrom(this.http.get<Deck[]>(this.serverUrl + 'api/deck/GetPlayerDecks'))
+  return result;
+}
+
+
+async CreateDeck(nom : string): Promise<Deck[]>{
+    //let deckDTO = {
+    //   Name : nom
+    //};
+    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/deck/CreateDeck', nom))
+  return result;
+}
+
 
 
   async register(email: string, password: string, passwordConfirm: string): Promise<void> {

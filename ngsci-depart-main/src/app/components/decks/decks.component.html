@@ -1,15 +1,18 @@
 <div class="decks-list">
-    <div class="create-deck">
-        <h2>Créer un nouveau deck</h2>
-       <!-- <form (ngSubmit)="createDeck()"> 
-           <input type="text" [(ngModel)]="newDeckName" placeholder="Nom du deck" required /> 
-          <button type="submit">Créer</button>
-        </form> 
-      </div>
-    <h2>Mes Decks</h2>
-    <div *ngFor="let d of decks" class="deck">
-      <h3>{{ d.name }}</h3>
-      <button (click)="setCurrentDeck(d)">Rendre courant</button>
-      <button (click)="deleteDeck(d)" [disabled]="d.isCurrent">Supprimer</button>
-    </div>
-  </div>  -->
+  <div class="create-deck">
+    <!-- <h2> Nouveau deck </h2>  -->
+    <!-- <button mat-raised-button (click)="openDialog()">Créer un nouveau deck</button>  -->
+
+    <h2>Créer un nouveau deck</h2>
+    <form (ngSubmit)="createDeck()">
+      <input type="text" [(ngModel)]="newDeckName" placeholder="Nom du deck" required />
+      <button type="submit">Créer</button>
+    </form>
+  </div>
+  <h2>Mes Decks</h2>
+  <div *ngFor="let d of decks" class="deck">
+    <h3>{{ d.name }}</h3>
+    <button (click)="setCurrentDeck(d.id!)">Rendre courant</button>
+    <button (click)="deleteDeck(d.id!)" [disabled]="d.isCurrent">Supprimer</button>
+  </div>
+</div>
