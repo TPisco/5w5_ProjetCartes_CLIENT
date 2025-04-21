@@ -20,6 +20,7 @@ export interface Deck {
   }
 //TODO : Ajouter un model pour DeckCards
   export interface DeckCards{
+    id?: number;
     ownedCard: OwnedCards;
     deck :Deck;
 

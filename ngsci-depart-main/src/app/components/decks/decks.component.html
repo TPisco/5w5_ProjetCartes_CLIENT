@@ -14,5 +14,42 @@
     <h3>{{ d.name }}</h3>
     <button (click)="setCurrentDeck(d.id!)">Rendre courant</button>
     <button (click)="deleteDeck(d.id!)" [disabled]="d.isCurrent">Supprimer</button>
+
+     <!-- Bouton pour afficher les cartes disponibles à ajouter -->
+     <button (click)="showAvailableCards(d.id!)">Ajouter des cartes</button>
+
+     <div *ngIf=" d.deckCards.length > 0 " class="available-cards">
+      <h4>Cartes disponibles de </h4>
+      <ul>
+        <div class="cards-container">
+          <mat-card *ngFor="let deckCard of d.deckCards">
+      
+              <mat-card-header _ngcontent-ng-c2357935512>
+                  <div _ngcontent-ng-c2357935512 mat-card-avatar class="mat-mdc-card-header infinite-card-mana-cost">
+                      <div _ngcontent-ng-c2357935512>{{card.ownedCard.card.cost}}</div>
+                  </div>
+                  <div class="mat-mdc-card-header-text">
+                      <mat-card-title _ngcontent-ng-c2357935512 class="mat-mdc-card-title">{{c.name}} </mat-card-title>
+                  </div>
+      
+              </mat-card-header>
+              <mat-card>
+                  <img src="{{c.imageUrl}}" alt="Image de la carte" width="300px" height="300px">
+      
+                  <P>Attaque: {{c.attack}}</P>
+                  <P>PV: {{c.health}}</P>
+      
+              </mat-card>
+      
+      
+          </mat-card>
+      
+      </div>
+        <li *ngFor="let card of d.deckCards">
+          {{ card.name }} (x{{ card.quantity }})
+          <button (click)="addCardToDeck(card.id, d.id!)">Ajouter</button>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
