@@ -224,6 +224,7 @@ export class MatchService {
     }
     return null;
   }
+  
 
   // Déplace une carte d'un array à l'autre
   moveCard(src: PlayableCard[], dst: PlayableCard[], playableCardId: any) {

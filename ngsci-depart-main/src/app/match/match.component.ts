@@ -107,10 +107,6 @@ export class MatchComponent implements OnInit {
       this.matchService.applyEvent(data);
     });
 
-    this.hubConnection!.on("PlayCard", (data) => {
-      console.log(data)
-      this.matchService.applyEvent(data);
-    });
 
 
 

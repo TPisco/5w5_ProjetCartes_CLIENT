@@ -53,6 +53,11 @@ export class HubServiceService {
     return Promise.resolve(undefined);
   }
 
+  playCard(playableCardId:number){
+    this.hubConnection!.invoke("onPlayCardAsync", this.matchData?.match.id, playableCardId ).catch(err => console.error(err))
+    
+  }
+
   getPlayerId() {
     return sessionStorage.getItem("playerId");
   }
