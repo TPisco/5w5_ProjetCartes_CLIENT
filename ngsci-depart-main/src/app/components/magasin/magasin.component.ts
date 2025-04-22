@@ -14,7 +14,7 @@ import { SortComponent } from "../sort/sort.component";
   templateUrl: './magasin.component.html',
   styleUrls: ['./magasin.component.css'],
   standalone: true,
-  imports: [RouterModule, RouterOutlet, FormsModule, CommonModule, MatCardModule, CardComponent, SortComponent, SortComponent]
+  imports: [RouterModule, CardComponent, RouterOutlet, FormsModule, CommonModule, MatCardModule, CardComponent, SortComponent, SortComponent]
 })
 export class MagasinComponent implements OnInit {
 

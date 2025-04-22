@@ -16,6 +16,9 @@
           <td><i class="fas fa-shield-alt"></i></td>
           <td>{{card?.health}}</td>
         </tr>
+        <tr *ngFor="let cp of card?.Powers">
+          <td> <span [@bounce]="bounce" >{{ cp.power.icone }}</span> {{ cp.value }}</td>
+        </tr>
       </table>
     </mat-card-content>
   </mat-card>

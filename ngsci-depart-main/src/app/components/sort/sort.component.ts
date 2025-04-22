@@ -13,7 +13,7 @@ import { ApiService } from 'src/app/services/api.service';
 @Component({
   selector: 'app-sort',
   standalone: true,
-  imports: [RouterModule, RouterOutlet, FormsModule, CommonModule, MatCardModule, CardComponent, SortComponent, SortComponent, MatSelectModule, MatFormFieldModule, ReactiveFormsModule],
+  imports: [RouterModule, CardComponent ,RouterOutlet, FormsModule, CommonModule, MatCardModule, CardComponent, SortComponent, SortComponent, MatSelectModule, MatFormFieldModule, ReactiveFormsModule],
   templateUrl: './sort.component.html',
   styleUrl: './sort.component.css'
 })
@@ -28,8 +28,22 @@ export class SortComponent implements OnInit {
   sortOrderProperty: 'attack' | 'health' | 'cost' = 'attack';
   sortOrder: 'asc' | 'desc' = 'asc';
 
+  constructor(private api: ApiService) { }
+
   async ngOnInit() {
-    console.log('recues', this.cards)
+    this.cards = await this.api.getAllCards();
+    console.log('Cartes récupérées avec pouvoirs:', this.cards);
+
+    this.cards.forEach(card => {
+      if (card.Powers && card.Powers.length > 0) {
+          console.log('Pouvoirs pour la carte', card.name, card.Powers);
+      } else {
+          console.log('Aucun pouvoir pour la carte', card.name);
+      }
+  });
+
+
+
     // this.sortedCards = [...this.cards];
     this.onSortPropertyChange('attack');
     this.onSortOrderChange('asc');

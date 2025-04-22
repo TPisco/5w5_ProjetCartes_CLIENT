@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { Card, Player } from '../models/models';
+import { Card, CardPower, Player } from '../models/models';
 import { Router } from '@angular/router';
 
 
@@ -29,7 +29,7 @@ export class ApiService {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       })
-    };
+    }; 
     let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetPlayersCards', httpOptions));
     return result;
   }
@@ -111,6 +111,5 @@ export class ApiService {
       return null;
     }
   }
-
 
 }
