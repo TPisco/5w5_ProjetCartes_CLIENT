@@ -10,7 +10,27 @@ export interface Card {
     health: number;
     cost: number;
     imageUrl: string;
+
+    // Ajout pouvoir
+    Powers: CardPower[];
+    
 }
+
+export interface CardPower {
+    cardId: number;
+    card: Card;
+    powerId : number;
+    power: Power;
+    value: number;
+}
+
+export interface Power {
+    id: number;
+    name: string;
+    description: string;
+    icone : string;
+}
+
 
 export interface Deck {
     id?: number; 
@@ -38,10 +58,10 @@ export interface OwnedCards{
 }
 
 export interface MatchData {
-    match:Match;
+    match: Match;
     playerA: Player;
     playerB: Player;
-    winningPlayerId:number;
+    winningPlayerId: number;
 }
 
 export interface Match {
@@ -59,8 +79,8 @@ export interface PlayableCard {
 }
 
 export interface PlayerData {
-    id:number;
-	  health: number;
+    id: number;
+    health: number;
     maxhealth: number;
     mana: number;
     playerId: number;
@@ -70,3 +90,11 @@ export interface PlayerData {
     battleField: PlayableCard[];
     graveyard: PlayableCard[];
 }
+
+// export interface JoinMatchData{
+//     match:Match;
+//     playerA:Player;
+//     playerB:Player;
+//     Started:boolean;
+//     otherPlayerConnectionId:string;
+// }

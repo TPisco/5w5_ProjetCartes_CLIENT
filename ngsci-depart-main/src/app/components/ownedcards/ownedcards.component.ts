@@ -18,6 +18,7 @@ import { SortComponent } from '../sort/sort.component';
 })
 export class OwnedcardsComponent implements OnInit {
 
+  cards : Card[] = [];
   public listOwnedCards: Card[] = [];
   //Ajout d'un deck initial
 public decks: Deck[] = [];
@@ -33,5 +34,10 @@ public decks: Deck[] = [];
       console.log("La liste ne contient aucune carte.")
     }
   }
+
+  async getOwnedCards() {
+    this.cards = await this.service.getPlayersCards();
+  }
+
 
 }

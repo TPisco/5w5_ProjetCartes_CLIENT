@@ -32,26 +32,10 @@
 
 <!-- Boucle ngFor affichage carte -->
 <div class="cards-container">
-    <mat-card *ngFor="let c of cards">
-
-        <mat-card-header _ngcontent-ng-c2357935512>
-            <div _ngcontent-ng-c2357935512 mat-card-avatar class="mat-mdc-card-header infinite-card-mana-cost">
-                <div _ngcontent-ng-c2357935512>{{c.cost}}</div>
-            </div>
-            <div class="mat-mdc-card-header-text">
-                <mat-card-title _ngcontent-ng-c2357935512 class="mat-mdc-card-title">{{c.name}} </mat-card-title>
-            </div>
-
-        </mat-card-header>
-        <mat-card>
-            <img src="{{c.imageUrl}}" alt="Image de la carte" width="300px" height="300px">
-
-            <P>Attaque: {{c.attack}}</P>
-            <P>PV: {{c.health}}</P>
-
-        </mat-card>
 
 
-    </mat-card>
+    <div *ngFor="let card of cards" class="card-item">
+        <app-card [card]="card"></app-card>
+      </div>
 
 </div>

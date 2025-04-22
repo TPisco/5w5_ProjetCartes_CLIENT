@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { Card, Deck, Player } from '../models/models';
+import { Card, CardPower, Player } from '../models/models';
 import { Router } from '@angular/router';
 
 
@@ -23,9 +24,14 @@ export class ApiService {
   }
 
   async getPlayersCards(): Promise<Card[]> {
-    let token = sessionStorage.getItem("token")
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetPlayersCards', { headers }));
+    let token = sessionStorage.getItem("token");
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      })
+    }; 
+    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetPlayersCards', httpOptions));
     return result;
   }
 
@@ -90,20 +96,23 @@ export class ApiService {
 
     let x = await lastValueFrom(this.http.post<any>(this.serverUrl + "api/Players/Register", registerDTO))
     console.log(x);
+
+    this.login(email, password)
   }
 
   async login(username: string, password: string): Promise<void> {
 
     let loginDTO = {
       Username: username,
-      Password: password,
+      Password: password
     };
 
     let x = await lastValueFrom(this.http.post<any>(this.serverUrl + "api/Players/Login", loginDTO));
     console.log(x);
 
     sessionStorage.setItem("token", x.token);
-    sessionStorage.setItem("playerid", x.playerId);
+    sessionStorage.setItem("playerId", x.playerId);
+    sessionStorage.setItem("userIntId", x.userIntId);
     sessionStorage.setItem("username", x.username);
 
   }
@@ -120,6 +129,40 @@ export class ApiService {
     let x = await lastValueFrom(this.http.get<any>(this.serverUrl + "api/Players/PrivateData", httpOptions))
     console.log(x);
     return x
+  }
+
+  decodeJwt(): any {
+    // Séparer le JWT en 3 parties (header, payload, signature)
+    const parts = sessionStorage.getItem("token")?.split('.');
+
+    if (parts == null) {
+      console.error('JWT mal formé');
+      return null;
+    }
+
+    // Si le JWT est mal formé
+    if (parts.length !== 3) {
+      console.error('JWT mal formé');
+      return null;
+    }
+
+    // Décoder la partie payload du JWT (qui est en base64url)
+    const base64Url = parts[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Remplace les caractères spécifiques de Base64 URL
+
+    try {
+      // Décoder en Base64
+      const decodedData = atob(base64); // atob() décode une chaîne Base64 en string
+
+      // Parser la chaîne JSON
+      const jsonData = JSON.parse(decodedData);
+
+      // Retourner la propriété PlayerId
+      return jsonData;
+    } catch (error) {
+      console.error('Erreur lors du décodage du JWT', error);
+      return null;
+    }
   }
 
 }
