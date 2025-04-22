@@ -16,28 +16,28 @@
     <button (click)="deleteDeck(d.id!)" [disabled]="d.isCurrent">Supprimer</button>
 
      <!-- Bouton pour afficher les cartes disponibles à ajouter -->
-     <button (click)="showAvailableCards(d.id!)">Ajouter des cartes</button>
+      <!-- <button (click)="showAvailableCards(d.id!)">Ajouter des cartes</button>  -->
 
      <div *ngIf=" d.deckCards.length > 0 " class="available-cards">
-      <h4>Cartes disponibles de </h4>
+      <h4>Cartes du deck {{d.name}}</h4>
       <ul>
         <div class="cards-container">
-          <mat-card *ngFor="let deckCard of d.deckCards">
+          <mat-card *ngFor="let deckCard of d.deckCards" (click)="removeCardFromDeck(deckCard.ownedCard.card.id, d.id!)" >
       
               <mat-card-header _ngcontent-ng-c2357935512>
                   <div _ngcontent-ng-c2357935512 mat-card-avatar class="mat-mdc-card-header infinite-card-mana-cost">
-                      <div _ngcontent-ng-c2357935512>{{card.ownedCard.card.cost}}</div>
+                      <div _ngcontent-ng-c2357935512>{{deckCard.ownedCard.card.cost}}</div>
                   </div>
                   <div class="mat-mdc-card-header-text">
-                      <mat-card-title _ngcontent-ng-c2357935512 class="mat-mdc-card-title">{{c.name}} </mat-card-title>
+                      <mat-card-title _ngcontent-ng-c2357935512 class="mat-mdc-card-title">{{deckCard.ownedCard.card.name}} </mat-card-title>
                   </div>
       
               </mat-card-header>
               <mat-card>
-                  <img src="{{c.imageUrl}}" alt="Image de la carte" width="300px" height="300px">
+                  <img src="{{deckCard.ownedCard.card.imageUrl}}" alt="Image de la carte" width="300px" height="300px">
       
-                  <P>Attaque: {{c.attack}}</P>
-                  <P>PV: {{c.health}}</P>
+                  <P>Attaque: {{deckCard.ownedCard.card.attack}}</P>
+                  <P>PV: {{deckCard.ownedCard.card.health}}</P>
       
               </mat-card>
       
@@ -45,11 +45,11 @@
           </mat-card>
       
       </div>
-        <li *ngFor="let card of d.deckCards">
-          {{ card.name }} (x{{ card.quantity }})
-          <button (click)="addCardToDeck(card.id, d.id!)">Ajouter</button>
-        </li>
-      </ul>
+       <li *ngFor="let item of listOwnedCards" (click)="addCardToDeck(item.id, d.id!)">
+          {{ item.name }} 
+         <!-- <button (click)="addCardToDeck(card.id, d.id!)">Ajouter</button>  -->
+        </li> 
+      </ul> 
     </div>
   </div>
 </div>

@@ -47,6 +47,20 @@ export class ApiService {
     return result;
   }
 
+  async addCardToDeck(cardId: number, deckId: number): Promise<Deck[]> {
+    
+    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/deck/AddCard', { cardId, deckId }))
+    return result;
+
+  }
+
+
+  async removeCardFromDeck(cardId: number, deckId: number): Promise<Deck[]> {
+    
+    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/deck/RemoveCard', { cardId, deckId }))
+    return result;
+
+  }
 
 
   async register(email: string, password: string, passwordConfirm: string): Promise<void> {

@@ -33,7 +33,7 @@ export class DecksComponent {
   public maxCardsPerDeck = 10;
   public newDeckName: string = '';
   //Liste de ownedCards initiale du joueur
-public listOwnedCards: OwnedCards[] = [];
+public listOwnedCards: Card[] = [];
 //Liste des cartes restantes pour le deck
 availableCards: DeckCards[] = [];
 
@@ -43,7 +43,7 @@ availableCards: DeckCards[] = [];
 
 
     this.decks = await this.service.getPlayerDecks();
-      this.listOwnedCards = await this.service.getPlayersCards();
+    this.listOwnedCards = await this.service.getPlayersCards();
   }
 
   async createDeck(): Promise<void> {
@@ -56,35 +56,81 @@ availableCards: DeckCards[] = [];
   }
 
 //Faire le tri des cartes restantes pour le deck
-showAvailableCards(deckId: number): void {
-  this.currentDeckId = deckId;
+//showAvailableCards(deckId: number): void {
+  //this.currentDeckId = deckId;
 
   // Trouver le deck sélectionné
-  const selectedDeck = this.decks.find((deck) => deck.id === deckId);
-  if (!selectedDeck) return;
+ // const selectedDeck = this.decks.find((deck) => deck.id === deckId);
+ // if (!selectedDeck) return;
 
   // Filtrer les cartes possédées qui ne sont pas déjà dans le deck
-  this.availableCards = this.ownedCards.filter((ownedCard) => {
-    return !selectedDeck.deckCards.some((deckCard) => deckCard.id === ownedCard.id);
-  });
-}
+ // this.availableCards = this.ownedCards.filter((ownedCard) => {
+ //   return !selectedDeck.deckCards.some((deckCard) => deckCard.id === ownedCard.id);
+ // });
+//}
 
 
-addCardToDeck(cardId: number, deckId: string): void {
-  this.deckService.addCardToDeck(cardId, deckId).subscribe(() => {
+async addCardToDeck(cardId: number, deckId: number): Promise<void> {
+ this.decks = await this.service.addCardToDeck(cardId, deckId)
+  
+
+
+
+  //.subscribe(() => {
     // Mettre à jour la liste des cartes du deck
-    const selectedDeck = this.decks.find((deck) => deck.id === deckId);
-    if (selectedDeck) {
-      const addedCard = this.ownedCards.find((card) => card.id === cardId);
-      if (addedCard) {
-        selectedDeck.deckCards.push(addedCard);
-      }
-    }
+    //const selectedDeck = this.decks.find((deck) => deck.id === deckId);
+    //if (selectedDeck) {
+    //  const addedCard = this.ownedCards.find((card) => card.id === cardId);
+     // if (addedCard) {
+     //   selectedDeck.deckCards.push(addedCard);
+     // }
+   // }
 
     // Mettre à jour la liste des cartes disponibles
-    this.availableCards = this.availableCards.filter((card) => card.id !== cardId);
-  });
+   // this.availableCards = this.availableCards.filter((card) => card.id !== cardId);
+ // });
 }
+
+
+
+async removeCardFromDeck(cardId: number, deckId: number): Promise<void> {
+  this.decks = await this.service.removeCardFromDeck(cardId, deckId)
+   
+ // Mettre à jour localement la liste des cartes du deck
+ const selectedDeck = this.decks.find((deck) => deck.id === deckId);
+ if (selectedDeck) {
+   selectedDeck.deckCards = selectedDeck.deckCards.filter((deckCard) => deckCard.ownedCard.id !== cardId);
+ }
+
+ // Optionnel : Ajouter la carte retirée à la liste des cartes disponibles
+// const removedCard = this.listOwnedCards.find((card) => card.id === cardId);
+// if (removedCard) {
+//   this.availableCards.push({
+ //    ownedCard: removedCard,
+ //    deckId: deckId,
+ //    quantity: 1 // Par défaut, une carte retirée peut être réutilisée
+ //  });
+ //}
+
+
+
+
+   //.subscribe(() => {
+     // Mettre à jour la liste des cartes du deck
+     //const selectedDeck = this.decks.find((deck) => deck.id === deckId);
+     //if (selectedDeck) {
+     //  const addedCard = this.ownedCards.find((card) => card.id === cardId);
+      // if (addedCard) {
+      //   selectedDeck.deckCards.push(addedCard);
+      // }
+    // }
+ 
+     // Mettre à jour la liste des cartes disponibles
+    // this.availableCards = this.availableCards.filter((card) => card.id !== cardId);
+  // });
+ }
+
+
 
 
   async deleteDeck(deckId: number): Promise<void> {
@@ -101,7 +147,7 @@ addCardToDeck(cardId: number, deckId: string): void {
    // this.decks = this.decks.filter((d) => d.id !== deckId);
   }
  
-  
+
 
 
   setCurrentDeck(deckId: number): void {
