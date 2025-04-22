@@ -12,7 +12,7 @@ export interface Card {
     imageUrl: string;
 
     // Ajout pouvoir
-    Powers: CardPower[];
+    cardPowers: CardPower[];
     
 }
 
@@ -28,7 +28,7 @@ export interface Power {
     id: number;
     name: string;
     description: string;
-    icone : string;
+    icon : string;
 }
 
 

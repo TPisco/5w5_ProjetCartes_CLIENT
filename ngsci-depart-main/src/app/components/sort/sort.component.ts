@@ -32,15 +32,8 @@ export class SortComponent implements OnInit {
 
   async ngOnInit() {
     this.cards = await this.api.getAllCards();
-    console.log('Cartes récupérées avec pouvoirs:', this.cards);
 
-    this.cards.forEach(card => {
-      if (card.Powers && card.Powers.length > 0) {
-          console.log('Pouvoirs pour la carte', card.name, card.Powers);
-      } else {
-          console.log('Aucun pouvoir pour la carte', card.name);
-      }
-  });
+
 
 
 

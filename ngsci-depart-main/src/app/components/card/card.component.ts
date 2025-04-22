@@ -14,23 +14,21 @@ import { trigger, transition, style, animate, keyframes } from '@angular/animati
     imports: [MatCardModule, CommonModule],
     animations: [
       trigger('bounce', [
-        transition(':enter', [
+        transition('* => active', [
           animate(
-            '0.6s cubic-bezier(0.25, 0.8, 0.25, 1)', // Durée de l'animation et courbe d'accélération
+            '0.5s ease-in-out',
             keyframes([
-              style({ transform: 'translateY(0)', offset: 0 }), // Position initiale
-              style({ transform: 'translateY(-20px)', offset: 0.3 }), // Monte légèrement
-              style({ transform: 'translateY(10px)', offset: 0.6 }), // Descend un peu
-              style({ transform: 'translateY(0)', offset: 1 }), // Retour à la position de départ
+              style({ transform: 'scale(1)', offset: 0 }),
+              style({ transform: 'scale(1.2)', offset: 0.5 }),
+              style({ transform: 'scale(1)', offset: 1 }),
             ])
           )
         ])
       ])
-    ],
+    ]
   })
 export class CardComponent implements OnInit {
 
-  bounce : any;
   @Input() card?:Card;
   @Input() show:string = "front";
   @Input() health:number = 0;
@@ -42,4 +40,13 @@ export class CardComponent implements OnInit {
 
   }
 
+  bounceState: string = '';
+
+
+  onCardClick() {
+    this.bounceState = 'active';
+    setTimeout(() => {
+      this.bounceState = ''; // Réinitialise l'état pour rejouer l'animation
+    }, 500);
+  }
 }

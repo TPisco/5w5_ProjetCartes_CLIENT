@@ -26,3 +26,16 @@
   font-size: 20px;
   margin-bottom: 0px;
 }
+
+.infinite-card {
+  cursor: pointer;
+}
+
+.infinite-card-content {
+  position: relative;
+}
+
+span {
+  display: inline-block;
+  transition: transform 0.5s ease-in-out;
+}

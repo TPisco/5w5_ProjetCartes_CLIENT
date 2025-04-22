@@ -1,5 +1,5 @@
 @if (show=='front') {
-  <mat-card class="infinite-card">
+  <mat-card class="infinite-card" (click)="onCardClick()">
     <mat-card-header>
       <div mat-card-avatar class="infinite-card-mana-cost">
         {{card?.cost}} <i class="fas fa-gem"></i>
@@ -16,8 +16,8 @@
           <td><i class="fas fa-shield-alt"></i></td>
           <td>{{card?.health}}</td>
         </tr>
-        <tr *ngFor="let cp of card?.Powers">
-          <td> <span [@bounce]="bounce" >{{ cp.power.icone }}</span> {{ cp.value }}</td>
+        <tr *ngFor="let cp of card?.cardPowers">
+          <td> <span [@bounce]="bounceState" >{{ cp.power.icon }}</span> {{ cp.value }}</td>
         </tr>
       </table>
     </mat-card-content>
