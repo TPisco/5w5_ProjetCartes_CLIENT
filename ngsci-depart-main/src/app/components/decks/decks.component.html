@@ -5,7 +5,7 @@
 
     <h2>Créer un nouveau deck</h2>
     <form (ngSubmit)="createDeck()">
-      <input type="text" [(ngModel)]="newDeckName" placeholder="Nom du deck" required />
+      <input type="text" [(ngModel)]="newDeckName" name="newDeckName" placeholder="Nom du deck" required  />
       <button type="submit">Créer</button>
     </form>
   </div>
@@ -18,7 +18,7 @@
      <!-- Bouton pour afficher les cartes disponibles à ajouter -->
       <!-- <button (click)="showAvailableCards(d.id!)">Ajouter des cartes</button>  -->
 
-     <div *ngIf=" d.deckCards.length > 0 " class="available-cards">
+     <div  class="available-cards">
       <h4>Cartes du deck {{d.name}}</h4>
       <ul>
         <div class="cards-container">

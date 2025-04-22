@@ -97,10 +97,10 @@ async removeCardFromDeck(cardId: number, deckId: number): Promise<void> {
   this.decks = await this.service.removeCardFromDeck(cardId, deckId)
    
  // Mettre à jour localement la liste des cartes du deck
- const selectedDeck = this.decks.find((deck) => deck.id === deckId);
- if (selectedDeck) {
-   selectedDeck.deckCards = selectedDeck.deckCards.filter((deckCard) => deckCard.ownedCard.id !== cardId);
- }
+ //const selectedDeck = this.decks.find((deck) => deck.id === deckId);
+ //if (selectedDeck) {
+ //  selectedDeck.deckCards = selectedDeck.deckCards.filter((deckCard) => deckCard.ownedCard.id !== cardId);
+ //}
 
  // Optionnel : Ajouter la carte retirée à la liste des cartes disponibles
 // const removedCard = this.listOwnedCards.find((card) => card.id === cardId);
@@ -142,7 +142,7 @@ async removeCardFromDeck(cardId: number, deckId: number): Promise<void> {
 
     // TODO : A voir si on doit faire un appel API pour supprimer le deck
 
-     await this.service.deleteDeck(deckId);
+    this.decks = await this.service.deleteDeck(deckId);
     // this.decks = await this.service.getPlayerDecks();
    // this.decks = this.decks.filter((d) => d.id !== deckId);
   }

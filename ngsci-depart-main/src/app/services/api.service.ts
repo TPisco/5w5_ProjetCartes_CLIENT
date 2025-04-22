@@ -42,29 +42,41 @@ export class ApiService {
     //let deckDTO = {
     //   Name : nom
     //};
+    let token = sessionStorage.getItem("token")
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
-    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/deck/CreateDeck', nom))
+    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/CreateDeck', nom,{ headers }))
     return result;
   }
 
   async addCardToDeck(cardId: number, deckId: number): Promise<Deck[]> {
+
+    let token = sessionStorage.getItem("token")
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     
-    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/deck/AddCard', { cardId, deckId }))
+    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/AddCard', { cardId, deckId },{ headers }))
     return result;
 
   }
 
 
   async removeCardFromDeck(cardId: number, deckId: number): Promise<Deck[]> {
+
+    let token = sessionStorage.getItem("token")
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     
-    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/deck/RemoveCard', { cardId, deckId }))
+    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/RemoveCard', { cardId, deckId },{ headers }))
     return result;
 
   }
 
 
   async deleteDeck(deckId: number): Promise<Deck[]> {
-    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/deck/DeleteDeck', deckId))
+
+    let token = sessionStorage.getItem("token")
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/DeleteDeck', deckId,{ headers }))
 
     return result
   }
