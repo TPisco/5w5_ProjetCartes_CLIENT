@@ -5,7 +5,7 @@
 
     <h2>Créer un nouveau deck</h2>
     <form (ngSubmit)="createDeck()">
-      <input type="text" [(ngModel)]="newDeckName" name="newDeckName" placeholder="Nom du deck" required  />
+      <input type="text" [(ngModel)]="newDeckName" name="newDeckName" placeholder="Nom du deck" required />
       <button type="submit">Créer</button>
     </form>
   </div>
@@ -15,42 +15,44 @@
     <button (click)="setCurrentDeck(d.id!)">Rendre courant</button>
     <button (click)="deleteDeck(d.id!)" [disabled]="d.isCurrent">Supprimer</button>
 
-     <!-- Bouton pour afficher les cartes disponibles à ajouter -->
-      <!-- <button (click)="showAvailableCards(d.id!)">Ajouter des cartes</button>  -->
+    <!-- Bouton pour afficher les cartes disponibles à ajouter -->
+    <!-- <button (click)="showAvailableCards(d.id!)">Ajouter des cartes</button>  -->
 
-     <div  class="available-cards">
+    <div class="available-cards">
       <h4>Cartes du deck {{d.name}}</h4>
       <ul>
         <div class="cards-container">
-          <mat-card *ngFor="let deckCard of d.deckCards" (click)="removeCardFromDeck(deckCard.ownedCard.card.id, d.id!)" >
-      
-              <mat-card-header _ngcontent-ng-c2357935512>
-                  <div _ngcontent-ng-c2357935512 mat-card-avatar class="mat-mdc-card-header infinite-card-mana-cost">
-                      <div _ngcontent-ng-c2357935512>{{deckCard.ownedCard.card.cost}}</div>
-                  </div>
-                  <div class="mat-mdc-card-header-text">
-                      <mat-card-title _ngcontent-ng-c2357935512 class="mat-mdc-card-title">{{deckCard.ownedCard.card.name}} </mat-card-title>
-                  </div>
-      
-              </mat-card-header>
-              <mat-card>
-                  <img src="{{deckCard.ownedCard.card.imageUrl}}" alt="Image de la carte" width="300px" height="300px">
-      
-                  <P>Attaque: {{deckCard.ownedCard.card.attack}}</P>
-                  <P>PV: {{deckCard.ownedCard.card.health}}</P>
-      
-              </mat-card>
-      
-      
+          <mat-card *ngFor="let deckCard of d.deckCards"
+            (click)="removeCardFromDeck(deckCard.ownedCard.card.id, d.id!)">
+
+            <mat-card-header _ngcontent-ng-c2357935512>
+              <div _ngcontent-ng-c2357935512 mat-card-avatar class="mat-mdc-card-header infinite-card-mana-cost">
+                <div _ngcontent-ng-c2357935512>{{deckCard.ownedCard.card.cost}}</div>
+              </div>
+              <div class="mat-mdc-card-header-text">
+                <mat-card-title _ngcontent-ng-c2357935512 class="mat-mdc-card-title">{{deckCard.ownedCard.card.name}}
+                </mat-card-title>
+              </div>
+
+            </mat-card-header>
+            <mat-card>
+              <img src="{{deckCard.ownedCard.card.imageUrl}}" alt="Image de la carte" width="300px" height="300px">
+
+              <P>Attaque: {{deckCard.ownedCard.card.attack}}</P>
+              <P>PV: {{deckCard.ownedCard.card.health}}</P>
+
+            </mat-card>
+
+
           </mat-card>
-      
-      </div>
-      <h4>Cartes disponibles à ajouter</h4>
-       <li *ngFor="let item of listOwnedCards" (click)="addCardToDeck(item.id, d.id!)">
-          {{ item.name }} 
-         <!-- <button (click)="addCardToDeck(card.id, d.id!)">Ajouter</button>  -->
-        </li> 
-      </ul> 
+
+        </div>
+        <h4>Cartes disponibles à ajouter</h4>
+        <li *ngFor="let item of listOwnedCards" (click)="addCardToDeck(item.id, d.id!)">
+          {{ item.name }}
+          <!-- <button (click)="addCardToDeck(card.id, d.id!)">Ajouter</button>  -->
+        </li>
+      </ul>
     </div>
   </div>
 </div>
