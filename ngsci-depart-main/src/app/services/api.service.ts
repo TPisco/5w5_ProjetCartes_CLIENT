@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { Card, Deck, Player } from '../models/models';
-import { Card, CardPower, Player } from '../models/models';
 import { Router } from '@angular/router';
 
 
@@ -18,8 +17,15 @@ export class ApiService {
 
   constructor(public http: HttpClient) { }
 
-  async getAllCards(): Promise<Card[]> {
-    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetAllCards'));
+  async getAllCards(): Promise<Card[]> {    
+    let token = sessionStorage.getItem("token");
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      })
+    }; 
+    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetAllCards',httpOptions));
     return result;
   }
 
