@@ -47,6 +47,6 @@ export class CardComponent implements OnInit {
     this.bounceState = 'active';
     setTimeout(() => {
       this.bounceState = ''; // Réinitialise l'état pour rejouer l'animation
-    }, 500);
+    }, 2000);
   }
 }
