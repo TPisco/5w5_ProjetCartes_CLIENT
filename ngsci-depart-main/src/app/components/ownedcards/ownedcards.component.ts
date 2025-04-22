@@ -18,8 +18,8 @@ import { SortComponent } from '../sort/sort.component';
 })
 export class OwnedcardsComponent implements OnInit {
 
+  cards : Card[] = [];
   public listOwnedCards: Card[] = [];
-
 
   sortedCards: Card[] = [...this.listOwnedCards];
   sortProperty: keyof Card = 'attack';
@@ -32,5 +32,10 @@ export class OwnedcardsComponent implements OnInit {
       console.log("La liste ne contient aucune carte.")
     }
   }
+
+  async getOwnedCards() {
+    this.cards = await this.service.getPlayersCards();
+  }
+
 
 }

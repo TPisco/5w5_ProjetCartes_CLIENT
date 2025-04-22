@@ -10,7 +10,27 @@ export interface Card {
     health: number;
     cost: number;
     imageUrl: string;
+
+    // Ajout pouvoir
+    Powers: CardPower[];
+    
 }
+
+export interface CardPower {
+    cardId: number;
+    card: Card;
+    powerId : number;
+    power: Power;
+    value: number;
+}
+
+export interface Power {
+    id: number;
+    name: string;
+    description: string;
+    icone : string;
+}
+
 
 export interface MatchData {
     match: Match;
