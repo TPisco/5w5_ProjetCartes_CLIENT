@@ -22,9 +22,13 @@
       <h4>Cartes du deck {{d.name}}</h4>
       <ul>
         <div class="cards-container">
+          <div *ngFor="let deckCard of d.deckCards" class="card-item">
+            <app-card [card]="deckCard.ownedCard.card"></app-card>
+          </div>
           <mat-card *ngFor="let deckCard of d.deckCards"
             (click)="removeCardFromDeck(deckCard.ownedCard.card.id, d.id!)">
 
+            
             <mat-card-header _ngcontent-ng-c2357935512>
               <div _ngcontent-ng-c2357935512 mat-card-avatar class="mat-mdc-card-header infinite-card-mana-cost">
                 <div _ngcontent-ng-c2357935512>{{deckCard.ownedCard.card.cost}}</div>

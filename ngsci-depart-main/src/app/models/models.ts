@@ -10,10 +10,8 @@ export interface Card {
     health: number;
     cost: number;
     imageUrl: string;
-
     // Ajout pouvoir
     Powers: CardPower[];
-    
 }
 
 export interface CardPower {
@@ -23,32 +21,25 @@ export interface CardPower {
     power: Power;
     value: number;
 }
-
 export interface Power {
     id: number;
     name: string;
     description: string;
     icone : string;
 }
-
-
 export interface Deck {
     id?: number; 
     name: string; 
     deckCards:DeckCards[] ;
     isCurrent: boolean; 
   }
-//TODO : Ajouter un model pour DeckCards
+
   export interface DeckCards{
     id?: number;
     ownedCard: OwnedCards;
     deck :Deck;
 
   }
-
-//TODO : Ajouter un model pour OwnedCards
-//Renvoyer model 
-//Test : Ajout du model OwnedCards, à supprimer si cela ne fonctionne pas
 export interface OwnedCards{
     id: number;
     cardId : Number;

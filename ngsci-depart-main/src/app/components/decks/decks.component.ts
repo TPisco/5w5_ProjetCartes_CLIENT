@@ -20,7 +20,7 @@ import { ApiService } from 'src/app/services/api.service';
 @Component({
   selector: 'app-decks',
   standalone: true,
-  imports: [RouterModule, RouterOutlet, FormsModule, CommonModule, MatCardModule, CardComponent, SortComponent],
+  imports: [RSouterModule, RouterOutlet, FormsModule, CommonModule, MatCardModule, CardComponent, SortComponent],
   templateUrl: './decks.component.html',
   styleUrl: './decks.component.css'
 })
@@ -112,9 +112,6 @@ async removeCardFromDeck(cardId: number, deckId: number): Promise<void> {
  //  });
  //}
 
-
-
-
    //.subscribe(() => {
      // Mettre à jour la liste des cartes du deck
      //const selectedDeck = this.decks.find((deck) => deck.id === deckId);
@@ -130,26 +127,15 @@ async removeCardFromDeck(cardId: number, deckId: number): Promise<void> {
   // });
  }
 
-
-
-
   async deleteDeck(deckId: number): Promise<void> {
     const deck = this.decks.find((d) => d.id === deckId);
     if (deck?.isCurrent) {
       console.error('Impossible de supprimer le deck courant.');
 
     }
-
-    // TODO : A voir si on doit faire un appel API pour supprimer le deck
-
     this.decks = await this.service.deleteDeck(deckId);
-    // this.decks = await this.service.getPlayerDecks();
-   // this.decks = this.decks.filter((d) => d.id !== deckId);
   }
- 
-
-
-
+//TODO : Faire la sélection du deck courant côté serveur
   setCurrentDeck(deckId: number): void {
     this.decks.forEach((deck) => (deck.isCurrent = deck.id === deckId));
   }
