@@ -45,6 +45,7 @@
           </mat-card>
       
       </div>
+      <h4>Cartes disponibles à ajouter</h4>
        <li *ngFor="let item of listOwnedCards" (click)="addCardToDeck(item.id, d.id!)">
           {{ item.name }} 
          <!-- <button (click)="addCardToDeck(card.id, d.id!)">Ajouter</button>  -->

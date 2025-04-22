@@ -142,7 +142,7 @@ async removeCardFromDeck(cardId: number, deckId: number): Promise<void> {
 
     // TODO : A voir si on doit faire un appel API pour supprimer le deck
 
-    this.decks = await this.service.deleteDeck(deckId);
+    this.decks = await this.service.deleteDeck(deck?.id);
     // this.decks = await this.service.getPlayerDecks();
    // this.decks = this.decks.filter((d) => d.id !== deckId);
   }
