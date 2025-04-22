@@ -110,7 +110,9 @@ export class ApiService {
       })
     }; 
       
-    let result = await lastValueFrom(this.http.delete<Deck[]>(this.serverUrl + 'api/Deck/DeleteDeck', deckId,httpOptions));
+    const url = `${this.serverUrl}api/Deck/DeleteDeck?deckId=${deckId}`;
+
+    let result = await lastValueFrom(this.http.delete<Deck[]>(url,httpOptions));
 
     return result;
   }
