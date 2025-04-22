@@ -57,6 +57,62 @@ export class MatchComponent implements OnInit {
       this.router.navigate(['/']);
     });
 
+    this.hubConnection!.on("FirstStrike", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+
+    this.hubConnection!.on("Heal", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+
+    this.hubConnection!.on("Shield", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+
+    this.hubConnection!.on("Thorns", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+
+    this.hubConnection!.on("CardActivation", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+
+    this.hubConnection!.on("CardDamage", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+
+    this.hubConnection!.on("CardDeath", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+
+    this.hubConnection!.on("Combat", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+
+    this.hubConnection!.on("PlayerDamage", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+
+    this.hubConnection!.on("PlayerDeath", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+
+    this.hubConnection!.on("PlayCard", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+
+
 
 
   }
@@ -93,14 +149,13 @@ export class MatchComponent implements OnInit {
 
   surrender() {
 
-
-
     this.hubConnection!.invoke("onSurrenderAsync", this.matchService.matchData?.match.id).catch(err => console.error(err));
-
 
     // TODO Tâche Hub: Faire l'action sur le Hub et retirer fakeSurrender
     //this.fakeSurrender();
   }
+
+
 
   // Pour permettre de tester le visuel du gameplay avant d'avoir fait la logique sur le serveur
   fakeSurrender() {

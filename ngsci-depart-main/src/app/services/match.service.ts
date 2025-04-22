@@ -74,12 +74,12 @@ export class MatchService {
 
       case "GainMana": {
         // TODO
-        if(this.isCurrentPlayerTurn){
+        if (this.isCurrentPlayerTurn) {
           this.playerData!.mana += event.mana;
-          }
-          else{ 
-            this.adversaryData!.mana += event.mana
-          }
+        }
+        else {
+          this.adversaryData!.mana += event.mana
+        }
         break;
       }
 
@@ -106,8 +106,106 @@ export class MatchService {
       case "EndMatch": {
         this.matchData!.winningPlayerId = event.winningPlayerId;
         this.match!.isMatchCompleted = true;
+        this.clearMatch();
         break;
       }
+
+      case "FistStrike": {
+        // TODO ????????
+        break;
+      }
+
+      case "Thorns": {
+        // TODO ????????
+        break;
+      }
+
+      case "Shield": {
+        // TODO
+        if (this.playerData == event.PlayerId) {
+          this.playerData!.battleField[event.CardId].health+= event.Shield ;
+        }
+        else {
+          this.adversaryData!.battleField[event.CardId].health+= event.Shield ;
+        }
+        break;
+      }
+
+      case "Heal": {
+        // TODO
+        if (this.playerData == event.PlayerId) {             //if                                        true                            false
+          this.playerData!.battleField.forEach(c => c.health + event.Heal > c.card.health ?  c.health = c.card.health : c.health+= event.Heal );
+        }
+        else {                                          //if                                        true                            false
+          this.adversaryData!.battleField.forEach(c => c.health + event.Heal > c.card.health ?  c.health = c.card.health : c.health+= event.Heal );
+        }
+        break;
+      }
+
+      case "CardDamage": {
+        // TODO
+        if (this.playerData == event.PlayerId) {          
+          this.playerData!.battleField[event.CardId].health -= event.Damage;
+        }
+        else {                               
+          this.adversaryData!.battleField[event.CardId].health -= event.Damage;
+        }
+        break;
+      }
+
+      case "CardDeath": {
+        // TODO
+        if (this.playerData == event.PlayerId) {    
+          let deadCard : PlayableCard | undefined = this.playerData!.battleField.find(event.CardId);     
+          this.playerData!.battleField.splice(event.CardId,1);
+          this.playerData!.graveyard.push(deadCard!)
+        }
+        else {                               
+          let deadCard : PlayableCard | undefined = this.adversaryData!.battleField.find(event.CardId);     
+          this.adversaryData!.battleField.splice(event.CardId,1);
+          this.adversaryData!.graveyard.push(deadCard!)
+        }
+        break;
+      }
+
+      case "PlayCard": {
+        // TODO
+        if (this.playerData == event.PlayerId) {    
+          let usedCard : PlayableCard | undefined = this.playerData!.hand.find(event.CardId);
+
+          if(this.playerData!.mana - usedCard!.card.cost<0) break;
+
+          this.playerData!.mana -= usedCard!.card.cost;
+          this.playerData!.hand.splice(event.CardId,1);
+          this.playerData!.battleField.push(usedCard!)
+        }
+        else {                               
+          let usedCard : PlayableCard | undefined = this.adversaryData!.hand.find(event.CardId);
+
+          if(this.playerData!.mana - usedCard!.card.cost<0) break;
+
+          this.adversaryData!.mana -= usedCard!.card.cost;
+          this.adversaryData!.hand.splice(event.CardId,1);
+          this.adversaryData!.battleField.push(usedCard!)
+        }
+        break;
+      }
+
+      case "PlayerDamage": {
+        // TODO
+        if (this.playerData == event.PlayerId) {          
+          this.playerData!.health -= event.Damage;
+        }
+        else {                               
+          this.adversaryData!.health -= event.Damage;
+        }
+        break;
+      }
+
+      case "PlayerDeath": {
+        // TODO ????
+      }
+
     }
     if (event.events) {
       for (let e of event.events) {
