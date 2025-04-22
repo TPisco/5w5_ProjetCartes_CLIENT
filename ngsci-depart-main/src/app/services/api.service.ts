@@ -63,6 +63,12 @@ export class ApiService {
   }
 
 
+  async deleteDeck(deckId: number): Promise<Deck[]> {
+    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/deck/DeleteDeck', deckId))
+
+    return result
+  }
+
   async register(email: string, password: string, passwordConfirm: string): Promise<void> {
     let registerDTO = {
       Email: email,
