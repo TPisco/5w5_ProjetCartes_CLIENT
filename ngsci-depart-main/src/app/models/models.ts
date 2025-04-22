@@ -32,6 +32,31 @@ export interface Power {
 }
 
 
+export interface Deck {
+    id?: number; 
+    name: string; 
+    deckCards:DeckCards[] ;
+    isCurrent: boolean; 
+  }
+//TODO : Ajouter un model pour DeckCards
+  export interface DeckCards{
+    id?: number;
+    ownedCard: OwnedCards;
+    deck :Deck;
+
+  }
+
+//TODO : Ajouter un model pour OwnedCards
+//Renvoyer model 
+//Test : Ajout du model OwnedCards, à supprimer si cela ne fonctionne pas
+export interface OwnedCards{
+    id: number;
+    cardId : Number;
+    card : Card;
+    player : Player;
+    
+}
+
 export interface MatchData {
     match: Match;
     playerA: Player;
