@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { Card, CardPower, Player } from '../models/models';
+import { Card, Deck, Player } from '../models/models';
 import { Router } from '@angular/router';
 
 
@@ -17,8 +17,15 @@ export class ApiService {
 
   constructor(public http: HttpClient) { }
 
-  async getAllCards(): Promise<Card[]> {
-    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetAllCards'));
+  async getAllCards(): Promise<Card[]> {    
+    let token = sessionStorage.getItem("token");
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      })
+    }; 
+    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetAllCards',httpOptions));
     return result;
   }
 
@@ -32,6 +39,58 @@ export class ApiService {
     }; 
     let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetPlayersCards', httpOptions));
     return result;
+  }
+
+  async getPlayerDecks(): Promise<Deck[]> {
+    //Le token est nécessaire pour la requête, sinon erreur "Unauthorized"
+    let token = sessionStorage.getItem("token")
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    let result = await lastValueFrom(this.http.get<Deck[]>(this.serverUrl + 'api/Deck/GetPlayerDecks', { headers }))
+    return result;
+  }
+
+
+  async CreateDeck(nom: string): Promise<Deck[]> {
+    //let deckDTO = {
+    //   Name : nom
+    //};
+    let token = sessionStorage.getItem("token")
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/CreateDeck', nom,{ headers }))
+    return result;
+  }
+
+  async addCardToDeck(cardId: number, deckId: number): Promise<Deck[]> {
+
+    let token = sessionStorage.getItem("token")
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    
+    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/AddCard', { cardId, deckId },{ headers }))
+    return result;
+
+  }
+
+
+  async removeCardFromDeck(cardId: number, deckId: number): Promise<Deck[]> {
+
+    let token = sessionStorage.getItem("token")
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    
+    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/RemoveCard', { cardId, deckId },{ headers }))
+    return result;
+
+  }
+
+
+  async deleteDeck(deckId: number): Promise<Deck[]> {
+
+    let token = sessionStorage.getItem("token")
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/DeleteDeck', deckId,{ headers }))
+
+    return result
   }
 
   async register(email: string, password: string, passwordConfirm: string): Promise<void> {

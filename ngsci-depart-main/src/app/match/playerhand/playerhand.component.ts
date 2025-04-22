@@ -20,11 +20,10 @@ export class PlayerhandComponent implements OnInit {
   constructor(public matchService: MatchService, public hub: HubServiceService) { }
 
   async ngOnInit() {
-    this.hubConnection = await this.hub.getConnection();
   }
 
   click(playableCardId:any){
     // TODO: Utiliser seulement une fois que l'on peut jouer des cartes (TP2)
-    this.hubConnection!.invoke("onPlayCardAsync", this.matchService.matchData?.match.id, playableCardId ).catch(err => console.error(err))
+    this.hub.playCard(playableCardId)
   }
 }

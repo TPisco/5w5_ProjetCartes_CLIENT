@@ -33,10 +33,6 @@ export class SortComponent implements OnInit {
   async ngOnInit() {
     this.cards = await this.api.getAllCards();
 
-
-
-
-
     // this.sortedCards = [...this.cards];
     this.onSortPropertyChange('attack');
     this.onSortOrderChange('asc');
