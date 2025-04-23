@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { Card, Deck, Player } from '../models/models';
+import { Card, Deck, OwnedCards, Player } from '../models/models';
 import { CardPower } from '../models/models';
 import { Router } from '@angular/router';
 
@@ -68,7 +68,28 @@ export class ApiService {
     return result;
   }
 
-  async addCardToDeck(cardId: number, deckId: number): Promise<Deck[]> {
+
+  async getAvailableCardsForDeck(deckId: number): Promise<OwnedCards[]> {
+    let token = sessionStorage.getItem("token")
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      })
+    }; 
+//Changer le post en get
+const url = `${this.serverUrl}api/Deck/GetRemainingCards?deckId=${deckId}`;
+let result = await lastValueFrom(this.http.get<OwnedCards[]>(url,httpOptions))
+   // let result = await lastValueFrom(this.http.post<OwnedCards[]>(this.serverUrl + 'api/Deck/GetRemainingCards', { deckId },httpOptions))
+    return result;
+
+  }
+
+ 
+
+
+
+  async addCardToDeck(cardId: number, deckId?: number): Promise<Deck[]> {
 
     let token = sessionStorage.getItem("token")
     let httpOptions = {

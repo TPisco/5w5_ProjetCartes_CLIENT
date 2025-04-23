@@ -15,6 +15,15 @@
     <button (click)="setCurrentDeck(d.id!)">Rendre courant</button>
     <button (click)="deleteDeck(d.id!)" [disabled]="d.isCurrent">Supprimer</button>
 
+
+    <!--Tentative de montrer les cartes disponibles, code placeholder -->
+    <ul>
+      <li *ngFor="let ownedCard of getAvailableCards(d.id!)">
+       hello !
+      </li>
+    </ul>
+
+
     <!-- Bouton pour afficher les cartes disponibles à ajouter -->
     <!-- <button (click)="showAvailableCards(d.id!)">Ajouter des cartes</button>  -->
 

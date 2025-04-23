@@ -20,7 +20,7 @@ import { ApiService } from 'src/app/services/api.service';
 @Component({
   selector: 'app-decks',
   standalone: true,
-  imports: [RSouterModule, RouterOutlet, FormsModule, CommonModule, MatCardModule, CardComponent, SortComponent],
+  imports: [RouterModule, RouterOutlet, FormsModule, CommonModule, MatCardModule, CardComponent, SortComponent],
   templateUrl: './decks.component.html',
   styleUrl: './decks.component.css'
 })
@@ -35,7 +35,13 @@ export class DecksComponent {
   //Liste de ownedCards initiale du joueur
 public listOwnedCards: Card[] = [];
 //Liste des cartes restantes pour le deck
+public usableCards : OwnedCards[] = [];
+
 availableCards: DeckCards[] = [];
+
+
+//Tentative de tri :
+public availableCardsByDeck: { [deckId: number]: OwnedCards[] } = {};
 
 
   constructor(public service: ApiService) { }
@@ -44,7 +50,25 @@ availableCards: DeckCards[] = [];
 
     this.decks = await this.service.getPlayerDecks();
     this.listOwnedCards = await this.service.getPlayersCards();
+
+//Temtative de tri des cartes restantes pour le deck
+//Utilisation de copilot, à supprimer si cela ne fonctionne pas
+for (const deck of this.decks) {
+  if(deck.id !== undefined){
+    this.availableCardsByDeck[deck.id] = await this.service.getAvailableCardsForDeck(deck.id);
   }
+ 
+}
+
+
+
+
+  }
+
+  getAvailableCards(deckId: number): OwnedCards[] {
+    return this.availableCardsByDeck[deckId] || [];
+  }
+
 
   async createDeck(): Promise<void> {
     if (this.decks.length >= this.maxDecks) {
