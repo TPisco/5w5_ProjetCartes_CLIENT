@@ -122,86 +122,81 @@ export class MatchService {
 
       case "Shield": {
         // TODO
-        if (this.playerData?.id == event.PlayerId) {
-          this.playerData!.battleField[event.CardId].health+= event.Shield ;
+        if (this.currentPlayerId == event.playerId) {
+          this.playerData!.battleField[event.cardId].health+= event.shield ;
         }
         else {
-          this.adversaryData!.battleField[event.CardId].health+= event.Shield ;
+          this.adversaryData!.battleField[event.cardId].health+= event.shield ;
         }
         break;
       }
 
       case "Heal": {
         // TODO
-        if (this.playerData?.id == event.PlayerId) {             //if                                        true                            false
-          this.playerData!.battleField.forEach(c => c.health + event.Heal > c.card.health ?  c.health = c.card.health : c.health+= event.Heal );
+        if (this.currentPlayerId== event.playerId) {             //if                                        true                            false
+          this.playerData!.battleField.forEach(c => c.health + event.heal > c.card.health ?  c.health = c.card.health : c.health+= event.heal );
         }
         else {                                          //if                                        true                            false
-          this.adversaryData!.battleField.forEach(c => c.health + event.Heal > c.card.health ?  c.health = c.card.health : c.health+= event.Heal );
+          this.adversaryData!.battleField.forEach(c => c.health + event.heal > c.card.health ?  c.health = c.card.health : c.health+= event.heal );
         }
         break;
       }
 
       case "CardDamage": {
         // TODO
-        if (this.playerData?.id == event.PlayerId) {          
-          this.playerData!.battleField[event.CardId].health -= event.Damage;
+        if (this.currentPlayerId == event.playerId) {          
+          let usedCard : PlayableCard | undefined = this.playerData!.battleField.find(c=>c.id==event.cardId);
+          console.log(usedCard)  
+          usedCard!.health -= event.damage;
         }
-        else {                               
-          this.adversaryData!.battleField[event.CardId].health -= event.Damage;
+        else {                
+          let usedCard : PlayableCard | undefined = this.adversaryData!.battleField.find(c=>c.id==event.cardId);               
+          usedCard!.health -= event.damage;
         }
         break;
       }
 
       case "CardDeath": {
         // TODO
-        if (this.playerData?.id == event.PlayerId) {    
-          let deadCard : PlayableCard | undefined = this.playerData!.battleField.find(event.CardId);     
-          this.playerData!.battleField.splice(event.CardId,1);
-          this.playerData!.graveyard.push(deadCard!)
+        if (this.currentPlayerId == event.playerId) {    
+          let deadCard : PlayableCard | undefined = this.playerData!.battleField.find(c=>c.id==event.cardId);      
+          this.moveCard(this.playerData!.battleField,this.playerData!.graveyard,deadCard!.id)
         }
         else {                               
-          let deadCard : PlayableCard | undefined = this.adversaryData!.battleField.find(event.CardId);     
-          this.adversaryData!.battleField.splice(event.CardId,1);
-          this.adversaryData!.graveyard.push(deadCard!)
+          let deadCard : PlayableCard | undefined = this.adversaryData!.battleField.find(c=>c.id==event.cardId);     
+          this.moveCard(this.adversaryData!.battleField,this.adversaryData!.graveyard,deadCard!.id)
         }
         break;
       }
 
       case "PlayCard": {
         // TODO
-        if (this.playerData?.id == event.playerId) {    
+        if (this.currentPlayerId == event.playerId) {    
             
           let usedCard : PlayableCard | undefined = this.playerData!.hand.find(c=>c.id==event.cardId);
           console.log(usedCard)   
 
-          if(this.playerData!.mana - usedCard!.card.cost<0) break;
-
           this.playerData!.mana -= usedCard!.card.cost;
-          this.playerData!.hand.splice(event.CardId,1);
-          this.playerData!.battleField.push(usedCard!)
+          this.moveCard(this.playerData!.hand,this.playerData!.battleField,usedCard!.id)
         }
         else {             
                          
           let usedCard : PlayableCard | undefined = this.adversaryData!.hand.find(c=>c.id==event.cardId);
           console.log(usedCard)   
 
-          if(this.adversaryData!.mana - usedCard!.card.cost<0) break;
-
           this.adversaryData!.mana -= usedCard!.card.cost;
-          this.adversaryData!.hand.splice(event.CardId,1);
-          this.adversaryData!.battleField.push(usedCard!)
+          this.moveCard(this.adversaryData!.hand,this.adversaryData!.battleField,usedCard!.id)
         }
         break;
       }
 
       case "PlayerDamage": {
         // TODO
-        if (this.playerData?.id == event.PlayerId) {          
-          this.playerData!.health -= event.Damage;
+        if (this.isCurrentPlayerTurn) {          
+          this.playerData!.health -= event.damage;
         }
         else {                               
-          this.adversaryData!.health -= event.Damage;
+          this.adversaryData!.health -= event.damage;
         }
         break;
       }
@@ -231,7 +226,7 @@ export class MatchService {
   
 
   // Déplace une carte d'un array à l'autre
-  moveCard(src: PlayableCard[], dst: PlayableCard[], playableCardId: any) {
+  moveCard(src: PlayableCard[], dst: PlayableCard[], playableCardId: number) {
     let playableCard = src.find(c => c.id == playableCardId);
 
     if (playableCard != undefined) {
