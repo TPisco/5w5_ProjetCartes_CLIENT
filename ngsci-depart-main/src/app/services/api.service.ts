@@ -137,6 +137,20 @@ export class ApiService {
     return x
   }
 
+  async GetPlayerElo(): Promise<number> {
+    let token = sessionStorage.getItem("token");
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      })
+    };
+    let id  =sessionStorage.getItem("playerId");
+    let x = await lastValueFrom(this.http.get<any>(this.serverUrl + "api/Players/GetElo/"+id, httpOptions))
+    console.log(x);
+    return x
+  }
+
   decodeJwt(): any {
     // Séparer le JWT en 3 parties (header, payload, signature)
     const parts = sessionStorage.getItem("token")?.split('.');
