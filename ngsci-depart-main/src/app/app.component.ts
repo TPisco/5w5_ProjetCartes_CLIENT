@@ -60,7 +60,8 @@ export class AppComponent implements OnInit {
   }
 
   async getElo(){
-    return await this.ApiServices.GetPlayerElo();
+   // return await this.ApiServices.GetPlayerElo();
+   return this.matchService.playerData?.Elo
   }
 
   async logout() {

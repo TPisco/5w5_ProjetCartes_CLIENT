@@ -106,6 +106,16 @@ export class MatchService {
       case "EndMatch": {
         this.matchData!.winningPlayerId = event.winningPlayerId;
         this.match!.isMatchCompleted = true;
+
+        if(this.matchData?.winningPlayerId == this.currentPlayerId){
+          this.playerData!.Elo = event.eLOWinner
+          this.adversaryData!.Elo = event.eLOLoser
+        }
+        else{
+          this.playerData!.Elo = event.eLOLoser
+          this.adversaryData!.Elo = event.eLOWinner
+        }
+        
         this.clearMatch();
         break;
       }
