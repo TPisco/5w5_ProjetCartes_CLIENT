@@ -53,18 +53,18 @@ export class HubServiceService {
     return Promise.resolve(undefined);
   }
 
-  playCard(playableCardId:number){
-    let storedMatchData  = sessionStorage.getItem("matchData");
-    if(storedMatchData)
-    this.matchData = JSON.parse(storedMatchData);
-    console.log( storedMatchData, playableCardId);
-    
-    this.hubConnection!.invoke("onPlayCardAsync", this.matchData?.match.id, playableCardId ).catch(err => console.error(err))
+  playCard(playableCardId: number) {
+    let storedMatchData = sessionStorage.getItem("matchData");
+    if (storedMatchData)
+      this.matchData = JSON.parse(storedMatchData);
+    console.log(storedMatchData, playableCardId);
+
+    this.hubConnection!.invoke("onPlayCardAsync", this.matchData?.match.id, playableCardId).catch(err => console.error(err))
   }
 
   getPlayerId() {
     return sessionStorage.getItem("playerId");
-    
+
   }
 
 }

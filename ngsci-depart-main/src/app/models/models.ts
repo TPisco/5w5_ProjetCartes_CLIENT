@@ -98,3 +98,14 @@ export interface PlayerData {
 //     Started:boolean;
 //     otherPlayerConnectionId:string;
 // }
+
+export interface UserEntry {
+    value: string;
+    key: string;
+}
+
+export interface Channel {
+    id: number;
+    title: string;
+  }
+  
