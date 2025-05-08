@@ -3,6 +3,7 @@ import { Card, MatchData, PlayableCard } from 'src/app/models/models';
 import { Injectable } from '@angular/core';
 import { Match } from '../models/models';
 import { FakerService } from './faker.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'

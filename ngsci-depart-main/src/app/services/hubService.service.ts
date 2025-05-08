@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as signalR from "@microsoft/signalr"
 import { MatchData } from '../models/models';
 // import { JoinMatchData } from '../models/models';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,8 @@ export class HubServiceService {
   constructor() { }
   private hubConnection?: signalR.HubConnection;
   matchData?: MatchData
-  url: string = "https://localhost:5276/matchHub";
+  // serverUrl = "http://localhost:5276/";
+   serverUrl = environment.apiUrl;
   //url : string = "https://localhost:7219/matchHub";
 
 
