@@ -111,6 +111,16 @@ export class HomeComponent implements OnInit {
     this.isSearchingMatch = true;
     this.searchMessage = 'Recherche d\'un match...';
 
+    let matchData  =  sessionStorage.getItem("matchData")
+
+    if(matchData!=null){
+
+      let match : MatchData  = JSON.parse( sessionStorage.getItem("matchData")! )
+      await this.hubConnection!.invoke("onJoinMatchAsync", match.match.id)
+      .catch(err => console.error('Error while sending join match request: ' + err));
+
+    }
+
     await this.hubConnection!.invoke("onJoinMatchAsync", null)
       .catch(err => console.error('Error while sending join match request: ' + err));
 
