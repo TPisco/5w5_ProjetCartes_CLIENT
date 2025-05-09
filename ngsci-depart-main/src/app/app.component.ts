@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     if (this.isLogged()) {
      
-        this.elo = await  this.ApiServices.GetPlayerElo();
+      this.elo = await  this.ApiServices.GetPlayerElo();
     }
   }
 
@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
 
   async getElo(){
    // return await this.ApiServices.GetPlayerElo();
-   return this.matchService.playerData?.Elo
+   this.elo = this.matchService.playerData!.Elo
   }
 
   async logout() {
