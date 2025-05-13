@@ -32,9 +32,17 @@ export class AppComponent implements OnInit {
   public elo: number | null = null;
 
   async ngOnInit(): Promise<void> {
+
+    const reloadFlag = sessionStorage.getItem('reloadFlag');
+    if (reloadFlag === 'true') {
+      this.router.navigate(["/"])
+    }
+    sessionStorage.removeItem('reloadFlag');
+
+
     if (this.isLogged()) {
-     
-      this.elo = await  this.ApiServices.GetPlayerElo();
+      await  this.ApiServices.GetPlayerElo();
+      this.elo = await this.ApiServices.updateElo();
     }
   }
 

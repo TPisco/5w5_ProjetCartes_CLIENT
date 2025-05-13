@@ -195,10 +195,12 @@ export class MatchComponent implements OnInit {
     }, 5000);
   }
 
-  endMatch() {
+  async endMatch() {
     this.matchService.clearMatch();
+    await this.apiService.updateElo();
+    window.location.reload();
+    sessionStorage.setItem('reloadFlag', 'true');
 
-    this.router.navigate(['/'])
   }
 
   isVictory() {

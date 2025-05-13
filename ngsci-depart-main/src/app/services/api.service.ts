@@ -13,6 +13,7 @@ export class ApiService {
 
   //serverUrl = "https://localhost:7179/";
   serverUrl = "http://localhost:5276/";
+  Elo? : number;
 
 
   constructor(public http: HttpClient) { }
@@ -137,7 +138,7 @@ export class ApiService {
     return x
   }
 
-  async GetPlayerElo(): Promise<number> {
+  async GetPlayerElo(): Promise<void> {
     let token = sessionStorage.getItem("token");
     let httpOptions = {
       headers: new HttpHeaders({
@@ -148,7 +149,20 @@ export class ApiService {
     let id  =sessionStorage.getItem("playerId");
     let x = await lastValueFrom(this.http.get<any>(this.serverUrl + "api/Players/GetElo/"+id, httpOptions))
     console.log(x);
-    return x
+
+    this.Elo = x
+  }
+
+
+  async updateElo(Elo? : number): Promise<number> {
+    
+    if(Elo !=null&& this.Elo==null){
+      this.Elo = Elo
+      return Elo;
+    }else{
+      return this.Elo!;
+    }
+    
   }
 
   decodeJwt(): any {
