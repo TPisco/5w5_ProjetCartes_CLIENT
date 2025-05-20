@@ -10,7 +10,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { loginGuard } from './login.guard';
 import { DecksComponent } from './components/decks/decks.component';
-import { RegarderMatchComponent } from './regarder-match/regarder-match.component';
+import { RegarderMatchComponent } from './components/regarder-match/regarder-match.component';
 
 
 const routes: Routes = [

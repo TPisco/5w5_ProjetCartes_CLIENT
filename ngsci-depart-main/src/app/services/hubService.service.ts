@@ -67,4 +67,10 @@ export class HubServiceService {
 
   }
 
+  // CHAT 
+  async sendMessages(message: string) {
+    if (this.hubConnection) {
+      await this.hubConnection.invoke('NewMessage', message).catch(err => console.error('Error while trying to send message : ' + err));
+    }
+  }
 }

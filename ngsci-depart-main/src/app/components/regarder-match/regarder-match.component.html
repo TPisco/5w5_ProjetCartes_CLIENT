@@ -1,4 +1,4 @@
-<div class="table-container">
+<div class="table-container" *ngIf="matchList.length > 0; else noMatches">
     <h1>Parties</h1>
     <table>
       <thead>
@@ -9,7 +9,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr *ngFor="let match of matchList">
           <td>newnew.com</td>
           <td>new2new.com</td>
           <td><button class="watch-button">Regarder</button></td>
@@ -17,3 +17,7 @@
       </tbody>
     </table>
   </div>
+
+  <ng-template #noMatches>
+    <p>Aucun match en cours pour le moment.</p>
+  </ng-template>
