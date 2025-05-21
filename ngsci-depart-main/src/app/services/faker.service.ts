@@ -47,7 +47,8 @@ export class FakerService {
           cardsPile: [],
           hand: [],
           battleField: [],
-          graveyard: []
+          graveyard: [],
+          Elo:1000
     }
     return playerData;
   }
