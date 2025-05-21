@@ -89,6 +89,7 @@ export interface PlayerData {
     hand: PlayableCard[];
     battleField: PlayableCard[];
     graveyard: PlayableCard[];
+    Elo:number;
 }
 
 // export interface JoinMatchData{

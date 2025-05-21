@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from './services/api.service';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpRequest } from '@microsoft/signalr';
+import { OnInit } from '@angular/core';
 
 
 @Component({
@@ -25,15 +26,33 @@ import { HttpRequest } from '@microsoft/signalr';
     RouterLink
   ],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'supercartesinfinies';
+
+  public elo: number | null = null;
+
+  async ngOnInit(): Promise<void> {
+
+    const reloadFlag = sessionStorage.getItem('reloadFlag');
+    if (reloadFlag === 'true') {
+      this.router.navigate(["/"])
+    }
+    sessionStorage.removeItem('reloadFlag');
+
+
+    if (this.isLogged()) {
+      await  this.ApiServices.GetPlayerElo();
+      this.elo = await this.ApiServices.updateElo();
+    }
+  }
 
   constructor(public router: Router, public matchService: MatchService, public ApiServices: ApiService) {
     if (!this.isLogged()) {
       this.router.navigate(["/login"])
     }
-  }
 
+  }
+  
 
   isLogged() {
     // TODO: Gérer l'affichage du joueur lorsqu'il est connecté
@@ -46,6 +65,11 @@ export class AppComponent {
     }
 
     return 'USERNAME';
+  }
+
+  async getElo(){
+   // return await this.ApiServices.GetPlayerElo();
+   this.elo = this.matchService.playerData!.Elo
   }
 
   async logout() {
