@@ -13,13 +13,13 @@ export interface Card {
 
     // Ajout pouvoir
     cardPowers: CardPower[];
-    
+
 }
 
 export interface CardPower {
     cardId: number;
     card: Card;
-    powerId : number;
+    powerId: number;
     power: Power;
     value: number;
 }
@@ -28,33 +28,49 @@ export interface Power {
     id: number;
     name: string;
     description: string;
-    icon : string;
+    icon: string;
+}
+//TODO : AJOUTER LES MODELS POUR STATUS
+export interface Status {
+    id: number;
+    name: string;
+    description: string;
+    icon: string;
+
+}
+export interface CardStatus {
+    id: number;
+    playableCardId: number;
+    playableCard: PlayableCard;
+    statusId: number;
+    status: Status;
+    value: number;
 }
 
 
 export interface Deck {
-    id?: number; 
-    name: string; 
-    deckCards:DeckCards[] ;
-    isCurrent: boolean; 
-  }
+    id?: number;
+    name: string;
+    deckCards: DeckCards[];
+    isCurrent: boolean;
+}
 //TODO : Ajouter un model pour DeckCards
-  export interface DeckCards{
+export interface DeckCards {
     id?: number;
     ownedCard: OwnedCards;
-    deck :Deck;
+    deck: Deck;
 
-  }
+}
 
 //TODO : Ajouter un model pour OwnedCards
 //Renvoyer model 
 //Test : Ajout du model OwnedCards, à supprimer si cela ne fonctionne pas
-export interface OwnedCards{
+export interface OwnedCards {
     id: number;
-    cardId : Number;
-    card : Card;
-    player : Player;
-    
+    cardId: Number;
+    card: Card;
+    player: Player;
+
 }
 
 export interface MatchData {
@@ -89,7 +105,7 @@ export interface PlayerData {
     hand: PlayableCard[];
     battleField: PlayableCard[];
     graveyard: PlayableCard[];
-    Elo:number;
+    Elo: number;
 }
 
 // export interface JoinMatchData{
@@ -108,5 +124,4 @@ export interface UserEntry {
 export interface Channel {
     id: number;
     title: string;
-  }
-  
+}
