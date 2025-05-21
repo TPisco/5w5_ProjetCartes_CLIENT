@@ -31,7 +31,7 @@ export class SortComponent implements OnInit {
   constructor(private api: ApiService) { }
 
   async ngOnInit() {
-    this.cards = await this.api.getAllCards();
+    //this.cards = await this.api.getAllCards();
 
     // this.sortedCards = [...this.cards];
     this.onSortPropertyChange('attack');
@@ -58,7 +58,6 @@ export class SortComponent implements OnInit {
 
     this.cards = [...this.cards].sort((a, b) => {
       if (a[this.sortProperty] < b[this.sortProperty]) {
-        console.log(this.cards)
         return this.sortOrder === 'asc' ? -1 : 1;
       }
       if (a[this.sortProperty] > b[this.sortProperty]) {

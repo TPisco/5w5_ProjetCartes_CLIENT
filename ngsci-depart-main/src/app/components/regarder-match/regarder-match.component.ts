@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { Channel, Match, MatchData, UserEntry } from '../../models/models';
 import * as signalR from "@microsoft/signalr"
 import { HubServiceService } from 'src/app/services/hubService.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-regarder-match',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './regarder-match.component.html',
   styleUrl: './regarder-match.component.css'
 })
@@ -50,7 +51,7 @@ export class RegarderMatchComponent {
   AffichagePartie() {
     if (this.hubConnection) {
       this.SeeMatches = true;
-      this.hubConnection.invoke('AfficheMatches')
+      this.hubConnection.invoke('SeeOngoingGame')
         .then(async response => console.log('Réponse AfficheMatches :', response))
         .catch(err => console.error('Erreur lors de l’invocation de AfficheMatches :', err));
     } else {

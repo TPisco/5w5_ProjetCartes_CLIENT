@@ -70,6 +70,7 @@ export interface Match {
     isPlayerATurn: boolean;
     playerDataA: PlayerData;
     playerDataB: PlayerData;
+    
 }
 
 export interface PlayableCard {
@@ -90,6 +91,7 @@ export interface PlayerData {
     battleField: PlayableCard[];
     graveyard: PlayableCard[];
     Elo:number;
+    player: Player
 }
 
 // export interface JoinMatchData{

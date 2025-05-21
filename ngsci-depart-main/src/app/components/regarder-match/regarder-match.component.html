@@ -10,8 +10,8 @@
       </thead>
       <tbody>
         <tr *ngFor="let match of matchList">
-          <td>newnew.com</td>
-          <td>new2new.com</td>
+          <td>{{match.playerDataB.player.name}}</td>
+          <td>{{match.playerDataA.player.name}}</td>
           <td><button class="watch-button">Regarder</button></td>
         </tr>
       </tbody>
