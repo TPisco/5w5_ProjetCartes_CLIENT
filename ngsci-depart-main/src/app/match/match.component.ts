@@ -111,7 +111,7 @@ export class MatchComponent implements OnInit {
       this.matchService.applyEvent(data);
     });
 
-    //TODO : AJOUT DES ÉVÈNEMENTS POUR LES STATUS ET LES NOUVEAUX POWERS
+    //TODO : AJOUT DES ÉVÈNEMENTS POUR LES STATUS ET LES NOUVEAUX POWERS (Rémi)
     //Évènements pour le ApplyPoison et PoisonDamage
     this.hubConnection!.on("Poison", (data) => {
       console.log(data)
@@ -132,6 +132,10 @@ export class MatchComponent implements OnInit {
     });
     //Évènements pour le ApplyDamageDown et DamageDown
     this.hubConnection!.on("ApplyDmgDown", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+    this.hubConnection!.on("DamageDown", (data) => {
       console.log(data)
       this.matchService.applyEvent(data);
     });
