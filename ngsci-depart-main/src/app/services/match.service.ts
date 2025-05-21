@@ -3,6 +3,8 @@ import { Card, MatchData, PlayableCard } from 'src/app/models/models';
 import { Injectable } from '@angular/core';
 import { Match } from '../models/models';
 import { FakerService } from './faker.service';
+import { AppComponent } from '../app.component';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,7 @@ export class MatchService {
   opponentSurrendered: boolean = false;
   isCurrentPlayerTurn: boolean = false;
 
-  constructor(public faker: FakerService) { }
+  constructor(public faker: FakerService, public apiService : ApiService) { }
 
   clearMatch() {
     this.match = null;
@@ -106,6 +108,20 @@ export class MatchService {
       case "EndMatch": {
         this.matchData!.winningPlayerId = event.winningPlayerId;
         this.match!.isMatchCompleted = true;
+
+        if(this.matchData?.winningPlayerId == this.currentPlayerId){
+          this.playerData!.Elo = event.eloWinner
+          this.adversaryData!.Elo = event.eloLoser
+          this.apiService.updateElo(event.eloWinner)
+          
+        }
+        else{
+          this.playerData!.Elo = event.eloLoser
+          this.adversaryData!.Elo = event.eloWinner
+          
+          this.apiService.updateElo(event.eloLoser)
+        }
+
         this.clearMatch();
         break;
       }

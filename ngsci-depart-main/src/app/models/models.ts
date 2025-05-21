@@ -89,6 +89,7 @@ export interface PlayerData {
     hand: PlayableCard[];
     battleField: PlayableCard[];
     graveyard: PlayableCard[];
+    Elo:number;
 }
 
 // export interface JoinMatchData{
@@ -98,3 +99,14 @@ export interface PlayerData {
 //     Started:boolean;
 //     otherPlayerConnectionId:string;
 // }
+
+export interface UserEntry {
+    value: string;
+    key: string;
+}
+
+export interface Channel {
+    id: number;
+    title: string;
+  }
+  

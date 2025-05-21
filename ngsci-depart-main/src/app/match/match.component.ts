@@ -53,8 +53,35 @@ export class MatchComponent implements OnInit {
     this.hubConnection!.on("Surrender", (data) => {
       console.log(data)
       this.matchService.applyEvent(data);
+
+      this.isMatchEnded = true
+
+      if(data.events[0].winningStringId ==  this.currentPlayerId){
+        this.endMessage = "Victoire!! <br> tu as gagné "+ data.events[0].eloWinner +" (+"+ data.events[0].eloGagne +") Elo"
+      }
+      else{
+        this.endMessage = "Défaite!! <br> tu as Perdu "+ data.events[0].eloLoser +" (-"+ data.events[0].eloPerdu +") Elo"
+      }
+      
+
+
+    });
+
+    this.hubConnection!.on("EndMatch", (data) => {
+
+      console.log(data)
+      this.matchService.applyEvent(data);
+      this.isMatchEnded = true
+
+      if(data.winningStringId ==  this.currentPlayerId){
+        this.endMessage = "Victoire!! <br> tu as gagné "+ data.eloWinner +" (+"+ data.eloGagne +") Elo"
+      }
+      else{
+        this.endMessage = "Défaite!! <br> tu as Perdu "+ data.eloLoser +" (-"+ data.eloPerdu +") Elo"
+      }
+      
+
       sessionStorage.removeItem("matchData");
-      this.router.navigate(['/']);
     });
 
     this.hubConnection!.on("FirstStrike", (data) => {
@@ -197,10 +224,12 @@ export class MatchComponent implements OnInit {
     }, 5000);
   }
 
-  endMatch() {
+  async endMatch() {
     this.matchService.clearMatch();
+    await this.apiService.updateElo();
+    window.location.reload();
+    sessionStorage.setItem('reloadFlag', 'true');
 
-    this.router.navigate(['/'])
   }
 
   isVictory() {

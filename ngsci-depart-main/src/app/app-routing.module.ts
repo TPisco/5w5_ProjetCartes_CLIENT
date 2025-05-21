@@ -10,6 +10,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { loginGuard } from './login.guard';
 import { DecksComponent } from './components/decks/decks.component';
+import { RegarderMatchComponent } from './components/regarder-match/regarder-match.component';
 
 
 const routes: Routes = [
@@ -23,7 +24,8 @@ const routes: Routes = [
       { path: 'decks', component: DecksComponent ,canActivate: [loginGuard]},
       { path: 'register', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
-      { path: 'app', component: AppComponent }
+      { path: 'app', component: AppComponent },
+      { path: 'regardermatch', component: RegarderMatchComponent}
     ]
   },
   { path: '**', redirectTo: '/' }
