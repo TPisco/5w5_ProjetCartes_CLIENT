@@ -11,6 +11,7 @@ export class HubServiceService {
   constructor() { }
   private hubConnection?: signalR.HubConnection;
   matchData?: MatchData
+  isSpectator : boolean = false;
   url: string = "https://localhost:5276/matchHub";
   //url : string = "https://localhost:7219/matchHub";
 
@@ -73,4 +74,6 @@ export class HubServiceService {
       await this.hubConnection.invoke('NewMessage', message).catch(err => console.error('Error while trying to send message : ' + err));
     }
   }
+
+
 }

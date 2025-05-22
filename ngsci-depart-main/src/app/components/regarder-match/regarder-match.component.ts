@@ -3,6 +3,7 @@ import { Channel, Match, MatchData, UserEntry } from '../../models/models';
 import * as signalR from "@microsoft/signalr"
 import { HubServiceService } from 'src/app/services/hubService.service';
 import { CommonModule } from '@angular/common';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-regarder-match',
@@ -18,13 +19,13 @@ export class RegarderMatchComponent {
   
   matchList : Match[] = [];
   SeeMatches = false;
-  constructor(private hubService: HubServiceService) { }
+  constructor(private hubService: HubServiceService, public router : Router) { }
 
   async ngOnInit() {
     // Démarrage du Hub
     await this.hubService.startHub();
     this.hubConnection = await this.hubService.getConnection();
-    this.AffichagePartie();
+    this.AffichageListePartie();
  
     if (this.hubConnection) {
       // Écoute des messages du serveur
@@ -33,22 +34,22 @@ export class RegarderMatchComponent {
         console.log('Liste des matches :', this.matchList);
       });
  
-      this.hubConnection.on('JoiningMatchSpectator', async (data) => {
+      this.hubConnection.on('JoiningMatchAsSpectator', async (data) => {
         console.log('Données de match rejointes :', data);
       });
  
-      this.hubConnection.on('NewMessage', (message) => {
-        console.log('Nouveau message :', message);
-      });
+      // this.hubConnection.on('NewMessage', (message) => {
+      //   console.log('Nouveau message :', message);
+      // });
  
-      this.hubConnection.on('LeaveChannel', (message) => {
-        console.log('Message de déconnexion :', message);
-      });
+      // this.hubConnection.on('LeaveChannel', (message) => {
+      //   console.log('Message de déconnexion :', message);
+      // });
  
     }
   }
 
-  AffichagePartie() {
+  AffichageListePartie() {
     if (this.hubConnection) {
       this.SeeMatches = true;
       this.hubConnection.invoke('SeeOngoingGame')
@@ -58,11 +59,12 @@ export class RegarderMatchComponent {
       console.error('HubConnection non initialisée.');
     }
   }
-  RegarderPartie(matchId: number) {
+  RegarderUnePartie(matchId: number) {
     if (this.hubConnection) {
       this.hubConnection.invoke('RegarderPartie', matchId)
         .then(response => console.log('Réponse regarderPartie :', response))
         .catch(err => console.error('Erreur lors de l’invocation de regarderPartie :', err));
+        this.router.navigate(['/match', matchId])
     } else {
       console.error('HubConnection non initialisée.');
     }

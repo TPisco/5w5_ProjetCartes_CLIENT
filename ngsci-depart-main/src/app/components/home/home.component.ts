@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit {
 
   isSearchingMatch: boolean = false;
   isConnected: Boolean = false;
+  isSpectator : boolean = false;
   searchMessage: string = '';
   private hubConnection?: signalR.HubConnection
   // joiningmatchData?: JoinMatchData;
@@ -62,14 +63,36 @@ export class HomeComponent implements OnInit {
       const playerId = this.apiService.decodeJwt().PlayerId
 
       console.log(playerId);
+      this.isSpectator = false;
 
       this.matchService.playMatch(joiningMatchData, playerId)
+    
 
       if (this.matchService.matchData) {
         this.router.navigate(["/match", this.matchService.matchData.match.id]);
         sessionStorage.setItem("matchData", JSON.stringify(joiningMatchData));
       }
     });
+
+    this.hubConnection!.on("JoinMatchAsSpectator", async (joiningMatchData: MatchData) => {
+      console.log(joiningMatchData);
+
+      // this.matchService.matchData = joiningMatchData;
+
+      const playerId = this.apiService.decodeJwt().PlayerId
+
+      console.log(playerId);
+      this.isSpectator = true;
+
+      this.matchService.playMatch(joiningMatchData, playerId)
+    
+
+      if (this.matchService.matchData) {
+        this.router.navigate(["/match", this.matchService.matchData.match.id]);
+        sessionStorage.setItem("matchData", JSON.stringify(joiningMatchData));
+      }
+    });
+
 
 
     // this.hubConnection!.on("joiningMatch", async (joiningMatchData: JoinMatchData) => {

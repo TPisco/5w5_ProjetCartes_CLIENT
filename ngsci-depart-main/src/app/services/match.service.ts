@@ -13,6 +13,7 @@ export class MatchService {
   match: Match | null = null;
   matchData: MatchData | null = null;
   currentPlayerId: number = -1;
+  isSpectator : boolean = false;
 
   playerData: PlayerData | undefined;
   adversaryData: PlayerData | undefined;
