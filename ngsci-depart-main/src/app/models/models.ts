@@ -70,6 +70,7 @@ export interface Match {
     isPlayerATurn: boolean;
     playerDataA: PlayerData;
     playerDataB: PlayerData;
+    spectatorsIds: string[];
     
 }
 

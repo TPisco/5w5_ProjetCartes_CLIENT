@@ -23,8 +23,17 @@ import { HubServiceService } from '../services/hubService.service';
 })
 export class MatchComponent implements OnInit {
   isMatchEnded: boolean = false;
+  matchData? : MatchData;
+  userId: string = sessionStorage.getItem('leActualUserId') ?? '';
+  userName: string = sessionStorage.getItem('email') ?? '';
+  matchId : number = 0;
   endMessage: string = '';
   private hubConnection?: signalR.HubConnection;
+  chatMessages: { sender: string; content: string; role: string }[] = [];
+  chatInput: string = '';
+  isSpectator: boolean = false;
+  connectedUsers: { email: string; role: 'player' | 'spectator' }[] = [];
+  mutedUsers: string[] = [];
   currentPlayerId: string = sessionStorage.getItem("playerId")!;
 
   // matchData?: MatchData;
@@ -42,6 +51,12 @@ export class MatchComponent implements OnInit {
       this.hubConnection = await this.hub.getConnection();
     }
 
+    this.hub.sendChatMessage(
+      this.matchId,
+      'System',
+      `${this.userName} has joined the match.`,
+      'system'
+    );
 
     // this.matchData = await this.hub.getMatch();
 
@@ -139,12 +154,19 @@ export class MatchComponent implements OnInit {
     });
 
 
-
-
-
   }
 
+  refreshConnectedUsers(): void {
+    const playerA = this.matchData?.playerA?.name ?? '';
+    const playerB = this.matchData?.playerB?.name ?? '';
+    const spectatorIds = this.matchData?.match?.spectatorsIds ?? [];
 
+    this.connectedUsers = [
+      { email: playerA, role: 'player' },
+      { email: playerB, role: 'player' },
+      ...spectatorIds.map(email => ({ email, role: 'spectator' as const }))
+    ];
+  }
 
   async endTurn() {
 
@@ -218,4 +240,49 @@ export class MatchComponent implements OnInit {
   isMatchCompleted() {
     return this.matchService.matchData?.match.isMatchCompleted;
   }
+
+  private async ensureHubConnection(): Promise<void> {
+    const maxRetries = 30;
+    let retries = 0;
+
+    while (!this.hub.isConnected && retries < maxRetries) {
+      await this.sleep(200);
+      retries++;
+    }
+
+    if (!this.hub.isConnected) {
+      console.error('Hub is not connected after retries');
+    }
+  }
+
+  private async waitForMatchData(): Promise<void> {
+    while (!this.hub.matchData) {
+      await this.sleep(100);
+    }
+  }
+
+  private sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  sendMessage(): void {
+    if (!this.chatInput.trim() || !this.matchService.match) return;
+
+    const message = {
+      sender: this.userName,
+      content: this.chatInput.trim(),
+      role: this.isSpectator ? 'spectator' : 'player'
+    };
+
+    this.hub.sendChatMessage(
+      this.matchService.match.id,
+      message.sender,
+      message.content,
+      message.role
+    );
+
+    this.chatInput = '';
+  }
 }
+
+
