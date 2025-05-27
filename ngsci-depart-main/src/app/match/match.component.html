@@ -38,18 +38,32 @@
 </div>
 }
 
-<!-- Chat Box -->
 <div class="chat-box">
   <h3>Chat</h3>
   <div class="chat-messages" #chatContainer>
     <div *ngFor="let message of chatMessages">
-      <div class="chat-message" [ngClass]="{ 'spectator-message': message.role === 'spectator', 'player-message': message.role === 'player' }">
+      <div
+        class="chat-message"
+        [ngClass]="{
+          'spectator-message': message.role === 'spectator',
+          'player-message': message.role === 'player'
+        }"
+      >
         <div class="sender-line">
-          <!-- <mat-icon *ngIf="message.role === 'player'">person</mat-icon>
-          <mat-icon *ngIf="message.role === 'spectator'">visibility</mat-icon>-->
+          <!-- mat-icon à décommenter si besoin -->
           <span class="sender">{{ message.sender }}</span>
         </div>
         <div class="content">{{ message.content }}</div>
       </div>
     </div>
   </div>
+
+  <!-- Input et bouton en bas, hors des messages -->
+  <div class="chat-input">
+    <input
+      type="text"
+      placeholder="Type your message..."
+    />
+    <button (click)="sendMessage()">Send</button>
+  </div>
+</div>

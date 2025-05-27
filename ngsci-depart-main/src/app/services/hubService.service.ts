@@ -3,6 +3,7 @@ import * as signalR from "@microsoft/signalr"
 import { MatchData } from '../models/models';
 import { Route, Router } from '@angular/router';
 import { MatchService } from './match.service';
+import { HttpClient } from '@angular/common/http';
 // import { JoinMatchData } from '../models/models';
 
 @Injectable({
@@ -10,7 +11,7 @@ import { MatchService } from './match.service';
 })
 export class HubServiceService {
 
-  constructor(public http: signalR.HttpClient, public router : Router, public match: MatchService) { }
+  constructor(public http: HttpClient, public router : Router, public match: MatchService) { }
   private hubConnection?: signalR.HubConnection;
   matchData?: MatchData
   isSpectator : boolean = false;
@@ -41,60 +42,8 @@ export class HubServiceService {
 
   }
 
-  async getConnection(): Promise<signalR.HubConnection> {
-    //return Promise.resolve(this.hubConnection ?? undefined);
-
-    if (this.hubConnection != null) {
-      return this.hubConnection;
-    } else {
-      this.hubConnection = new signalR.HubConnectionBuilder()
-        .withUrl('https://localhost:7179/matchHub', {
-          accessTokenFactory: () => {
-            const token = sessionStorage.getItem("token");
-            if (!token) {
-              console.error("Authorization token is missing");
-              throw new Error("Authorization token is missing");
-            }
-            return token;
-          }
-        })
-        .build();
-
-      this.hubConnection.on('JoiningMatchData', (data: MatchData) => {
-        if (sessionStorage.getItem('email') === data.playerA.name) {
-          this.matchData = data;
-          this.match.playMatch(data, data.playerA.id);
-        } else if (sessionStorage.getItem('email') === data.playerB.name) {
-          this.matchData = data;
-          
-          this.match.playMatch(data, data.playerB.id);
-        } else
-        {
-          this.matchData = data;
-          this.match.playMatch(data, -1);
-        }
-        console.log("Match data:", this.matchData);
-        this.router.navigate(['/match/' + data.match.id]);
-      });
-
-      this.hubConnection.on('PlayEvent', (data) => {
-        this.match.applyEvent(data);
-      });
-
-      this.hubConnection.on('Join', (data) => {
-        this.joinMatch();
-      });
-
-      try {
-        await this.hubConnection.start();
-        console.log('La connexion est active!');
-      } catch (error) {
-        console.error('Error while starting connection:', error);
-        throw error;
-      }
-
-      return this.hubConnection;
-    }
+  getConnection(): Promise<signalR.HubConnection> {
+    return Promise.resolve(this.hubConnection!);
   }
 
   getMatch(): Promise<MatchData | undefined> {

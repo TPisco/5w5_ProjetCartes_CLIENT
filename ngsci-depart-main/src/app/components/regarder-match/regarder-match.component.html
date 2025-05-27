@@ -12,7 +12,7 @@
         <tr *ngFor="let match of matchList">
           <td>{{match.playerDataB.player.name}}</td>
           <td>{{match.playerDataA.player.name}}</td>
-          <td><button class="watch-button">Regarder</button></td>
+          <td><button class="watch-button" (click)="RegarderUnePartie(match.id)">Regarder</button></td>
         </tr>
       </tbody>
     </table>

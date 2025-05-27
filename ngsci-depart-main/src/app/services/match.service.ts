@@ -1,10 +1,11 @@
 import { PlayerData } from './../models/models';
 import { Card, MatchData, PlayableCard } from 'src/app/models/models';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Match } from '../models/models';
 import { FakerService } from './faker.service';
 import { AppComponent } from '../app.component';
 import { ApiService } from './api.service';
+import { HubServiceService } from './hubService.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class MatchService {
 
   opponentSurrendered: boolean = false;
   isCurrentPlayerTurn: boolean = false;
+  private hubService?: HubServiceService;
 
   constructor(public faker: FakerService, public apiService : ApiService) { }
 

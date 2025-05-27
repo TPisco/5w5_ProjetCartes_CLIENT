@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
   // joiningmatchData?: JoinMatchData;
   // matchData?: MatchData
   currentPlayerId: string = sessionStorage.getItem("playerId")!;
-  constructor(public router: Router, public match: MatchService, public hub: HubServiceService, public matchService: MatchService, private apiService: ApiService) { }
+  constructor(public router: Router, public hub: HubServiceService, public matchService: MatchService, private apiService: ApiService) { }
 
   async ngOnInit() {
     await this.setupSignalRConnection();
