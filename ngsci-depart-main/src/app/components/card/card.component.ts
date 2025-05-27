@@ -34,19 +34,35 @@ export class CardComponent implements OnInit {
   @Input() health:number = 0;
   beautifulBackUrl = "https://i.pinimg.com/236x/3c/73/0d/3c730d6df70700a3c912a3c87d6d2027.jpg";
 
+
+  bounceState: string[] = [];
+  powersToShow: any[] = [];
+
   constructor() { }
 
   ngOnInit() {
-
+    this.powersToShow = this.card?.cardPowers || [];
+    this.bounceState = new Array(this.powersToShow.length).fill('');
   }
 
-  bounceState: string = '';
+  //bounceState: string = '';
 
 
   onCardClick() {
-    this.bounceState = 'active';
-    setTimeout(() => {
-      this.bounceState = ''; // Réinitialise l'état pour rejouer l'animation
-    }, 2000);
+    // Réinitialiser les états d'animation
+    this.bounceState = new Array(this.powersToShow.length).fill('');
+
+    // Afficher chaque pouvoir un par un, pendant 2 secondes
+    this.powersToShow.forEach((_, index) => {
+      setTimeout(() => {
+        this.bounceState[index] = 'active';
+
+        // Après 2 secondes, on cache l’animation
+        setTimeout(() => {
+          this.bounceState[index] = '';
+        }, 2000);
+
+      }, index * 2100); // Délai entre les animations
+    });
   }
 }
