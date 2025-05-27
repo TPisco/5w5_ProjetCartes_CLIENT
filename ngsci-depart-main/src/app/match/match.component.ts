@@ -9,9 +9,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { PlayerhandComponent } from './playerhand/playerhand.component';
 import { EnemyhandComponent } from './enemyhand/enemyhand.component';
 import { BattlefieldComponent } from './battlefield/battlefield.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 import * as signalR from "@microsoft/signalr";
 import { HubServiceService } from '../services/hubService.service';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
@@ -19,7 +20,8 @@ import { HubServiceService } from '../services/hubService.service';
   templateUrl: './match.component.html',
   styleUrls: ['./match.component.css'],
   standalone: true,
-  imports: [CommonModule, BattlefieldComponent, EnemyhandComponent, PlayerhandComponent, MatButtonModule, HealthComponent]
+  imports: [CommonModule, BattlefieldComponent, EnemyhandComponent, PlayerhandComponent
+    , MatButtonModule, HealthComponent, NgIf, HealthComponent, MatIconModule  ]
 })
 export class MatchComponent implements OnInit {
   isMatchEnded: boolean = false;
@@ -35,6 +37,7 @@ export class MatchComponent implements OnInit {
   connectedUsers: { email: string; role: 'player' | 'spectator' }[] = [];
   mutedUsers: string[] = [];
   currentPlayerId: string = sessionStorage.getItem("playerId")!;
+
 
   // matchData?: MatchData;
   taskname: string = "";
@@ -77,9 +80,6 @@ export class MatchComponent implements OnInit {
       else{
         this.endMessage = "Défaite!! <br> tu as Perdu "+ data.events[0].eloLoser +" (-"+ data.events[0].eloPerdu +") Elo"
       }
-      
-
-
     });
 
     this.hubConnection!.on("EndMatch", (data) => {
@@ -94,6 +94,7 @@ export class MatchComponent implements OnInit {
       else{
         this.endMessage = "Défaite!! <br> tu as Perdu "+ data.eloLoser +" (-"+ data.eloPerdu +") Elo"
       }
+      
       
 
       sessionStorage.removeItem("matchData");
@@ -154,6 +155,43 @@ export class MatchComponent implements OnInit {
     });
 
 
+    this.ensureHubConnection().then(() => {
+      setTimeout(() => {
+        this.hub.joinMatch(this.matchId).then(() => {
+          this.waitForMatchData().then(() => {
+            this.matchData = this.hub.matchData;
+
+            this.refreshConnectedUsers();
+
+            const currentEmail = sessionStorage.getItem('email') ?? '';
+            const playerEmails = [
+              this.matchData?.playerA?.name,
+              this.matchData?.playerB?.name
+            ].filter(Boolean);
+            this.isSpectator = !playerEmails.includes(currentEmail);
+
+            this.subscribeToHubEvents();
+          });
+        });
+      }, 300);
+    });
+  }
+
+
+
+  private subscribeToHubEvents(): void {
+    this.hub.onBanFromMatch((matchId, bannedEmail) => {
+      if (this.userName === bannedEmail) {
+        alert(`You have been banned from match #${matchId}`);
+        this.matchService.clearMatch();
+        this.router.navigate(['/matches']);
+      }
+      this.refreshConnectedUsers();
+    });
+
+    this.hub.onChatMessage((sender, message, role) => {
+      this.chatMessages.push({ sender, content: message, role });
+    });
   }
 
   refreshConnectedUsers(): void {
@@ -169,8 +207,6 @@ export class MatchComponent implements OnInit {
   }
 
   async endTurn() {
-
-
 
     this.hubConnection!.invoke("onEndTurnAsync", this.matchService.matchData?.match.id)
       .catch(err => {

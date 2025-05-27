@@ -19,6 +19,7 @@ export class FakerService {
         isPlayerATurn: false,
         playerDataA: this.createFakePlayerData(PlayerAId, "Adversaire"),
         playerDataB: this.createFakePlayerData(PlayerBId, "Joueur"),
+        spectatorsIds: []
       },
       playerA: {
         id: 1,

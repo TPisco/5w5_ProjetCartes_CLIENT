@@ -74,6 +74,12 @@ export interface Match {
     
 }
 
+export interface ChatMessage {
+    sender: string;
+    message: string;
+    role: string;
+  }
+
 export interface PlayableCard {
     id: number;
     card: Card;

@@ -145,4 +145,14 @@ export class HubServiceService {
     let hubC = await this.getConnection();
     return hubC.state === signalR.HubConnectionState.Connected;
   }
+
+  public async onBanFromMatch(callback: (matchId: number, bannedEmail: string) => void): Promise<void> {
+    const hub = await this.getConnection();
+    hub.on('BannedFromMatchWithId', callback);
+  }
+
+  async onChatMessage(callback: (sender: string, message: string, role: string) => void) {
+  let hubC = await this.getConnection();
+  hubC.on("ReceiveChatMessage", callback);
+  }
 }
