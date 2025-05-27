@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Card, MatchData, PlayableCard, PlayerData } from '../models/models';
+import { Card, MatchData, PlayableCard, Player, PlayerData } from '../models/models';
 
 const PlayerAId = 1;
 const PlayerBId = 2;
@@ -19,6 +19,7 @@ export class FakerService {
         isPlayerATurn: false,
         playerDataA: this.createFakePlayerData(PlayerAId, "Adversaire"),
         playerDataB: this.createFakePlayerData(PlayerBId, "Joueur"),
+        spectatorsIds: []
       },
       playerA: {
         id: 1,
@@ -37,6 +38,7 @@ export class FakerService {
   }
 
   private createFakePlayerData(playerId:number, name:string) : PlayerData {
+    let player : Player = {id:-1,name:"aaa"}
     let playerData:PlayerData = {
           id: -1,
           health: 20,
@@ -48,7 +50,8 @@ export class FakerService {
           hand: [],
           battleField: [],
           graveyard: [],
-          Elo:1000
+          Elo:1000,
+          player: player
     }
     return playerData;
   }

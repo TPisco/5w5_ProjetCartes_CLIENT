@@ -86,7 +86,15 @@ export interface Match {
     isPlayerATurn: boolean;
     playerDataA: PlayerData;
     playerDataB: PlayerData;
+    spectatorsIds: string[];
+    
 }
+
+export interface ChatMessage {
+    sender: string;
+    message: string;
+    role: string;
+  }
 
 export interface PlayableCard {
     id: number;
@@ -105,7 +113,8 @@ export interface PlayerData {
     hand: PlayableCard[];
     battleField: PlayableCard[];
     graveyard: PlayableCard[];
-    Elo: number;
+    Elo:number;
+    player: Player
 }
 
 // export interface JoinMatchData{
