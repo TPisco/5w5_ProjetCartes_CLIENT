@@ -5,6 +5,7 @@ import { Match } from '../models/models';
 import { FakerService } from './faker.service';
 import { AppComponent } from '../app.component';
 import { ApiService } from './api.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'

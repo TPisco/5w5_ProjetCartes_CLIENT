@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { Card, Deck, Player } from '../models/models';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -12,8 +13,8 @@ import { Router } from '@angular/router';
 export class ApiService {
 
   //serverUrl = "https://localhost:7179/";
-  serverUrl = "http://localhost:5276/";
-  Elo? : number;
+ // serverUrl = "http://localhost:5276/";
+  serverUrl = environment.apiUrl;
 
 
   constructor(public http: HttpClient) { }

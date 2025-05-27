@@ -13,6 +13,7 @@ import { DecksComponent } from './components/decks/decks.component';
 import { RegarderMatchComponent } from './components/regarder-match/regarder-match.component';
 
 
+
 const routes: Routes = [
   { path: 'match/:id', component: MatchComponent },
 
