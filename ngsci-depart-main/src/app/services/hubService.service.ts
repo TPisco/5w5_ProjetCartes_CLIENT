@@ -77,14 +77,24 @@ export class HubServiceService {
   }
 
   async joinMatch(matchId?: number) {
+    try {
     let hubC = await this.getConnection();
-    hubC.invoke('JoinMatch', matchId);
+    await hubC.invoke('onJoinMatchAsync', matchId);
+  } catch (error) {
+    console.error("Failed to invoke JoinMatch:", error);
   }
+}
+
+  async onChatMessage(callback: (sender: string, message: string, role: string) => void) {
+    let hub = await this.getConnection();
+    hub.on("ReceiveChatMessage", callback);
+  }
+
 
   async sendChatMessage(matchId: number, sender: string, message: string, role: string) {
     try {
       const hubC = await this.getConnection();
-      await hubC.invoke('SendChatMessage', matchId, sender, message, role);
+      await hubC.invoke('SendMessage', matchId, sender, message, role);
     } catch (error) {
       console.error("Failed to send chat message:", error);
     }
@@ -100,8 +110,14 @@ export class HubServiceService {
     hub.on('BannedFromMatchWithId', callback);
   }
 
-  async onChatMessage(callback: (sender: string, message: string, role: string) => void) {
-  let hubC = await this.getConnection();
-  hubC.on("ReceiveChatMessage", callback);
+    async onPlayerJoined(callback: (userEmail: string) => void) {
+    let hubC = await this.getConnection();
+    hubC.on("PlayerJoined", callback);
   }
+
+  async onPlayerLeft(callback: () => void) {
+    let hubC = await this.getConnection();
+    hubC.on("PlayerLeft", callback);
+  }
+
 }
