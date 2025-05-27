@@ -53,8 +53,35 @@ export class MatchComponent implements OnInit {
     this.hubConnection!.on("Surrender", (data) => {
       console.log(data)
       this.matchService.applyEvent(data);
+
+      this.isMatchEnded = true
+
+      if(data.events[0].winningStringId ==  this.currentPlayerId){
+        this.endMessage = "Victoire!! <br> tu as gagné "+ data.events[0].eloWinner +" (+"+ data.events[0].eloGagne +") Elo"
+      }
+      else{
+        this.endMessage = "Défaite!! <br> tu as Perdu "+ data.events[0].eloLoser +" (-"+ data.events[0].eloPerdu +") Elo"
+      }
+      
+
+
+    });
+
+    this.hubConnection!.on("EndMatch", (data) => {
+
+      console.log(data)
+      this.matchService.applyEvent(data);
+      this.isMatchEnded = true
+
+      if(data.winningStringId ==  this.currentPlayerId){
+        this.endMessage = "Victoire!! <br> tu as gagné "+ data.eloWinner +" (+"+ data.eloGagne +") Elo"
+      }
+      else{
+        this.endMessage = "Défaite!! <br> tu as Perdu "+ data.eloLoser +" (-"+ data.eloPerdu +") Elo"
+      }
+      
+
       sessionStorage.removeItem("matchData");
-      this.router.navigate(['/']);
     });
 
     this.hubConnection!.on("FirstStrike", (data) => {
@@ -107,6 +134,35 @@ export class MatchComponent implements OnInit {
       this.matchService.applyEvent(data);
     });
     this.hubConnection!.on("PlayCard", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+
+    //TODO : AJOUT DES ÉVÈNEMENTS POUR LES STATUS ET LES NOUVEAUX POWERS (Rémi)
+    //Évènements pour le ApplyPoison et PoisonDamage
+    this.hubConnection!.on("Poison", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+    this.hubConnection!.on("PoisonDamage", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+    //Évènements pour le ApplyStun et StunEvent
+    this.hubConnection!.on("Stun", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+    this.hubConnection!.on("StunnedNoAttack", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+    //Évènements pour le ApplyDamageDown et DamageDown
+    this.hubConnection!.on("ApplyDmgDown", (data) => {
+      console.log(data)
+      this.matchService.applyEvent(data);
+    });
+    this.hubConnection!.on("DamageDown", (data) => {
       console.log(data)
       this.matchService.applyEvent(data);
     });
@@ -168,10 +224,12 @@ export class MatchComponent implements OnInit {
     }, 5000);
   }
 
-  endMatch() {
+  async endMatch() {
     this.matchService.clearMatch();
+    await this.apiService.updateElo();
+    window.location.reload();
+    sessionStorage.setItem('reloadFlag', 'true');
 
-    this.router.navigate(['/'])
   }
 
   isVictory() {

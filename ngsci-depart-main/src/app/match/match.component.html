@@ -19,7 +19,9 @@
   </div>
 </div>
 <div *ngIf="isMatchEnded" class="end">
-  <p>{{ endMessage }}</p>
+  <h1 [innerHTML]="endMessage"></h1>
+  <button mat-raised-button  color="accent"
+  style="margin-right: 20px;" (click)="endMatch()">Terminer</button>
 </div>
 @if (matchService.playerData) {
 <div>
