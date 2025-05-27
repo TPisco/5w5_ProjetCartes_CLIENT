@@ -85,10 +85,7 @@ export class HubServiceService {
   }
 }
 
-  async onChatMessage(callback: (sender: string, message: string, role: string) => void) {
-    let hub = await this.getConnection();
-    hub.on("ReceiveChatMessage", callback);
-  }
+
 
 
   async sendChatMessage(matchId: number, sender: string, message: string, role: string) {
@@ -98,6 +95,11 @@ export class HubServiceService {
     } catch (error) {
       console.error("Failed to send chat message:", error);
     }
+  }
+
+  async onChatMessage(callback: (sender: string, message: string, role: string) => void) {
+    let hubC = await this.getConnection();
+    hubC.on("ReceiveChatMessage", callback);
   }
 
   async isConnected(): Promise<boolean> {

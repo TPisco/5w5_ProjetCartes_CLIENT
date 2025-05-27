@@ -1,5 +1,5 @@
 import { FakerService } from './../services/faker.service';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, NgModule, OnInit, signal } from '@angular/core';
 import { MatchData, PlayerData } from '../models/models';
 import { MatchService } from './../services/match.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,6 +13,7 @@ import { CommonModule, NgIf } from '@angular/common';
 import * as signalR from "@microsoft/signalr";
 import { HubServiceService } from '../services/hubService.service';
 import { MatIconModule } from '@angular/material/icon';
+import { FormsModule, NgModel } from '@angular/forms';
 
 
 @Component({
@@ -21,13 +22,13 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./match.component.css'],
   standalone: true,
   imports: [CommonModule, BattlefieldComponent, EnemyhandComponent, PlayerhandComponent
-    , MatButtonModule, HealthComponent, NgIf, HealthComponent, MatIconModule  ]
+    , MatButtonModule, HealthComponent, NgIf, HealthComponent, MatIconModule, CommonModule, FormsModule  ]
 })
 export class MatchComponent implements OnInit {
   isMatchEnded: boolean = false;
   matchData? : MatchData;
   userId: string = sessionStorage.getItem('leActualUserId') ?? '';
-  userName: string = sessionStorage.getItem('email') ?? '';
+  userName: string = sessionStorage.getItem('username') ?? '';
   matchId : number = 0;
   endMessage: string = '';
   private hubConnection?: signalR.HubConnection;
@@ -49,6 +50,7 @@ export class MatchComponent implements OnInit {
     this.hubConnection = await this.hub.getConnection();
 
 
+
     if (!this.hubConnection) {
       await this.hub.startHub();
       this.hubConnection = await this.hub.getConnection();
@@ -62,6 +64,20 @@ export class MatchComponent implements OnInit {
     );
 
     // this.matchData = await this.hub.getMatch();
+    this.hub.onChatMessage((sender, message, role) => {
+      console.log('[CHAT MESSAGE]', { sender, message, role });
+      this.chatMessages.push({ sender, content: message, role });
+    });
+
+    this.hub.onBanFromMatch((matchId, bannedEmail) => {
+      if (this.userName === bannedEmail) {
+        alert(`You have been banned from match #${matchId}`);
+        this.matchService.clearMatch();
+        this.router.navigate(['/matches']);
+      }
+      this.refreshConnectedUsers();
+    });
+
 
     this.hubConnection!.on("EndTurn", (data) => {
       console.log(data)
@@ -154,6 +170,10 @@ export class MatchComponent implements OnInit {
       this.matchService.applyEvent(data);
     });
 
+    this.hubConnection!.on("ReceiveChatMessage", (data) => {
+      console.log(data)
+    });
+
 
     this.ensureHubConnection().then(() => {
       setTimeout(() => {
@@ -180,19 +200,10 @@ export class MatchComponent implements OnInit {
 
 
   private subscribeToHubEvents(): void {
-    this.hub.onBanFromMatch((matchId, bannedEmail) => {
-      if (this.userName === bannedEmail) {
-        alert(`You have been banned from match #${matchId}`);
-        this.matchService.clearMatch();
-        this.router.navigate(['/matches']);
-      }
-      this.refreshConnectedUsers();
-    });
 
-    this.hub.onChatMessage((sender, message, role) => {
-      this.chatMessages.push({ sender, content: message, role });
-    });
+    
   }
+  
 
   refreshConnectedUsers(): void {
     const playerA = this.matchData?.playerA?.name ?? '';
@@ -204,6 +215,8 @@ export class MatchComponent implements OnInit {
       { email: playerB, role: 'player' },
       ...spectatorIds.map(email => ({ email, role: 'spectator' as const }))
     ];
+
+    console.log('Connected users:', this.connectedUsers);
   }
 
   async endTurn() {
@@ -302,16 +315,17 @@ export class MatchComponent implements OnInit {
   }
 
   sendMessage(): void {
-    if (!this.chatInput.trim() || !this.matchService.match) return;
+    //if (!this.chatInput.trim() || !this.matchService.match) return;
 
     const message = {
-      sender: this.userName,
-      content: this.chatInput.trim(),
+      sender : this.userName,
+      content: this.chatInput,
       role: this.isSpectator ? 'spectator' : 'player'
     };
 
+    console.log(message)
     this.hub.sendChatMessage(
-      this.matchService.match.id,
+      this.matchService.match!.id,
       message.sender,
       message.content,
       message.role

@@ -61,7 +61,7 @@ export class RegarderMatchComponent {
   }
   RegarderUnePartie(matchId: number) {
     if (this.hubConnection) {
-      this.hubConnection.invoke('RegarderPartie', matchId)
+      this.hubConnection.invoke('onJoinMatchAsync', matchId)
         .then(response => console.log('Réponse regarderPartie :', response))
         .catch(err => console.error('Erreur lors de l’invocation de regarderPartie :', err));
         this.router.navigate(['/match', matchId])

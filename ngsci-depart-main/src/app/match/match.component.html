@@ -25,11 +25,18 @@
 </div>
 @if (matchService.playerData) {
 <div>
+  <ng-container *ngIf="!isSpectator">
   <app-playerhand [cards]="matchService.playerData.hand"></app-playerhand>
   <button mat-raised-button [disabled]="!matchService.isCurrentPlayerTurn" class="endturn" color="accent"
     style="margin-right: 20px;" (click)="endTurn()">Terminer</button>
   <button mat-raised-button class="surrender" color="warn" style="margin-right: 20px;"
     (click)="surrender()">Abandonner</button>
+  </ng-container>
+
+    <!-- Si spectateur, on affiche la main en ennemie uniquement -->
+  <ng-container *ngIf="isSpectator && matchService.playerData">
+    <app-enemyhand [cards]="matchService.playerData.hand"></app-enemyhand>
+  </ng-container>
   <app-health [enemy]="true" [maxhealth]="matchService.adversaryData!.maxhealth"
     [health]="matchService.adversaryData!.health" [mana]="matchService.adversaryData!.mana"
     [playername]="matchService.adversaryData!.playerName"></app-health>
@@ -37,6 +44,7 @@
     [mana]="matchService.playerData!.mana" [playername]="matchService.playerData!.playerName"></app-health>
 </div>
 }
+
 
 <div class="chat-box">
   <h3>Chat</h3>
@@ -50,7 +58,6 @@
         }"
       >
         <div class="sender-line">
-          <!-- mat-icon à décommenter si besoin -->
           <span class="sender">{{ message.sender }}</span>
         </div>
         <div class="content">{{ message.content }}</div>
@@ -58,12 +65,21 @@
     </div>
   </div>
 
+  <div class="connected-users">
+    <h3>Utilisateurs connectés</h3>
+    <p *ngIf="!connectedUsers.length">Aucun utilisateur connecté</p>
+    <ul>
+      <li *ngFor="let user of connectedUsers">
+        <strong>{{ user.email }}</strong>
+        <span *ngIf="user.role === 'player'"> (Joueur)</span>
+        <span *ngIf="user.role === 'spectator'"> (Spectateur)</span>
+      </li>
+    </ul>
+  </div>
+
   <!-- Input et bouton en bas, hors des messages -->
   <div class="chat-input">
-    <input
-      type="text"
-      placeholder="Type your message..."
-    />
+    <input type="text" placeholder="Type your message..." [(ngModel)]="chatInput"/>
     <button (click)="sendMessage()">Send</button>
   </div>
 </div>
