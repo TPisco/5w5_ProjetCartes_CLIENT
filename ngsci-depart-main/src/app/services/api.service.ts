@@ -13,8 +13,8 @@ import { environment } from 'src/environments/environment';
 export class ApiService {
 
   //serverUrl = "https://localhost:7179/";
- // serverUrl = "http://localhost:5276/";
-  serverUrl = environment.apiUrl;
+  serverUrl = "http://localhost:5276/";
+  //serverUrl = environment.apiUrl;
 Elo?:number;
 
   constructor(public http: HttpClient) { }
