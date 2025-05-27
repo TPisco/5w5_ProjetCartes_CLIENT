@@ -25,8 +25,8 @@
 </div>
 @if (matchService.playerData) {
 <div>
-  <ng-container *ngIf="!isSpectator">
-  <app-playerhand [cards]="matchService.playerData.hand"></app-playerhand>
+  <ng-container>
+  <app-playerhand [isSpectator]="isSpectator" [cards]="matchService.playerData.hand"></app-playerhand>
   <button mat-raised-button [disabled]="!matchService.isCurrentPlayerTurn" class="endturn" color="accent"
     style="margin-right: 20px;" (click)="endTurn()">Terminer</button>
   <button mat-raised-button class="surrender" color="warn" style="margin-right: 20px;"
@@ -34,9 +34,6 @@
   </ng-container>
 
     <!-- Si spectateur, on affiche la main en ennemie uniquement -->
-  <ng-container *ngIf="isSpectator && matchService.playerData">
-    <app-enemyhand [cards]="matchService.playerData.hand"></app-enemyhand>
-  </ng-container>
   <app-health [enemy]="true" [maxhealth]="matchService.adversaryData!.maxhealth"
     [health]="matchService.adversaryData!.health" [mana]="matchService.adversaryData!.mana"
     [playername]="matchService.adversaryData!.playerName"></app-health>

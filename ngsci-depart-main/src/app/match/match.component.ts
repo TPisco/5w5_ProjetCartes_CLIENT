@@ -69,6 +69,9 @@ export class MatchComponent implements OnInit {
       this.chatMessages.push({ sender, content: message, role });
     });
 
+ 
+
+
     this.hub.onBanFromMatch((matchId, bannedEmail) => {
       if (this.userName === bannedEmail) {
         alert(`You have been banned from match #${matchId}`);
@@ -175,6 +178,8 @@ export class MatchComponent implements OnInit {
     });
 
 
+
+
     this.ensureHubConnection().then(() => {
       setTimeout(() => {
         this.hub.joinMatch(this.matchId).then(() => {
@@ -183,18 +188,27 @@ export class MatchComponent implements OnInit {
 
             this.refreshConnectedUsers();
 
-            const currentEmail = sessionStorage.getItem('email') ?? '';
-            const playerEmails = [
+            const currentUsername = sessionStorage.getItem('username') ?? '';
+            const playerUsernames = [
               this.matchData?.playerA?.name,
               this.matchData?.playerB?.name
             ].filter(Boolean);
-            this.isSpectator = !playerEmails.includes(currentEmail);
+            this.isSpectator = !playerUsernames.includes(currentUsername);
 
             this.subscribeToHubEvents();
           });
         });
       }, 300);
     });
+    
+    const currentUsername = sessionStorage.getItem('username') ?? '';
+            const playerUsernames = [
+              this.matchData?.playerA?.name,
+              this.matchData?.playerB?.name
+            ].filter(Boolean);
+            this.isSpectator = !playerUsernames.includes(currentUsername);
+    this.refreshConnectedUsers();
+
   }
 
 
@@ -206,7 +220,7 @@ export class MatchComponent implements OnInit {
   
 
   refreshConnectedUsers(): void {
-    const playerA = this.matchData?.playerA?.name ?? '';
+    const playerA = this.matchData?.playerA.name ?? '';
     const playerB = this.matchData?.playerB?.name ?? '';
     const spectatorIds = this.matchData?.match?.spectatorsIds ?? [];
 

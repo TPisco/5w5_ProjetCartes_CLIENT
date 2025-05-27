@@ -2,7 +2,7 @@
 
   <div class="container">
     @for (card of cards; track card) {
-      <app-card [card]="card.card" [id]="card.id" class="card fadeIn" (click)="click(card.id)"></app-card>
+      <app-card [card]="card.card" [show]="isSpectator ? 'back' : 'front'" [id]="card.id" class="card fadeIn" (click)="click(card.id)"></app-card>
     }
   </div>
 </div>

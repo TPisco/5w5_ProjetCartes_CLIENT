@@ -16,7 +16,7 @@ export class PlayerhandComponent implements OnInit {
 
   @Input() cards: PlayableCard[] = [];
     private hubConnection?: signalR.HubConnection;
-
+  @Input() isSpectator : boolean = false;
   constructor(public matchService: MatchService, public hub: HubServiceService) { }
 
   async ngOnInit() {
