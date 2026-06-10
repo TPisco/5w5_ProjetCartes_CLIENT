@@ -43,7 +43,7 @@ export class LoginComponent {
       const email = this.loginForm.value.email;
       const password = this.loginForm.value.password;
       try {
-        await this.ApiService.login(this.Email, this.Password)
+        await this.ApiService.login(email, password)
         this.router.navigate(["/"])
         console.log("Login réussi")
       } catch (error: any) {

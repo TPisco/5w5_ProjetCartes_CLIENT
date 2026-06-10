@@ -23,8 +23,7 @@ export class SortComponent implements OnInit {
   @Input() cards: Card[] = []; // decorate the property with @Input()
 
 
-  // sortedCards: Card[] = [...this.cards];
-  sortProperty: keyof Card = 'attack';
+  sortProperty: 'attack' | 'health' | 'cost' | 'name' | 'id' = 'attack';
   sortOrderProperty: 'attack' | 'health' | 'cost' = 'attack';
   sortOrder: 'asc' | 'desc' = 'asc';
 
@@ -55,12 +54,14 @@ export class SortComponent implements OnInit {
   }
 
   sortCards() {
-
+    const prop = this.sortProperty;
     this.cards = [...this.cards].sort((a, b) => {
-      if (a[this.sortProperty] < b[this.sortProperty]) {
+      const aVal = a[prop];
+      const bVal = b[prop];
+      if (aVal < bVal) {
         return this.sortOrder === 'asc' ? -1 : 1;
       }
-      if (a[this.sortProperty] > b[this.sortProperty]) {
+      if (aVal > bVal) {
         return this.sortOrder === 'asc' ? 1 : -1;
       }
       return 0;

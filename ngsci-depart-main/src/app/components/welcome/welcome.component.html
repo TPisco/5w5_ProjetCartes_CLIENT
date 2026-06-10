@@ -1,4 +1,12 @@
-<div style="display: flex; justify-content: center; align-items: center;">
-  <img src="/assets/welcome.jpg" height="800px">
+<div class="page-shell welcome-shell">
+  <div class="welcome-hero panel">
+    <h1>Bienvenue, dresseur !</h1>
+    <p>Collectionnez, construisez vos decks et affrontez d'autres joueurs en temps réel.</p>
+    <div class="welcome-actions">
+      <button mat-raised-button class="btn-pokemon btn-primary" routerLink="/magasin">Magasin</button>
+      <button mat-raised-button class="btn-pokemon btn-outline" routerLink="/decks">Mes decks</button>
+      <button mat-raised-button class="btn-pokemon btn-outline" routerLink="/regardermatch">Voir les parties</button>
+    </div>
+    <img src="/assets/welcome.jpg" alt="Super Cartes Infinies" class="welcome-image" />
+  </div>
 </div>
-

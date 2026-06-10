@@ -14,6 +14,7 @@ export class BattlefieldComponent implements OnInit {
 
   @Input() cards: PlayableCard[] = [];
   @Input() align: string = 'top';
+  @Input() dyingCardIds: Set<number> = new Set();
 
   constructor() { }
 

@@ -1,28 +1,30 @@
 @if (matchService.match == null) {
-<mat-toolbar style="display: flex;">
-  <mat-icon style="margin-right: 8px" routerLink="/">class</mat-icon>
-  <a routerLink="/"><span>Super Cartes Infinies</span></a>
-  <button id="Magasin" mat-raised-button color="accent" routerLink="magasin">Magasin</button>
-  <button id="MesCartes" mat-raised-button color="accent" routerLink="OwnedCards">Mes cartes</button>
-  <button id="Decks" mat-raised-button color="accent" routerLink="decks">Decks</button>
-  <button id="RegarderMatch" mat-raised-button color="accent" routerLink="regardermatch">Parties</button>
+<mat-toolbar class="main-toolbar">
+  <div class="brand" routerLink="/">
+    <mat-icon>catching_pokemon</mat-icon>
+    <span>Super Cartes Infinies</span>
+  </div>
 
+  <nav class="nav-links">
+    <a routerLink="magasin" routerLinkActive="active">Magasin</a>
+    <a routerLink="catalog" routerLinkActive="active">Catalogue</a>
+    <a routerLink="OwnedCards" routerLinkActive="active">Mes cartes</a>
+    <a routerLink="decks" routerLinkActive="active">Decks</a>
+    <a routerLink="regardermatch" routerLinkActive="active">Parties</a>
+    <a routerLink="stats" routerLinkActive="active">Stats</a>
+  </nav>
 
+  <span class="spacer"></span>
 
-  <span style="flex: 1 1 auto;"></span>
   @if (isLogged()) {
-    <mat-chip style="margin-right: 20px;">
-      {{elo}}
-    </mat-chip>
-  <mat-chip style="margin-right: 20px;">
-    {{getUsername()}}
-  </mat-chip>
+    <mat-chip class="chip-gold">⚡ {{ gold }} gold</mat-chip>
+    <mat-chip class="chip-elo">🏆 {{ elo }}</mat-chip>
+    <mat-chip>{{ getUsername() }}</mat-chip>
+    <button mat-raised-button class="btn-pokemon btn-danger" (click)="logout()">Déconnexion</button>
   }
-  @if (isLogged()) {
-  <button mat-raised-button color="warn" (click)="logout()">Se déconnecter</button>
-  <button mat-raised-button (click)="Test()">Test</button>
+  @if (!isLogged()) {
+    <button mat-raised-button class="btn-pokemon btn-primary" routerLink="/login">Connexion</button>
   }
 </mat-toolbar>
-
 }
 <router-outlet></router-outlet>

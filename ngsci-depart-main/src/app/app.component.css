@@ -1,19 +1,62 @@
-#Magasin {
-    margin-left: 20px;
-    padding: 6px;
-}
-#MesCartes {
-    margin-left: 20px;
-    padding: 6px;
-
+.main-toolbar {
+  background: linear-gradient(90deg, #0f172a 0%, #1e293b 50%, #0f172a 100%) !important;
+  border-bottom: 3px solid #ffcb05;
+  color: #fff;
+  padding: 0 1rem;
+  gap: 1rem;
 }
 
-#Decks {
-    margin-left: 20px;
-    padding: 6px;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 800;
+  color: #ffcb05;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-#RegarderMatch {
-    margin-left: 20px;
-    padding: 6px;
+.nav-links {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  color: #cbd5e1;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  background: #ffcb05;
+  color: #0f172a;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.chip-gold {
+  background: #ffcb05 !important;
+  color: #0f172a !important;
+  font-weight: 700;
+}
+
+.chip-elo {
+  background: #334155 !important;
+  color: #f8fafc !important;
+}
+
+@media (max-width: 900px) {
+  .main-toolbar {
+    flex-wrap: wrap;
+    height: auto !important;
+    padding: 0.75rem;
+  }
 }

@@ -1,158 +1,120 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { RouterModule, RouterOutlet } from '@angular/router';
-import { Card, Deck, DeckCards, OwnedCards } from 'src/app/models/models';
-import { CardComponent } from '../card/card.component';
-import { SortComponent } from '../sort/sort.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { RouterModule } from '@angular/router';
+import { Card, Deck } from 'src/app/models/models';
 import { ApiService } from 'src/app/services/api.service';
-//Nouvelles importation pour le dialog
-//import {ChangeDetectionStrategy,  inject} from '@angular/core';
-//import {MatButtonModule} from '@angular/material/button';
-//import {
-// MatDialog,
-// MatDialogActions,
-// MatDialogClose,
-// MatDialogContent,
-// MatDialogTitle,
-//} from '@angular/material/dialog';
+import { CreateDeckDialogComponent, CreateDeckDialogResult } from './create-deck-dialog.component';
+
 @Component({
   selector: 'app-decks',
   standalone: true,
-  imports: [RouterModule, RouterOutlet, FormsModule, CommonModule, MatCardModule, CardComponent, SortComponent],
+  imports: [RouterModule, FormsModule, CommonModule, MatCardModule, MatButtonModule, MatDialogModule],
   templateUrl: './decks.component.html',
   styleUrl: './decks.component.css'
 })
-export class DecksComponent {
-  //Ajout du code placeholder, rien n'est final ici
-  //Id du deck courant
+export class DecksComponent implements OnInit {
   currentDeckId: number | null = null;
-  public decks: Deck[] = [];
-  public maxDecks: number = 5;
-  public maxCardsPerDeck = 10;
-  public newDeckName: string = '';
-  //Liste de ownedCards initiale du joueur
-public listOwnedCards: Card[] = [];
-//Liste des cartes restantes pour le deck
-availableCards: DeckCards[] = [];
+  decks: Deck[] = [];
+  maxDecks = 10;
+  maxCardsPerDeck = 30;
+  listOwnedCards: Card[] = [];
+  availableCardsByDeck: Record<number, Card[]> = {};
+  errorMessage = '';
+  successMessage = '';
 
+  constructor(public service: ApiService, private dialog: MatDialog) {}
 
-  constructor(public service: ApiService) { }
   async ngOnInit() {
+    const limits = await this.service.getDeckLimits();
+    this.maxDecks = limits.maxDecks;
+    this.maxCardsPerDeck = limits.maxCardsPerDeck;
+    await this.reloadDecks();
+  }
 
-
+  async reloadDecks() {
     this.decks = await this.service.getPlayerDecks();
     this.listOwnedCards = await this.service.getPlayersCards();
+    for (const deck of this.decks) {
+      if (deck.id != null) {
+        await this.loadAvailableCards(deck.id);
+      }
+    }
   }
 
-  async createDeck(): Promise<void> {
+  async loadAvailableCards(deckId: number) {
+    this.availableCardsByDeck[deckId] = await this.service.getAvailableCardsForDeck(deckId);
+  }
+
+  async openCreateDeckDialog() {
+    this.errorMessage = '';
     if (this.decks.length >= this.maxDecks) {
-      console.error('Nombre maximum de decks atteint.');
-
+      this.errorMessage = 'Nombre maximum de decks atteint.';
+      return;
     }
-    this.decks = await this.service.CreateDeck(this.newDeckName);
 
+    try {
+      this.listOwnedCards = await this.service.getPlayersCards();
+    } catch {
+      this.errorMessage = 'Impossible de charger vos cartes.';
+      return;
+    }
+
+    if (!this.listOwnedCards.length) {
+      this.errorMessage = 'Vous ne possédez aucune carte pour créer un deck.';
+      return;
+    }
+
+    const ref = this.dialog.open(CreateDeckDialogComponent, {
+      width: '920px',
+      maxWidth: '95vw',
+      panelClass: 'pokemon-dialog',
+      data: { ownedCards: this.listOwnedCards, maxCards: this.maxCardsPerDeck }
+    });
+    ref.afterClosed().subscribe(async (result?: CreateDeckDialogResult) => {
+      if (!result) return;
+      try {
+        this.decks = await this.service.createDeckWithCards(result.name, result.cardIds);
+        this.successMessage = `Deck « ${result.name} » créé !`;
+        await this.reloadDecks();
+      } catch {
+        this.errorMessage = 'Impossible de créer le deck.';
+      }
+    });
   }
 
-//Faire le tri des cartes restantes pour le deck
-//showAvailableCards(deckId: number): void {
-  //this.currentDeckId = deckId;
+  async addCardToDeck(cardId: number, deckId: number) {
+    this.errorMessage = '';
+    try {
+      this.decks = await this.service.addCardToDeck(cardId, deckId);
+      await this.loadAvailableCards(deckId);
+    } catch {
+      this.errorMessage = 'Impossible d\'ajouter cette carte.';
+    }
+  }
 
-  // Trouver le deck sélectionné
- // const selectedDeck = this.decks.find((deck) => deck.id === deckId);
- // if (!selectedDeck) return;
+  async removeCardFromDeck(cardId: number, deckId: number) {
+    this.decks = await this.service.removeCardFromDeck(cardId, deckId);
+    await this.loadAvailableCards(deckId);
+  }
 
-  // Filtrer les cartes possédées qui ne sont pas déjà dans le deck
- // this.availableCards = this.ownedCards.filter((ownedCard) => {
- //   return !selectedDeck.deckCards.some((deckCard) => deckCard.id === ownedCard.id);
- // });
-//}
-
-
-async addCardToDeck(cardId: number, deckId: number): Promise<void> {
- this.decks = await this.service.addCardToDeck(cardId, deckId)
-  
-
-
-
-  //.subscribe(() => {
-    // Mettre à jour la liste des cartes du deck
-    //const selectedDeck = this.decks.find((deck) => deck.id === deckId);
-    //if (selectedDeck) {
-    //  const addedCard = this.ownedCards.find((card) => card.id === cardId);
-     // if (addedCard) {
-     //   selectedDeck.deckCards.push(addedCard);
-     // }
-   // }
-
-    // Mettre à jour la liste des cartes disponibles
-   // this.availableCards = this.availableCards.filter((card) => card.id !== cardId);
- // });
-}
-
-
-
-async removeCardFromDeck(cardId: number, deckId: number): Promise<void> {
-  this.decks = await this.service.removeCardFromDeck(cardId, deckId)
-   
- // Mettre à jour localement la liste des cartes du deck
- //const selectedDeck = this.decks.find((deck) => deck.id === deckId);
- //if (selectedDeck) {
- //  selectedDeck.deckCards = selectedDeck.deckCards.filter((deckCard) => deckCard.ownedCard.id !== cardId);
- //}
-
- // Optionnel : Ajouter la carte retirée à la liste des cartes disponibles
-// const removedCard = this.listOwnedCards.find((card) => card.id === cardId);
-// if (removedCard) {
-//   this.availableCards.push({
- //    ownedCard: removedCard,
- //    deckId: deckId,
- //    quantity: 1 // Par défaut, une carte retirée peut être réutilisée
- //  });
- //}
-
-
-
-
-   //.subscribe(() => {
-     // Mettre à jour la liste des cartes du deck
-     //const selectedDeck = this.decks.find((deck) => deck.id === deckId);
-     //if (selectedDeck) {
-     //  const addedCard = this.ownedCards.find((card) => card.id === cardId);
-      // if (addedCard) {
-      //   selectedDeck.deckCards.push(addedCard);
-      // }
-    // }
- 
-     // Mettre à jour la liste des cartes disponibles
-    // this.availableCards = this.availableCards.filter((card) => card.id !== cardId);
-  // });
- }
-
-
-
-
-  async deleteDeck(deckId: number): Promise<void> {
-    const deck = this.decks.find((d) => d.id === deckId);
+  async deleteDeck(deckId: number) {
+    const deck = this.decks.find(d => d.id === deckId);
     if (deck?.isCurrent) {
-      console.error('Impossible de supprimer le deck courant.');
-
+      this.errorMessage = 'Impossible de supprimer le deck courant.';
+      return;
     }
-
-    // TODO : A voir si on doit faire un appel API pour supprimer le deck
-
     this.decks = await this.service.deleteDeck(deckId);
-    // this.decks = await this.service.getPlayerDecks();
-   // this.decks = this.decks.filter((d) => d.id !== deckId);
-  }
- 
-
-
-
-  setCurrentDeck(deckId: number): void {
-    this.decks.forEach((deck) => (deck.isCurrent = deck.id === deckId));
   }
 
-
+  setCurrentDeck(deckId: number) {
+    this.service.setCurrentDeck(deckId).then(decks => {
+      this.decks = decks;
+      this.currentDeckId = deckId;
+      this.successMessage = 'Deck courant mis à jour.';
+    });
+  }
 }

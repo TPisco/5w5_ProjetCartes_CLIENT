@@ -1,55 +1,43 @@
-<div class="decks-list">
-  <div class="create-deck">
-    <!-- <h2> Nouveau deck </h2>  -->
-    <!-- <button mat-raised-button (click)="openDialog()">Créer un nouveau deck</button>  -->
+<div class="page-shell">
+  <header class="page-header">
+    <h1>Mes Decks</h1>
+    <p>Construisez vos decks pour dominer l'arène.</p>
+  </header>
 
-    <h2>Créer un nouveau deck</h2>
-    <form (ngSubmit)="createDeck()">
-      <input type="text" [(ngModel)]="newDeckName" name="newDeckName" placeholder="Nom du deck" required  />
-      <button type="submit">Créer</button>
-    </form>
-  </div>
-  <h2>Mes Decks</h2>
-  <div *ngFor="let d of decks" class="deck">
-    <h3>{{ d.name }}</h3>
-    <button (click)="setCurrentDeck(d.id!)">Rendre courant</button>
-    <button (click)="deleteDeck(d.id!)" [disabled]="d.isCurrent">Supprimer</button>
+  <p class="msg error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  <p class="msg success" *ngIf="successMessage">{{ successMessage }}</p>
+  <p class="limits">Limites : {{ maxDecks }} decks · {{ maxCardsPerDeck }} cartes par deck</p>
 
-     <!-- Bouton pour afficher les cartes disponibles à ajouter -->
-      <!-- <button (click)="showAvailableCards(d.id!)">Ajouter des cartes</button>  -->
+  <button mat-raised-button class="btn-pokemon btn-primary" (click)="openCreateDeckDialog()" [disabled]="decks.length >= maxDecks">
+    + Créer un nouveau deck
+  </button>
 
-     <div  class="available-cards">
-      <h4>Cartes du deck {{d.name}}</h4>
-      <ul>
-        <div class="cards-container">
-          <mat-card *ngFor="let deckCard of d.deckCards" (click)="removeCardFromDeck(deckCard.ownedCard.card.id, d.id!)" >
-      
-              <mat-card-header _ngcontent-ng-c2357935512>
-                  <div _ngcontent-ng-c2357935512 mat-card-avatar class="mat-mdc-card-header infinite-card-mana-cost">
-                      <div _ngcontent-ng-c2357935512>{{deckCard.ownedCard.card.cost}}</div>
-                  </div>
-                  <div class="mat-mdc-card-header-text">
-                      <mat-card-title _ngcontent-ng-c2357935512 class="mat-mdc-card-title">{{deckCard.ownedCard.card.name}} </mat-card-title>
-                  </div>
-      
-              </mat-card-header>
-              <mat-card>
-                  <img src="{{deckCard.ownedCard.card.imageUrl}}" alt="Image de la carte" width="300px" height="300px">
-      
-                  <P>Attaque: {{deckCard.ownedCard.card.attack}}</P>
-                  <P>PV: {{deckCard.ownedCard.card.health}}</P>
-      
-              </mat-card>
-      
-      
-          </mat-card>
-      
+  <div *ngFor="let d of decks" class="deck-panel">
+    <div class="deck-head">
+      <h3>{{ d.name }} <span *ngIf="d.isCurrent" class="current-badge">Courant</span></h3>
+      <div class="deck-actions">
+        <button class="btn-pokemon btn-secondary" (click)="setCurrentDeck(d.id!)" [disabled]="d.isCurrent">Définir courant</button>
+        <button class="btn-pokemon btn-danger" (click)="deleteDeck(d.id!)" [disabled]="d.isCurrent">Supprimer</button>
       </div>
-       <li *ngFor="let item of listOwnedCards" (click)="addCardToDeck(item.id, d.id!)">
-          {{ item.name }} 
-         <!-- <button (click)="addCardToDeck(card.id, d.id!)">Ajouter</button>  -->
-        </li> 
-      </ul> 
     </div>
+
+    <h4>Cartes ({{ (d.deckCards?.length ?? 0) }}/{{ maxCardsPerDeck }})</h4>
+    <div class="cards-container">
+      <mat-card *ngFor="let deckCard of d.deckCards ?? []" class="deck-card-item" (click)="removeCardFromDeck(deckCard.ownedCard.card.id, d.id!)">
+        <img [src]="deckCard.ownedCard.card.imageUrl" [alt]="deckCard.ownedCard.card.name" width="140" />
+        <p>{{ deckCard.ownedCard.card.name }}</p>
+        <small>Cliquer pour retirer</small>
+      </mat-card>
+    </div>
+
+    <h4>Ajouter une carte</h4>
+    <ul class="available-list" *ngIf="(availableCardsByDeck[d.id!]?.length ?? 0) > 0; else noAvailableCards">
+      <li *ngFor="let card of availableCardsByDeck[d.id!]" (click)="addCardToDeck(card.id, d.id!)">
+        {{ card.name }} ({{ card.cost }} mana)
+      </li>
+    </ul>
+    <ng-template #noAvailableCards>
+      <p class="empty-hint">Aucune carte disponible à ajouter.</p>
+    </ng-template>
   </div>
 </div>

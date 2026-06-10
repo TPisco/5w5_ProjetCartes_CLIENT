@@ -1,5 +1,10 @@
-<div class="table-container" *ngIf="matchList.length > 0; else noMatches">
-    <h1>Parties</h1>
+<div class="page-shell">
+  <header class="page-header">
+    <h1>Parties en cours</h1>
+    <p>Regardez une partie ou rejoignez le matchmaking depuis l'accueil.</p>
+  </header>
+
+  <div class="panel table-container" *ngIf="matchList.length > 0; else noMatches">
     <table>
       <thead>
         <tr>
@@ -10,14 +15,21 @@
       </thead>
       <tbody>
         <tr *ngFor="let match of matchList">
-          <td>{{match.playerDataB.player.name}}</td>
-          <td>{{match.playerDataA.player.name}}</td>
-          <td><button class="watch-button" (click)="RegarderUnePartie(match.id)">Regarder</button></td>
+          <td>{{ match.playerDataB.player.name }}</td>
+          <td>{{ match.playerDataA.player.name }}</td>
+          <td>
+            <button mat-raised-button class="btn-pokemon btn-primary watch-button" (click)="RegarderUnePartie(match.id)">
+              Regarder
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
 
   <ng-template #noMatches>
-    <p>Aucun match en cours pour le moment.</p>
+    <div class="panel empty-state">
+      <p>Aucun match en cours pour le moment.</p>
+    </div>
   </ng-template>
+</div>

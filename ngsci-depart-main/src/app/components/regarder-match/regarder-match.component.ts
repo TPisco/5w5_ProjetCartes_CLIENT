@@ -3,12 +3,13 @@ import { Channel, Match, MatchData, UserEntry } from '../../models/models';
 import * as signalR from "@microsoft/signalr"
 import { HubServiceService } from 'src/app/services/hubService.service';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-regarder-match',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatButtonModule],
   templateUrl: './regarder-match.component.html',
   styleUrl: './regarder-match.component.css'
 })
@@ -61,10 +62,9 @@ export class RegarderMatchComponent {
   }
   RegarderUnePartie(matchId: number) {
     if (this.hubConnection) {
-      this.hubConnection.invoke('onJoinMatchAsync', matchId)
-        .then(response => console.log('Réponse regarderPartie :', response))
-        .catch(err => console.error('Erreur lors de l’invocation de regarderPartie :', err));
-        this.router.navigate(['/match', matchId])
+      this.hubConnection.invoke('WatchMatchAsync', matchId)
+        .then(() => this.router.navigate(['/match', matchId]))
+        .catch(err => console.error('Erreur lors de la spectation :', err));
     } else {
       console.error('HubConnection non initialisée.');
     }

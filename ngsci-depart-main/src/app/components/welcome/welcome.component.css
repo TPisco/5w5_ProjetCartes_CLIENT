@@ -1,0 +1,25 @@
+.welcome-hero {
+  text-align: center;
+  padding: 2rem;
+}
+
+.welcome-hero h1 {
+  color: var(--pk-blue);
+  margin-top: 0;
+}
+
+.welcome-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.welcome-image {
+  max-width: 100%;
+  max-height: 520px;
+  border-radius: var(--pk-radius);
+  border: 3px solid var(--pk-yellow);
+  box-shadow: var(--pk-shadow);
+}

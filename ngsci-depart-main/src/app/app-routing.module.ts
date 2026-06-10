@@ -11,6 +11,8 @@ import { LoginComponent } from './components/login/login.component';
 import { loginGuard } from './login.guard';
 import { DecksComponent } from './components/decks/decks.component';
 import { RegarderMatchComponent } from './components/regarder-match/regarder-match.component';
+import { CatalogComponent } from './components/catalog/catalog.component';
+import { StatisticsComponent } from './components/statistics/statistics.component';
 
 
 const routes: Routes = [
@@ -21,7 +23,9 @@ const routes: Routes = [
       { path: '', component: WelcomeComponent ,canActivate: [loginGuard]},
       { path: 'magasin', component: MagasinComponent ,canActivate: [loginGuard]},
       { path: 'OwnedCards', component: OwnedcardsComponent ,canActivate: [loginGuard]},
+      { path: 'catalog', component: CatalogComponent ,canActivate: [loginGuard]},
       { path: 'decks', component: DecksComponent ,canActivate: [loginGuard]},
+      { path: 'stats', component: StatisticsComponent ,canActivate: [loginGuard]},
       { path: 'register', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
       { path: 'app', component: AppComponent },

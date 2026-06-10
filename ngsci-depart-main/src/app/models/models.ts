@@ -1,6 +1,9 @@
 export interface Player {
     id: number;
     name: string;
+    gold?: number;
+    wins?: number;
+    losses?: number;
 }
 
 export interface Card {
@@ -10,10 +13,8 @@ export interface Card {
     health: number;
     cost: number;
     imageUrl: string;
-
-    // Ajout pouvoir
+    rarity?: string;
     cardPowers: CardPower[];
-
 }
 
 export interface CardPower {
@@ -133,4 +134,45 @@ export interface UserEntry {
 export interface Channel {
     id: number;
     title: string;
+}
+
+export interface Pack {
+    id: number;
+    name: string;
+    imageUrl: string;
+    price: number;
+    cardCount: number;
+    defaultRarity: string;
+}
+
+export interface PackPurchaseResult {
+    goldRemaining: number;
+    cards: Card[];
+}
+
+export interface PlayerStats {
+    wins: number;
+    losses: number;
+    gold: number;
+    decks: DeckStatsSummary[];
+}
+
+export interface DeckStatsSummary {
+    id: number;
+    name: string;
+    wins: number;
+    losses: number;
+    isCurrent: boolean;
+}
+
+export interface ChartDataPoint {
+    label: string;
+    count: number;
+}
+
+export interface CardDistribution {
+    byCost: ChartDataPoint[];
+    byRarity: ChartDataPoint[];
+    byAttack: ChartDataPoint[];
+    byHealth: ChartDataPoint[];
 }

@@ -1,0 +1,51 @@
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filters input,
+.filters select {
+  padding: 0.65rem 1rem;
+  border-radius: 12px;
+  border: 2px solid var(--pk-blue-light);
+  background: var(--pk-bg);
+  color: var(--pk-text);
+  min-width: 200px;
+}
+
+.catalog-card {
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.catalog-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--pk-yellow);
+}
+
+.rarity-badge {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.rarity-common { border-color: #64748b; }
+.rarity-common .rarity-badge { background: #64748b; color: #fff; }
+
+.rarity-rare { border-color: #22c55e; }
+.rarity-rare .rarity-badge { background: #22c55e; color: #fff; }
+
+.rarity-epic { border-color: #a855f7; }
+.rarity-epic .rarity-badge { background: #a855f7; color: #fff; }
+
+.rarity-legendary { border-color: #f59e0b; }
+.rarity-legendary .rarity-badge { background: #f59e0b; color: #0f172a; }
+
+.card-grid {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}

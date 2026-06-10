@@ -1,0 +1,24 @@
+<div class="page-shell">
+  <header class="page-header">
+    <h1>Catalogue des cartes</h1>
+    <p>Toutes les cartes disponibles dans le jeu — collection complète.</p>
+  </header>
+
+  <div class="filters">
+    <input type="text" placeholder="Rechercher une carte..." [(ngModel)]="search" (input)="applyFilters()" />
+    <select [(ngModel)]="rarityFilter" (change)="applyFilters()">
+      <option value="all">Toutes les raretés</option>
+      <option value="common">Commune</option>
+      <option value="rare">Rare</option>
+      <option value="epic">Épique</option>
+      <option value="legendary">Légendaire</option>
+    </select>
+  </div>
+
+  <div class="card-grid">
+    <div *ngFor="let card of filtered" class="catalog-card" [ngClass]="rarityClass(card)">
+      <app-card [card]="card"></app-card>
+      <span class="rarity-badge">{{ getRarityLabel(card) }}</span>
+    </div>
+  </div>
+</div>

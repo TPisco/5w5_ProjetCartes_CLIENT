@@ -1,9 +1,28 @@
-<div class="row titre">
-  <h1>Magasin de cartes</h1>
+<div class="page-shell">
+  <header class="page-header">
+    <h1>Magasin de paquets</h1>
+    <p>Ouvrez des paquets pour enrichir votre collection.</p>
+  </header>
+
+  <div class="panel gold-bar" *ngIf="gold >= 0">
+    <span class="gold-label">Votre gold</span>
+    <strong class="gold-value">⚡ {{ gold }}</strong>
+  </div>
+
+  <p class="msg error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <div class="pack-grid">
+    <mat-card *ngFor="let pack of packs" class="pack-card panel">
+      <mat-card-title>{{ pack.name }}</mat-card-title>
+      <mat-card-content>
+        <p>{{ pack.cardCount }} cartes</p>
+        <p class="price">{{ pack.price }} gold</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button class="btn-pokemon btn-primary" (click)="buyPack(pack)" [disabled]="gold < pack.price">
+          Acheter
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
 </div>
-<app-sort [cards]="listCards"></app-sort>
-<div class="card-container">
-
-</div> 
-
-<!-- <app-sort [cards]="listCards"></app-sort> -->

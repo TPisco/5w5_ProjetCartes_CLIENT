@@ -22,8 +22,10 @@ export class PlayerhandComponent implements OnInit {
   async ngOnInit() {
   }
 
-  click(playableCardId:any){
-    // TODO: Utiliser seulement une fois que l'on peut jouer des cartes (TP2)
-    this.hub.playCard(playableCardId)
+  click(playableCardId: any) {
+    if (!this.matchService.isCurrentPlayerTurn || this.matchService.isSpectator) {
+      return;
+    }
+    this.hub.playCard(playableCardId);
   }
 }

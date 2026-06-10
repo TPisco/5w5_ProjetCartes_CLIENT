@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
-import { Card, Deck, Player } from '../models/models';
+import { Card, Deck, Player, Pack, PackPurchaseResult, PlayerStats, CardDistribution } from '../models/models';
 import { Router } from '@angular/router';
 
 
@@ -38,28 +38,40 @@ export class ApiService {
         'Authorization': 'Bearer ' + token
       })
     }; 
-    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetPlayersCards', httpOptions));
-    return result;
+    const raw = await lastValueFrom(this.http.get<any[]>(this.serverUrl + 'api/card/GetPlayersCards', httpOptions));
+    return (raw ?? []).map(c => this.normalizeCard(c));
   }
 
   async getPlayerDecks(): Promise<Deck[]> {
-    //Le token est nécessaire pour la requête, sinon erreur "Unauthorized"
     let token = sessionStorage.getItem("token")
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    let result = await lastValueFrom(this.http.get<Deck[]>(this.serverUrl + 'api/Deck/GetPlayerDecks', { headers }))
-    return result;
+    const raw = await lastValueFrom(this.http.get<any[]>(this.serverUrl + 'api/Deck/GetPlayerDecks', { headers }));
+    return (raw ?? []).map(d => this.normalizeDeck(d));
   }
 
 
   async CreateDeck(nom: string): Promise<Deck[]> {
-    //let deckDTO = {
-    //   Name : nom
-    //};
     let token = sessionStorage.getItem("token")
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/CreateDeck', { name: nom, cardIds: [] }, { headers }));
+  }
 
-    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/CreateDeck', nom,{ headers }))
-    return result;
+  async createDeckWithCards(name: string, cardIds: number[]): Promise<Deck[]> {
+    const headers = this.authHeaders();
+    return await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/CreateDeck', { name, cardIds }, { headers }));
+  }
+
+  async buyPack(packId: number): Promise<PackPurchaseResult> {
+    const raw = await lastValueFrom(this.http.post<any>(this.serverUrl + 'api/Pack/BuyPack?packId=' + packId, {}, { headers: this.authHeaders() }));
+    return {
+      goldRemaining: raw.goldRemaining ?? raw.GoldRemaining ?? 0,
+      cards: (raw.cards ?? raw.Cards ?? []).map((c: any) => ({
+        ...c,
+        rarity: typeof c.rarity === 'number'
+          ? ['Common', 'Rare', 'Epic', 'Legendary'][c.rarity]
+          : (c.rarity ?? c.Rarity ?? 'Common')
+      }))
+    };
   }
 
   async addCardToDeck(cardId: number, deckId: number): Promise<Deck[]> {
@@ -67,8 +79,8 @@ export class ApiService {
     let token = sessionStorage.getItem("token")
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     
-    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/AddCard', { cardId, deckId },{ headers }))
-    return result;
+    const raw = await lastValueFrom(this.http.post<any[]>(this.serverUrl + 'api/Deck/AddCard', { cardId, deckId }, { headers }));
+    return (raw ?? []).map(d => this.normalizeDeck(d));
 
   }
 
@@ -78,11 +90,17 @@ export class ApiService {
     let token = sessionStorage.getItem("token")
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     
-    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/RemoveCard', { cardId, deckId },{ headers }))
-    return result;
+    const raw = await lastValueFrom(this.http.post<any[]>(this.serverUrl + 'api/Deck/RemoveCard', { cardId, deckId }, { headers }));
+    return (raw ?? []).map(d => this.normalizeDeck(d));
 
   }
 
+
+  async setCurrentDeck(deckId: number): Promise<Deck[]> {
+    let token = sessionStorage.getItem("token");
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/SetCurrentDeck', deckId, { headers }));
+  }
 
   async deleteDeck(deckId: number): Promise<Deck[]> {
 
@@ -119,8 +137,9 @@ export class ApiService {
 
     sessionStorage.setItem("token", x.token);
     sessionStorage.setItem("playerId", x.playerId);
-    sessionStorage.setItem("userIntId", x.userIntId);
+    sessionStorage.setItem("userIntId", x.userIntID ?? x.userIntId);
     sessionStorage.setItem("username", x.username);
+    sessionStorage.setItem("email", username);
 
   }
 
@@ -163,6 +182,79 @@ export class ApiService {
       return this.Elo!;
     }
     
+  }
+
+  private authHeaders(): HttpHeaders {
+    const token = sessionStorage.getItem("token");
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
+
+  async refreshGold(): Promise<number> {
+    const result = await lastValueFrom(this.http.get<number>(this.serverUrl + 'api/Players/GetGold', { headers: this.authHeaders() }));
+    return result;
+  }
+
+  async getPacks(): Promise<Pack[]> {
+    return await lastValueFrom(this.http.get<Pack[]>(this.serverUrl + 'api/Pack/GetAllPacks'));
+  }
+
+  async getPlayerStats(): Promise<PlayerStats> {
+    return await lastValueFrom(this.http.get<PlayerStats>(this.serverUrl + 'api/Statistics/GetPlayerStats', { headers: this.authHeaders() }));
+  }
+
+  async getCardDistribution(deckId?: number): Promise<CardDistribution> {
+    const url = deckId != null
+      ? `${this.serverUrl}api/Statistics/GetCardDistribution?deckId=${deckId}`
+      : `${this.serverUrl}api/Statistics/GetCardDistribution`;
+    return await lastValueFrom(this.http.get<CardDistribution>(url, { headers: this.authHeaders() }));
+  }
+
+  async getDeckLimits(): Promise<{ maxDecks: number; maxCardsPerDeck: number }> {
+    return await lastValueFrom(this.http.get<{ maxDecks: number; maxCardsPerDeck: number }>(this.serverUrl + 'api/Deck/GetDeckLimits', { headers: this.authHeaders() }));
+  }
+
+  async getAvailableCardsForDeck(deckId: number): Promise<Card[]> {
+    const raw = await lastValueFrom(this.http.get<any[]>(this.serverUrl + 'api/Deck/GetAvailableCards?deckId=' + deckId, { headers: this.authHeaders() }));
+    return (raw ?? []).map(c => this.normalizeCard(c));
+  }
+
+  private normalizeCard(c: any): Card {
+    if (!c) {
+      return c;
+    }
+    return {
+      ...c,
+      id: c.id ?? c.Id,
+      name: c.name ?? c.Name ?? '',
+      imageUrl: c.imageUrl ?? c.ImageUrl ?? '',
+      cost: c.cost ?? c.Cost ?? 0,
+      attack: c.attack ?? c.Attack ?? 0,
+      health: c.health ?? c.Health ?? 0,
+    } as Card;
+  }
+
+  private normalizeDeck(d: any): Deck {
+    const deckCards = (d.deckCards ?? d.DeckCards ?? []).map((dc: any) => {
+      const ownedRaw = dc.ownedCard ?? dc.OwnedCard;
+      const card = ownedRaw ? this.normalizeCard(ownedRaw.card ?? ownedRaw.Card) : undefined;
+      return {
+        ...dc,
+        id: dc.id ?? dc.Id,
+        ownedCard: ownedRaw ? {
+          ...ownedRaw,
+          id: ownedRaw.id ?? ownedRaw.Id,
+          cardId: ownedRaw.cardId ?? ownedRaw.CardId,
+          card
+        } : ownedRaw
+      };
+    });
+    return {
+      ...d,
+      id: d.id ?? d.Id,
+      name: d.name ?? d.Name ?? '',
+      isCurrent: d.isCurrent ?? d.IsCurrent ?? false,
+      deckCards
+    } as Deck;
   }
 
   decodeJwt(): any {

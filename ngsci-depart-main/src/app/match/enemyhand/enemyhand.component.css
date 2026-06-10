@@ -1,35 +1,41 @@
+.enemy-hand {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  top: -250px;
+}
 
-  .container {
-    position: relative;
-    height: 300px;
-    display: flex;
-    margin: auto;
-    transform: scale(0.7) translateY(60px);
-  }
+.container {
+  position: relative;
+  height: 300px;
+  display: flex;
+  margin: auto;
+  transform: scale(0.7) translateY(60px);
+}
 
-  .card {
-    display: flex;
-    box-shadow: -1rem 0 3rem #000;
-    transition: 0.4s ease-out;
-    position: relative;
-    left: 0px;
-  }
+.card {
+  display: flex;
+  box-shadow: -1rem 0 3rem #000;
+  transition: 0.4s ease-out;
+  position: relative;
+  left: 0;
+}
 
-  .example-card {
-    margin: 0 !important;
-  }
+.example-card {
+  margin: 0 !important;
+}
 
-  .card:not(:first-child) {
-      margin-left: -50px;
-  }
+.card:not(:first-child) {
+  margin-left: -50px;
+}
 
-  .card:hover {
-    transform: translateY(-20px);
-    transition: 0.4s ease-out;
-  }
+.card:hover {
+  transform: translateY(-20px);
+  transition: 0.4s ease-out;
+}
 
-  .card:hover .card {
-    position: relative;
-    left: 50px;
-    transition: 0.4s ease-out;
-  }
+.card:hover .card {
+  position: relative;
+  left: 50px;
+  transition: 0.4s ease-out;
+}

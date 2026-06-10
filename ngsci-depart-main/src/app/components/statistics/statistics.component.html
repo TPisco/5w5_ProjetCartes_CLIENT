@@ -1,0 +1,42 @@
+<div class="page-shell" *ngIf="playerStats">
+  <header class="page-header">
+    <h1>Statistiques</h1>
+    <p>Suivez vos performances et la composition de votre collection.</p>
+  </header>
+
+  <p class="msg error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <mat-card class="panel summary">
+    <p>Victoires : <strong>{{ playerStats.wins }}</strong></p>
+    <p>Défaites : <strong>{{ playerStats.losses }}</strong></p>
+    <p>Gold : <strong>⚡ {{ playerStats.gold }}</strong></p>
+  </mat-card>
+
+  <div class="panel deck-select">
+    <label for="deckFilter">Filtrer par deck</label>
+    <select id="deckFilter" [(ngModel)]="selectedDeckId" (change)="onDeckChange()">
+      <option [ngValue]="null">Toutes mes cartes</option>
+      <option *ngFor="let deck of playerStats.decks" [ngValue]="deck.id">
+        {{ deck.name }} ({{ deck.wins }}V / {{ deck.losses }}D)
+      </option>
+    </select>
+  </div>
+
+  <div class="charts" *ngIf="distribution">
+    <mat-card class="panel" *ngFor="let chart of [
+      { title: 'Coût', data: distribution.byCost },
+      { title: 'Rareté', data: distribution.byRarity },
+      { title: 'Attaque', data: distribution.byAttack },
+      { title: 'PV', data: distribution.byHealth }
+    ]">
+      <h3>{{ chart.title }}</h3>
+      <div class="bar-row" *ngFor="let point of chart.data">
+        <span class="label">{{ point.label }}</span>
+        <div class="bar-track">
+          <div class="bar-fill" [style.width.%]="(point.count / maxCount(chart.data)) * 100"></div>
+        </div>
+        <span class="count">{{ point.count }}</span>
+      </div>
+    </mat-card>
+  </div>
+</div>

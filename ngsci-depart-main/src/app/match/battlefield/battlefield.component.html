@@ -1,7 +1,12 @@
 <div style="display: flex;position: relative; width: fit-content; margin: auto;">
   <div class="container">
-    @for (card of cards; track card) {
-      <app-card [id]="card.id" class="card fadeIn" [card]="card.card" [health]="card.health" style="margin: 5px;"></app-card>
+    @for (card of cards; track card.id) {
+      <app-card [id]="card.id"
+        [class.card-death]="dyingCardIds.has(card.id)"
+        class="card fadeIn"
+        [card]="card.card"
+        [health]="card.health"
+        style="margin: 5px;"></app-card>
     }
   </div>
 </div>

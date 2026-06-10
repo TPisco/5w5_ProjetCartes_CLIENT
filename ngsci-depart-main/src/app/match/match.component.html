@@ -1,85 +1,110 @@
-<div class="board" style="height: 100%;background-image: url('/assets/nouveauBoard.jpg'); background-size: cover;">
-  <div style="height: 45%;">
-    <h1 style="position: absolute;">Adversaire</h1>
-    @if (matchService.adversaryData) {
-    <div>
-      <app-battlefield [cards]="matchService.adversaryData.battleField"></app-battlefield>
-      <app-enemyhand [cards]="matchService.adversaryData.hand"></app-enemyhand>
+<div class="match-screen">
+  <div class="board">
+    <div class="board-zone board-zone--enemy">
+      <h2 class="zone-label">{{ isSpectator ? matchService.adversaryData?.playerName : 'Adversaire' }}</h2>
+      @if (matchService.adversaryData) {
+        <app-battlefield [cards]="matchService.adversaryData.battleField" [dyingCardIds]="matchService.dyingCardIds"></app-battlefield>
+        <app-enemyhand [cards]="matchService.adversaryData.hand"></app-enemyhand>
+      }
     </div>
-    }
-  </div>
-  <div style="height: 45%;">
-    <h1 style="position: absolute;">Mon jeu</h1>
-    @if (matchService.playerData) {
-    <div>
-      <app-battlefield [cards]="matchService.playerData.battleField"></app-battlefield>
+    <div class="board-zone board-zone--player">
+      <h2 class="zone-label">{{ isSpectator ? matchService.playerData?.playerName : 'Mon jeu' }}</h2>
+      @if (matchService.playerData) {
+        <app-battlefield [cards]="matchService.playerData.battleField" [dyingCardIds]="matchService.dyingCardIds"></app-battlefield>
+        @if (isSpectator) {
+          <app-enemyhand [cards]="matchService.playerData.hand"></app-enemyhand>
+        }
+      }
     </div>
-    }
-
   </div>
-</div>
-<div *ngIf="isMatchEnded" class="end">
-  <h1 [innerHTML]="endMessage"></h1>
-  <button mat-raised-button  color="accent"
-  style="margin-right: 20px;" (click)="endMatch()">Terminer</button>
-</div>
-@if (matchService.playerData) {
-<div>
-  <ng-container *ngIf="!isSpectator">
-  <app-playerhand [cards]="matchService.playerData.hand"></app-playerhand>
-  <button mat-raised-button [disabled]="!matchService.isCurrentPlayerTurn" class="endturn" color="accent"
-    style="margin-right: 20px;" (click)="endTurn()">Terminer</button>
-  <button mat-raised-button class="surrender" color="warn" style="margin-right: 20px;"
-    (click)="surrender()">Abandonner</button>
-  </ng-container>
 
-    <!-- Si spectateur, on affiche la main en ennemie uniquement -->
-  <ng-container *ngIf="isSpectator && matchService.playerData">
-    <app-enemyhand [cards]="matchService.playerData.hand"></app-enemyhand>
-  </ng-container>
-  <app-health [enemy]="true" [maxhealth]="matchService.adversaryData!.maxhealth"
-    [health]="matchService.adversaryData!.health" [mana]="matchService.adversaryData!.mana"
-    [playername]="matchService.adversaryData!.playerName"></app-health>
-  <app-health [maxhealth]="matchService.playerData!.maxhealth" [health]="matchService.playerData!.health"
-    [mana]="matchService.playerData!.mana" [playername]="matchService.playerData!.playerName"></app-health>
-</div>
-}
-
-
-<div class="chat-box">
-  <h3>Chat</h3>
-  <div class="chat-messages" #chatContainer>
-    <div *ngFor="let message of chatMessages">
-      <div
-        class="chat-message"
-        [ngClass]="{
-          'spectator-message': message.role === 'spectator',
-          'player-message': message.role === 'player'
-        }"
-      >
-        <div class="sender-line">
-          <span class="sender">{{ message.sender }}</span>
-        </div>
-        <div class="content">{{ message.content }}</div>
+  @if (isMatchEnded) {
+    <div class="end-overlay">
+      <div class="end-panel">
+        <h1 [innerHTML]="endMessage"></h1>
+        <button mat-raised-button class="btn-pokemon btn-primary" (click)="endMatch()">Quitter la partie</button>
       </div>
     </div>
-  </div>
+  }
 
-  <div class="connected-users">
-    <h3>Utilisateurs connectés</h3>
-    <p *ngIf="!connectedUsers.length">Aucun utilisateur connecté</p>
-    <ul>
-      <li *ngFor="let user of connectedUsers">
-        <strong>{{ user.email }}</strong>
-        <span *ngIf="user.role === 'player'"> (Joueur)</span>
-        <span *ngIf="user.role === 'spectator'"> (Spectateur)</span>
-      </li>
-    </ul>
-  </div>
+  @if (matchService.playerData && !isSpectator) {
+    <div class="hud-enemy-health">
+      <app-health [enemy]="true"
+        [maxhealth]="matchService.adversaryData!.maxhealth"
+        [health]="matchService.adversaryData!.health"
+        [mana]="matchService.adversaryData!.mana"
+        [playername]="matchService.adversaryData!.playerName"></app-health>
+    </div>
 
-  <!-- Input et bouton en bas, hors des messages -->
-  <div class="chat-input">
-    <input type="text" placeholder="Type your message..." [(ngModel)]="chatInput"/>
-    <button (click)="sendMessage()">Send</button>
+    <div class="match-controls">
+      <div class="player-hud-row">
+        <div class="hud-player-health">
+          <app-health
+            [maxhealth]="matchService.playerData!.maxhealth"
+            [health]="matchService.playerData!.health"
+            [mana]="matchService.playerData!.mana"
+            [playername]="matchService.playerData!.playerName"></app-health>
+        </div>
+
+        <div class="hand-row">
+          <app-playerhand [cards]="matchService.playerData.hand"></app-playerhand>
+        </div>
+      </div>
+
+      <div class="action-bar" [class.action-bar--active]="matchService.isCurrentPlayerTurn">
+        @if (matchService.isCurrentPlayerTurn) {
+          <button mat-raised-button class="btn-pokemon btn-primary" (click)="endTurn()">Terminer mon tour</button>
+        } @else {
+          <span class="turn-waiting">En attente du tour adverse...</span>
+        }
+        <button mat-raised-button class="btn-pokemon btn-danger" (click)="surrender()">Abandonner</button>
+      </div>
+    </div>
+  }
+
+  @if (isSpectator && matchService.playerData && matchService.adversaryData) {
+    <div class="hud-enemy-health">
+      <app-health [enemy]="true"
+        [maxhealth]="matchService.adversaryData.maxhealth"
+        [health]="matchService.adversaryData.health"
+        [mana]="matchService.adversaryData.mana"
+        [playername]="matchService.adversaryData.playerName"></app-health>
+    </div>
+    <div class="match-controls spectator-controls">
+      <div class="hud-player-health">
+        <app-health
+          [maxhealth]="matchService.playerData.maxhealth"
+          [health]="matchService.playerData.health"
+          [mana]="matchService.playerData.mana"
+          [playername]="matchService.playerData.playerName"></app-health>
+      </div>
+    </div>
+  }
+
+  <div class="chat-box">
+    <h3>Chat</h3>
+    <div class="chat-messages">
+      <div *ngFor="let message of chatMessages">
+        <div class="chat-message"
+          [ngClass]="{ 'spectator-message': message.role === 'spectator', 'player-message': message.role === 'player' }">
+          <div class="sender-line"><span class="sender">{{ message.sender }}</span></div>
+          <div class="content">{{ message.content }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="connected-users">
+      <h3>Connectés</h3>
+      <ul>
+        <li *ngFor="let user of connectedUsers">
+          <strong>{{ user.email }}</strong>
+          <span *ngIf="user.role === 'player'"> (Joueur)</span>
+          <span *ngIf="user.role === 'spectator'"> (Spectateur)</span>
+        </li>
+      </ul>
+    </div>
+    <div class="chat-input">
+      <input type="text" placeholder="Votre message..." [(ngModel)]="chatInput"/>
+      <button class="btn-pokemon btn-primary" (click)="sendMessage()">Envoyer</button>
+    </div>
   </div>
 </div>

@@ -58,15 +58,13 @@ export class HomeComponent implements OnInit {
     this.hubConnection!.on("JoiningMatchData", async (joiningMatchData: MatchData) => {
       console.log(joiningMatchData);
 
-      // this.matchService.matchData = joiningMatchData;
+      this.hub.matchData = joiningMatchData;
+      const playerId = this.apiService.decodeJwt()?.PlayerId;
 
-      const playerId = this.apiService.decodeJwt().PlayerId
-
-      console.log(playerId);
       this.isSpectator = false;
-
-      this.matchService.playMatch(joiningMatchData, playerId)
-    
+      if (playerId != null) {
+        this.matchService.playMatch(joiningMatchData, playerId);
+      }
 
       if (this.matchService.matchData) {
         this.router.navigate(["/match", this.matchService.matchData.match.id]);
@@ -75,53 +73,15 @@ export class HomeComponent implements OnInit {
     });
 
     this.hubConnection!.on("JoinMatchAsSpectator", async (joiningMatchData: MatchData) => {
-      console.log(joiningMatchData);
-
-      // this.matchService.matchData = joiningMatchData;
-
-      const playerId = this.apiService.decodeJwt().PlayerId
-
-      console.log(playerId);
+      this.hub.matchData = joiningMatchData;
       this.isSpectator = true;
-
-      this.matchService.playMatch(joiningMatchData, playerId)
-    
+      this.matchService.playMatchAsSpectator(joiningMatchData);
 
       if (this.matchService.matchData) {
         this.router.navigate(["/match", this.matchService.matchData.match.id]);
         sessionStorage.setItem("matchData", JSON.stringify(joiningMatchData));
       }
     });
-
-
-
-    // this.hubConnection!.on("joiningMatch", async (joiningMatchData: JoinMatchData) => {
-
-    //   // this.joiningmatchData = await this.hub.getMatch();
-
-    //   this.matchData = {
-    //     match: this.matchData!.match,
-    //     playerA: this.matchData!.playerA,
-    //     playerB: this.matchData!.playerB,
-    //Possibly have to change this
-    //     winningPlayerId: -1
-    //   }
-
-    //   console.log('matchData', joiningMatchData);
-    //   this.joiningmatchData = joiningMatchData;
-    //   if (this.matchData) {
-    //     this.router.navigate(["/match", this.matchData.match.id]);
-    //     sessionStorage.setItem("matchData", JSON.stringify(joiningMatchData));
-    //   }
-    // });
-
-    this.hubConnection!.on("StartMatch", async (data) => {
-      // this.joiningmatchData = await this.hub.getMatch();
-
-      // this.matchService.playMatch(this.matchService.matchData!, +this.currentPlayerId!);
-      this.matchService.applyEvent(data);
-    });
-
   }
 
 

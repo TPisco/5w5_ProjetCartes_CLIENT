@@ -1,0 +1,58 @@
+.summary {
+  margin-bottom: 1rem;
+}
+
+.deck-select {
+  margin-bottom: 1.25rem;
+}
+
+.deck-select label {
+  display: block;
+  font-weight: 600;
+  color: var(--pk-blue);
+  margin-bottom: 0.5rem;
+}
+
+.deck-select select {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 10px;
+  border: 2px solid var(--pk-blue);
+  background: #fff;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.charts h3 {
+  color: var(--pk-blue);
+  margin-top: 0;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 30px;
+  gap: 8px;
+  align-items: center;
+  margin: 6px 0;
+}
+
+.bar-track {
+  background: var(--pk-bg-dark);
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  background: linear-gradient(90deg, var(--pk-yellow), var(--pk-red));
+  height: 100%;
+}
+
+.msg.error {
+  color: var(--pk-danger);
+  font-weight: 600;
+}

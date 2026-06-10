@@ -1,12 +1,134 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global dark theme */
+:root {
+  --pk-blue: #3b82f6;
+  --pk-blue-light: #1e3a5f;
+  --pk-yellow: #ffcb05;
+  --pk-red: #ef4444;
+  --pk-surface: #1e293b;
+  --pk-surface-light: #334155;
+  --pk-bg: #0f172a;
+  --pk-bg-dark: #020617;
+  --pk-text: #f1f5f9;
+  --pk-muted: #94a3b8;
+  --pk-success: #22c55e;
+  --pk-danger: #f87171;
+  --pk-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --pk-radius: 14px;
+}
 
-html, body { height: 100%; }
+html, body {
+  height: 100%;
+}
 
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 85% 90%, rgba(255, 203, 5, 0.08) 0%, transparent 40%),
+    linear-gradient(160deg, var(--pk-bg) 0%, #1e293b 50%, var(--pk-bg-dark) 100%);
+  color: var(--pk-text);
+  min-height: 100vh;
+}
 
 a {
-    text-decoration: none;
-    color: inherit;
+  text-decoration: none;
+  color: inherit;
+}
+
+.page-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.25rem;
+}
+
+.page-header {
+  margin-bottom: 1.25rem;
+}
+
+.page-header h1 {
+  margin: 0 0 0.35rem;
+  font-size: 1.75rem;
+  color: var(--pk-yellow);
+}
+
+.page-header p {
+  margin: 0;
+  color: var(--pk-muted);
+}
+
+.panel {
+  background: var(--pk-surface);
+  border: 2px solid var(--pk-blue-light);
+  border-radius: var(--pk-radius);
+  box-shadow: var(--pk-shadow);
+  padding: 1.1rem;
+}
+
+.btn-pokemon {
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.3px;
+  text-transform: none;
+}
+
+.btn-pokemon.btn-primary {
+  background: var(--pk-yellow) !important;
+  color: #0f172a !important;
+}
+
+.btn-pokemon.btn-danger {
+  background: var(--pk-red) !important;
+  color: #fff !important;
+}
+
+.btn-pokemon.btn-outline {
+  border: 2px solid var(--pk-yellow) !important;
+  color: var(--pk-yellow) !important;
+  background: transparent !important;
+}
+
+.pokemon-dialog .mat-mdc-dialog-surface {
+  border: 3px solid var(--pk-yellow);
+  border-radius: var(--pk-radius);
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  color: var(--pk-text);
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.card-item,
+.catalog-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: var(--pk-radius);
+  background: var(--pk-surface);
+  border: 2px solid var(--pk-blue-light);
+  min-height: 340px;
+}
+
+.card-item app-card,
+.catalog-card app-card {
+  display: block;
+  width: 100%;
+  max-width: 260px;
+}
+
+.card-death {
+  animation: cardDeath 0.45s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes cardDeath {
+  0% { opacity: 1; transform: scale(1); filter: brightness(1); }
+  50% { opacity: 0.6; transform: scale(0.92); filter: brightness(0.5) grayscale(0.5); }
+  100% { opacity: 0; transform: scale(0.75) translateY(20px); filter: grayscale(1); }
 }
 
 @keyframes fadeIn {
@@ -19,69 +141,34 @@ a {
   100% { opacity: 0; }
 }
 
-.card.fadeIn
-{
-  animation: fadeIn 0.3s;
-  -webkit-animation: fadeIn 0.3s;
-  -moz-animation: fadeIn 0.3s;
-  -o-animation: fadeIn 0.3s;
-  -ms-animation: fadeIn 0.3s;
-}
-
-.card.fadeOut
-{
-  animation: fadeOut 0.3s;
-  -webkit-animation: fadeOut 0.3s;
-  -moz-animation: fadeOut 0.3s;
-  -o-animation: fadeOut 0.3s;
-  -ms-animation: fadeOut 0.3s;
-}
-
-.card.attack{
-  animation: attack 0.5s;
-  -webkit-animation: attack 0.5s;
-  -moz-animation: attack 0.5s;
-  -o-animation: attack 0.5s;
-  -ms-animation: attack 0.5s;
-}
-
-.card.reverseAttack{
-  animation: attackReverse 0.5s;
-  -webkit-animation: attackReverse 0.5s;
-  -moz-animation: attackReverse 0.5s;
-  -o-animation: attackReverse 0.5s;
-  -ms-animation: attackReverse 0.5s;
-}
+.card.fadeIn { animation: fadeIn 0.3s; }
+.card.fadeOut { animation: fadeOut 0.3s; }
+.card.attack { animation: attack 0.5s; }
+.card.reverseAttack { animation: attackReverse 0.5s; }
 
 @keyframes attack {
-  0% {
-    transform: translateY(0%);
-  }
-  20% {
-    transform: translateY(10%);
-  }
-  60% {
-    transform: translateY(-50%);
-  }
-  100% {
-    transform: translateY(0%);
-  }
+  0% { transform: translateY(0%); }
+  20% { transform: translateY(10%); }
+  60% { transform: translateY(-50%); }
+  100% { transform: translateY(0%); }
 }
 
 @keyframes attackReverse {
-  0% {
-    transform: translateY(0%);
-  }
-  20% {
-    transform: translateY(-10%);
-  }
-  60% {
-    transform: translateY(50%);
-  }
-  100% {
-    transform: translateY(0%);
-  }
+  0% { transform: translateY(0%); }
+  20% { transform: translateY(-10%); }
+  60% { transform: translateY(50%); }
+  100% { transform: translateY(0%); }
 }
 
+.msg.error { color: var(--pk-danger); font-weight: 600; }
+.msg.success { color: var(--pk-success); font-weight: 600; }
 
+input, select, textarea {
+  background: var(--pk-bg);
+  color: var(--pk-text);
+  border: 1px solid var(--pk-blue-light);
+}
 
+.mat-mdc-form-field {
+  color: var(--pk-text);
+}
