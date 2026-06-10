@@ -37,6 +37,7 @@ export class DecksComponent implements OnInit {
 
   async reloadDecks() {
     this.decks = await this.service.getPlayerDecks();
+    this.currentDeckId = this.decks.find(d => d.isCurrent)?.id ?? null;
     this.listOwnedCards = await this.service.getPlayersCards();
     for (const deck of this.decks) {
       if (deck.id != null) {
@@ -102,19 +103,33 @@ export class DecksComponent implements OnInit {
   }
 
   async deleteDeck(deckId: number) {
+    this.errorMessage = '';
+    this.successMessage = '';
     const deck = this.decks.find(d => d.id === deckId);
     if (deck?.isCurrent) {
       this.errorMessage = 'Impossible de supprimer le deck courant.';
       return;
     }
-    this.decks = await this.service.deleteDeck(deckId);
+    try {
+      this.decks = await this.service.deleteDeck(deckId);
+      delete this.availableCardsByDeck[deckId];
+      this.currentDeckId = this.decks.find(d => d.isCurrent)?.id ?? null;
+      this.successMessage = `Deck « ${deck?.name ?? ''} » supprimé.`;
+    } catch (err: any) {
+      this.errorMessage = err?.error?.Message ?? 'Impossible de supprimer ce deck.';
+    }
   }
 
-  setCurrentDeck(deckId: number) {
-    this.service.setCurrentDeck(deckId).then(decks => {
-      this.decks = decks;
+  async setCurrentDeck(deckId: number) {
+    this.errorMessage = '';
+    this.successMessage = '';
+    try {
+      this.decks = await this.service.setCurrentDeck(deckId);
       this.currentDeckId = deckId;
-      this.successMessage = 'Deck courant mis à jour.';
-    });
+      const name = this.decks.find(d => d.id === deckId)?.name ?? '';
+      this.successMessage = `« ${name} » est maintenant votre deck courant.`;
+    } catch (err: any) {
+      this.errorMessage = err?.error?.Message ?? 'Impossible de définir ce deck comme courant.';
+    }
   }
 }

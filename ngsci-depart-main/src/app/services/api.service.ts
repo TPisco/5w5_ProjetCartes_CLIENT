@@ -97,19 +97,21 @@ export class ApiService {
 
 
   async setCurrentDeck(deckId: number): Promise<Deck[]> {
-    let token = sessionStorage.getItem("token");
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/SetCurrentDeck', deckId, { headers }));
+    const raw = await lastValueFrom(this.http.post<any[]>(
+      this.serverUrl + 'api/Deck/SetCurrentDeck',
+      { deckId },
+      { headers: this.authHeaders() }
+    ));
+    return (raw ?? []).map(d => this.normalizeDeck(d));
   }
 
   async deleteDeck(deckId: number): Promise<Deck[]> {
-
-    let token = sessionStorage.getItem("token")
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    let result = await lastValueFrom(this.http.post<Deck[]>(this.serverUrl + 'api/Deck/DeleteDeck', deckId,{ headers }))
-
-    return result
+    const raw = await lastValueFrom(this.http.post<any[]>(
+      this.serverUrl + 'api/Deck/DeleteDeck',
+      { deckId },
+      { headers: this.authHeaders() }
+    ));
+    return (raw ?? []).map(d => this.normalizeDeck(d));
   }
 
   async register(email: string, password: string, passwordConfirm: string): Promise<void> {

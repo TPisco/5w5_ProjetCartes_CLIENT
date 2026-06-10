@@ -16,15 +16,15 @@
     <div class="deck-head">
       <h3>{{ d.name }} <span *ngIf="d.isCurrent" class="current-badge">Courant</span></h3>
       <div class="deck-actions">
-        <button class="btn-pokemon btn-secondary" (click)="setCurrentDeck(d.id!)" [disabled]="d.isCurrent">Définir courant</button>
-        <button class="btn-pokemon btn-danger" (click)="deleteDeck(d.id!)" [disabled]="d.isCurrent">Supprimer</button>
+        <button type="button" class="btn-pokemon btn-secondary" (click)="setCurrentDeck(d.id!)" [disabled]="d.isCurrent">Définir courant</button>
+        <button type="button" class="btn-pokemon btn-danger" (click)="deleteDeck(d.id!)" [disabled]="d.isCurrent">Supprimer</button>
       </div>
     </div>
 
     <h4>Cartes ({{ (d.deckCards?.length ?? 0) }}/{{ maxCardsPerDeck }})</h4>
     <div class="cards-container">
       <mat-card *ngFor="let deckCard of d.deckCards ?? []" class="deck-card-item" (click)="removeCardFromDeck(deckCard.ownedCard.card.id, d.id!)">
-        <img [src]="deckCard.ownedCard.card.imageUrl" [alt]="deckCard.ownedCard.card.name" width="140" />
+        <img [src]="deckCard.ownedCard.card.imageUrl" [alt]="deckCard.ownedCard.card.name" />
         <p>{{ deckCard.ownedCard.card.name }}</p>
         <small>Cliquer pour retirer</small>
       </mat-card>
