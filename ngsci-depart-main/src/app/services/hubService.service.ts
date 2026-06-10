@@ -134,6 +134,20 @@ export class HubServiceService {
     hubC.on("ReceiveChatMessage", callback);
   }
 
+  async endTurn(matchId: number): Promise<void> {
+    if (!this.match.isCurrentPlayerTurn || this.match.isSpectator) {
+      return;
+    }
+    await this.hubConnection!.invoke('onEndTurnAsync', matchId);
+  }
+
+  async surrender(matchId: number): Promise<void> {
+    if (this.match.isSpectator) {
+      return;
+    }
+    await this.hubConnection!.invoke('onSurrenderAsync', matchId);
+  }
+
   get isConnected(): boolean {
     return this.hubConnection?.state === signalR.HubConnectionState.Connected;
   }

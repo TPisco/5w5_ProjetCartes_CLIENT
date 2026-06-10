@@ -1,71 +1,71 @@
-import { AfterViewChecked, Component, Input, OnInit } from '@angular/core';
-import { Card } from 'src/app/models/models';
-import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
+import { Component, Input, OnChanges } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { NgForOf } from '@angular/common';
-import { RouterModule, RouterOutlet } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CardComponent } from '../card/card.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { ApiService } from 'src/app/services/api.service';
+import { MatSelectModule } from '@angular/material/select';
+import { Card } from 'src/app/models/models';
+import {
+  CardCollectionFilters,
+  CardCollectionView,
+  DEFAULT_CARD_COLLECTION_FILTERS,
+  POKEMON_TYPE_LABELS,
+  collectAvailableTypes,
+  filterAndPaginateCards,
+} from 'src/app/utils/card-collection.util';
+import { CardComponent } from '../card/card.component';
 
 @Component({
   selector: 'app-sort',
   standalone: true,
-  imports: [RouterModule, CardComponent ,RouterOutlet, FormsModule, CommonModule, MatCardModule, CardComponent, SortComponent, SortComponent, MatSelectModule, MatFormFieldModule, ReactiveFormsModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+    MatCardModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    CardComponent,
+  ],
   templateUrl: './sort.component.html',
   styleUrl: './sort.component.css'
 })
-export class SortComponent implements OnInit {
+export class SortComponent implements OnChanges {
+  @Input() cards: Card[] = [];
 
+  sourceCards: Card[] = [];
+  availableTypes: string[] = [];
+  typeLabels = POKEMON_TYPE_LABELS;
+  filters: CardCollectionFilters = { ...DEFAULT_CARD_COLLECTION_FILTERS };
+  view: CardCollectionView = {
+    items: [],
+    totalItems: 0,
+    totalPages: 1,
+    page: 1,
+    pageSize: DEFAULT_CARD_COLLECTION_FILTERS.pageSize,
+  };
 
-  @Input() cards: Card[] = []; // decorate the property with @Input()
-
-
-  sortProperty: 'attack' | 'health' | 'cost' | 'name' | 'id' = 'attack';
-  sortOrderProperty: 'attack' | 'health' | 'cost' = 'attack';
-  sortOrder: 'asc' | 'desc' = 'asc';
-
-  constructor(private api: ApiService) { }
-
-  async ngOnInit() {
-   // this.cards = await this.api.getAllCards();
-
-    // this.sortedCards = [...this.cards];
-    this.onSortPropertyChange('attack');
-    this.onSortOrderChange('asc');
-    this.sortCards();
-
+  ngOnChanges(): void {
+    this.sourceCards = [...(this.cards ?? [])];
+    this.availableTypes = collectAvailableTypes(this.sourceCards);
+    this.onFiltersChanged();
   }
 
-  onSortPropertyChange(event: any) {
-    // console.log(event);
-    this.sortProperty = event;
-
-
-    this.sortCards();
+  onFiltersChanged(resetPage = true) {
+    if (resetPage) {
+      this.filters.page = 1;
+    }
+    this.view = filterAndPaginateCards(this.sourceCards, this.filters);
+    this.filters.page = this.view.page;
   }
 
-  onSortOrderChange(event: any) {
-    // console.log(event);
-    this.sortOrder = event;
-    this.sortCards();
+  goToPage(page: number) {
+    this.filters.page = page;
+    this.onFiltersChanged(false);
   }
 
-  sortCards() {
-    const prop = this.sortProperty;
-    this.cards = [...this.cards].sort((a, b) => {
-      const aVal = a[prop];
-      const bVal = b[prop];
-      if (aVal < bVal) {
-        return this.sortOrder === 'asc' ? -1 : 1;
-      }
-      if (aVal > bVal) {
-        return this.sortOrder === 'asc' ? 1 : -1;
-      }
-      return 0;
-    });
+  typeLabel(type: string): string {
+    return this.typeLabels[type] ?? type;
   }
-
 }

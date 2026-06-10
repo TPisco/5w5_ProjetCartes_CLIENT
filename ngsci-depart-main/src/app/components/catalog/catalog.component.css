@@ -1,7 +1,7 @@
 .filters {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
   flex-wrap: wrap;
 }
 
@@ -12,7 +12,13 @@
   border: 2px solid var(--pk-blue-light);
   background: var(--pk-bg);
   color: var(--pk-text);
-  min-width: 200px;
+  min-width: 180px;
+}
+
+.results-meta {
+  color: var(--pk-muted);
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
 }
 
 .catalog-card {
@@ -25,27 +31,71 @@
   border-color: var(--pk-yellow);
 }
 
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.type-badge,
 .rarity-badge {
   display: inline-block;
-  margin-top: 0.5rem;
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
 }
 
+.type-badge {
+  background: var(--pk-blue-light);
+  color: #fff;
+}
+
+.rarity-badge {
+  background: #64748b;
+  color: #fff;
+}
+
 .rarity-common { border-color: #64748b; }
-.rarity-common .rarity-badge { background: #64748b; color: #fff; }
+.rarity-common .rarity-badge { background: #64748b; }
 
 .rarity-rare { border-color: #22c55e; }
-.rarity-rare .rarity-badge { background: #22c55e; color: #fff; }
+.rarity-rare .rarity-badge { background: #22c55e; }
 
 .rarity-epic { border-color: #a855f7; }
-.rarity-epic .rarity-badge { background: #a855f7; color: #fff; }
+.rarity-epic .rarity-badge { background: #a855f7; }
 
 .rarity-legendary { border-color: #f59e0b; }
 .rarity-legendary .rarity-badge { background: #f59e0b; color: #0f172a; }
 
 .card-grid {
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.empty-state {
+  color: var(--pk-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.page-indicator {
+  color: var(--pk-yellow);
+  font-weight: 700;
+}
+
+.pagination .btn-pokemon:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }

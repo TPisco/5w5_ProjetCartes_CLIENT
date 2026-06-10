@@ -64,6 +64,7 @@ export class FakerService {
         id: playableCardId++,
         card: c,
         health: c.health,
+        attack: c.attack,
       };
       matchData.match.playerDataB.cardsPile.push(playableCardB);
 
@@ -71,6 +72,7 @@ export class FakerService {
         id: playableCardId++,
         card: c,
         health: c.health,
+        attack: c.attack,
       };
       matchData.match.playerDataA.cardsPile.push(playableCardA);
     }

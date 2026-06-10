@@ -3,9 +3,16 @@
     @for (card of cards; track card.id) {
       <app-card [id]="card.id"
         [class.card-death]="dyingCardIds.has(card.id)"
+        [class.attack]="animationClass(card.id) === 'attack'"
+        [class.reverseAttack]="animationClass(card.id) === 'reverseAttack'"
+        [class.power-flash]="animationClass(card.id) === 'power'"
         class="card fadeIn"
         [card]="card.card"
+        [inMatch]="true"
+        [attack]="matchService.getCardAttack(card)"
         [health]="card.health"
+        [powerPulse]="matchService.getPowerIconPulse(card.id)"
+        [statFlashTick]="matchService.getStatFlashTick(card.id)"
         style="margin: 5px;"></app-card>
     }
   </div>

@@ -269,20 +269,22 @@ export class MatchComponent implements OnInit {
 
 
   async endTurn() {
-    this.matchService.isCurrentPlayerTurn = false;
-    this.hubConnection!.invoke("onEndTurnAsync", this.matchId)
-      .catch(err => console.log("Error found : " + err));
+    const matchId = this.matchService.match?.id ?? this.matchId;
+    try {
+      await this.hub.endTurn(matchId);
+    } catch (err) {
+      console.error('Impossible de terminer le tour', err);
+    }
   }
 
-
-
-  surrender() {
-
-    this.hubConnection!.invoke("onSurrenderAsync", this.matchId).catch(err => console.error(err));
-
+  async surrender() {
+    const matchId = this.matchService.match?.id ?? this.matchId;
+    try {
+      await this.hub.surrender(matchId);
+    } catch (err) {
+      console.error('Impossible d\'abandonner', err);
+    }
   }
-
-
 
   async endMatch() {
 

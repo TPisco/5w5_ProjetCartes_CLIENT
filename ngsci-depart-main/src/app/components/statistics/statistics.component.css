@@ -19,6 +19,12 @@
   border-radius: 10px;
   border: 2px solid var(--pk-blue);
   background: #fff;
+  color: #000;
+}
+
+.deck-select select option {
+  color: #000;
+  background: #fff;
 }
 
 .charts {

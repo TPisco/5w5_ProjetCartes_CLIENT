@@ -26,8 +26,8 @@ export class ApiService {
         'Authorization': 'Bearer ' + token
       })
     }; 
-    let result = await lastValueFrom(this.http.get<Card[]>(this.serverUrl + 'api/card/GetAllCards',httpOptions));
-    return result;
+    const raw = await lastValueFrom(this.http.get<any[]>(this.serverUrl + 'api/card/GetAllCards', httpOptions));
+    return (raw ?? []).map(c => this.normalizeCard(c));
   }
 
   async getPlayersCards(): Promise<Card[]> {
@@ -232,6 +232,7 @@ export class ApiService {
       cost: c.cost ?? c.Cost ?? 0,
       attack: c.attack ?? c.Attack ?? 0,
       health: c.health ?? c.Health ?? 0,
+      type: String(c.type ?? c.Type ?? '').toLowerCase(),
     } as Card;
   }
 

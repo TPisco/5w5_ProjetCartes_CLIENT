@@ -160,6 +160,15 @@ a {
   100% { transform: translateY(0%); }
 }
 
+.card.power-flash {
+  animation: powerFlash 0.45s ease;
+}
+
+@keyframes powerFlash {
+  0%, 100% { filter: brightness(1); box-shadow: none; }
+  50% { filter: brightness(1.35); box-shadow: 0 0 14px rgba(255, 203, 5, 0.75); }
+}
+
 .msg.error { color: var(--pk-danger); font-weight: 600; }
 .msg.success { color: var(--pk-success); font-weight: 600; }
 

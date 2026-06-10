@@ -5,6 +5,19 @@ import { Match } from '../models/models';
 import { FakerService } from './faker.service';
 import { ApiService } from './api.service';
 
+const POWER_IDS = {
+  FIRST_STRIKE: 1,
+  THORNS: 2,
+  HEAL: 3,
+  SHIELD: 4,
+  CHAOS: 5,
+} as const;
+
+export interface PowerIconPulse {
+  powerId: number;
+  tick: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,6 +33,10 @@ export class MatchService {
   opponentSurrendered: boolean = false;
   isCurrentPlayerTurn: boolean = false;
   dyingCardIds = new Set<number>();
+  combatAnimations = new Map<number, string>();
+  powerIconPulses = new Map<number, PowerIconPulse>();
+  statFlashTicks = new Map<number, number>();
+  lastActivationAttackerId: number | null = null;
 
   constructor(public faker: FakerService, public apiService: ApiService) { }
 
@@ -32,6 +49,10 @@ export class MatchService {
     this.isCurrentPlayerTurn = false;
     this.isSpectator = false;
     this.dyingCardIds.clear();
+    this.combatAnimations.clear();
+    this.powerIconPulses.clear();
+    this.statFlashTicks.clear();
+    this.lastActivationAttackerId = null;
   }
 
   playTestMatch(cards: Card[]) {
@@ -61,6 +82,7 @@ export class MatchService {
     }
     this.playerData.maxhealth = this.playerData.health;
     this.adversaryData.maxhealth = this.adversaryData.health;
+    this.initializeMatchStats();
   }
 
   playMatchAsSpectator(matchData: MatchData) {
@@ -75,6 +97,7 @@ export class MatchService {
     this.isCurrentPlayerTurn = false;
     this.playerData.maxhealth = this.playerData.health;
     this.adversaryData.maxhealth = this.adversaryData.health;
+    this.initializeMatchStats();
   }
 
   async applyEvent(event: any) {
@@ -94,7 +117,7 @@ export class MatchService {
         if (this.match && playerId != null) {
           const isPlayerA = Number(this.match.playerDataA.playerId) === playerId;
           this.match.isPlayerATurn = isPlayerA;
-          this.isCurrentPlayerTurn = playerId === Number(this.currentPlayerId);
+          this.isCurrentPlayerTurn = !this.isSpectator && playerId === Number(this.currentPlayerId);
         }
         break;
       }
@@ -108,17 +131,18 @@ export class MatchService {
       }
 
       case "PlayerEndTurn":
-        if (this.match) {
-          this.match.isPlayerATurn = !this.match.isPlayerATurn;
-          this.syncTurnState();
-        }
         break;
 
       case "DrawCard": {
         const playerData = this.getPlayerData(event.playerId);
-        if (playerData) {
-          this.moveCard(playerData.cardsPile, playerData.hand, event.playableCardId);
-          await new Promise(resolve => setTimeout(resolve, 250));
+        const playableCardId = event.playableCardId ?? event.PlayableCardId;
+        if (playerData && playableCardId) {
+          this.moveCard(playerData.cardsPile, playerData.hand, playableCardId);
+          const drawnCard = playerData.hand.find(c => c.id === playableCardId);
+          if (drawnCard) {
+            this.ensurePlayableCardStats(drawnCard);
+          }
+          await this.delay(250);
         }
         break;
       }
@@ -135,35 +159,105 @@ export class MatchService {
       }
 
       case "Shield": {
-        const card = this.findBattlefieldCard(event.playerId, event.cardId);
+        const cardId = event.cardId ?? event.CardId;
+        if (cardId != null) {
+          this.triggerPowerIconPulse(cardId, POWER_IDS.SHIELD);
+          this.setCombatAnimation(cardId, 'power');
+          await this.delay(350);
+          this.clearCombatAnimation(cardId);
+        }
+        const card = this.findBattlefieldCard(event.playerId, cardId);
         if (card) {
-          card.health += event.shield ?? 0;
+          card.health += event.shield ?? event.Shield ?? 0;
+          this.triggerStatFlash(cardId);
         }
         break;
       }
 
       case "Heal": {
+        const cardId = event.cardId ?? event.CardId;
+        if (cardId != null) {
+          this.triggerPowerIconPulse(cardId, POWER_IDS.HEAL);
+          this.setCombatAnimation(cardId, 'power');
+          await this.delay(350);
+          this.clearCombatAnimation(cardId);
+        }
         const playerData = this.getPlayerData(event.playerId);
-        const heal = event.heal ?? 0;
+        const heal = event.heal ?? event.Heal ?? 0;
         playerData?.battleField.forEach(c => {
           c.health = Math.min(c.health + heal, c.card.health);
+          this.triggerStatFlash(c.id);
         });
         break;
       }
 
-      case "Thorns":
-      case "FirstStrike":
+      case "Thorns": {
+        const sourceId = event.sourceCardId ?? event.SourceCardId;
+        if (sourceId != null) {
+          this.triggerPowerIconPulse(sourceId, POWER_IDS.THORNS);
+          this.setCombatAnimation(sourceId, 'power');
+          await this.delay(300);
+          this.clearCombatAnimation(sourceId);
+        }
+        break;
+      }
+
+      case "FirstStrike": {
+        const card = this.findAttackerCardWithPower(POWER_IDS.FIRST_STRIKE);
+        if (card) {
+          this.triggerPowerIconPulse(card.id, POWER_IDS.FIRST_STRIKE);
+          this.setCombatAnimation(card.id, 'power');
+          await this.delay(300);
+          this.clearCombatAnimation(card.id);
+        }
+        break;
+      }
+
       case "Combat":
-      case "CardActivation":
-      case "Chaos":
+        break;
+
+      case "CardActivation": {
+        const attackerId = this.eventPlayerId(event);
+        this.lastActivationAttackerId = attackerId;
+        const attacker = this.resolvePlayerData(attackerId);
+        for (const card of attacker?.battleField ?? []) {
+          this.setCombatAnimation(card.id, 'attack');
+        }
+        await this.delay(450);
+        for (const card of attacker?.battleField ?? []) {
+          this.clearCombatAnimation(card.id);
+        }
+        break;
+      }
+
+      case "Chaos": {
+        const chaosCard = this.findAttackerCardWithPower(POWER_IDS.CHAOS);
+        if (chaosCard) {
+          this.triggerPowerIconPulse(chaosCard.id, POWER_IDS.CHAOS);
+          this.setCombatAnimation(chaosCard.id, 'power');
+        }
+        this.applyChaosEffect();
+        await this.delay(400);
+        if (chaosCard) {
+          this.clearCombatAnimation(chaosCard.id);
+        }
+        break;
+      }
+
       case "EarthquakeX":
       case "RandomPain":
+        await this.delay(300);
         break;
 
       case "CardDamage": {
-        const card = this.findBattlefieldCard(event.playerId, event.cardId);
+        const cardId = event.cardId ?? event.CardId;
+        const card = this.findBattlefieldCard(event.playerId, cardId);
         if (card) {
-          card.health = Math.max(0, card.health - (event.damage ?? 0));
+          this.setCombatAnimation(cardId, 'reverseAttack');
+          await this.delay(350);
+          card.health = Math.max(0, card.health - (event.damage ?? event.Damage ?? 0));
+          this.triggerStatFlash(cardId);
+          this.clearCombatAnimation(cardId);
         }
         break;
       }
@@ -173,7 +267,7 @@ export class MatchService {
         const playerData = this.resolvePlayerData(event.playerId);
         if (playerData && cardId != null) {
           this.dyingCardIds.add(cardId);
-          await new Promise(resolve => setTimeout(resolve, 450));
+          await this.delay(450);
           this.moveCard(playerData.battleField, playerData.graveyard, cardId);
           this.dyingCardIds.delete(cardId);
         }
@@ -184,6 +278,7 @@ export class MatchService {
         const playerData = this.getPlayerData(event.playerId);
         const usedCard = playerData?.hand.find(c => c.id == event.cardId);
         if (playerData && usedCard) {
+          this.ensurePlayableCardStats(usedCard);
           playerData.mana -= usedCard.card.cost;
           this.moveCard(playerData.hand, playerData.battleField, usedCard.id);
         }
@@ -193,7 +288,8 @@ export class MatchService {
       case "PlayerDamage": {
         const playerData = this.getPlayerData(event.playerId);
         if (playerData) {
-          playerData.health = Math.max(0, playerData.health - (event.damage ?? 0));
+          await this.delay(250);
+          playerData.health = Math.max(0, playerData.health - (event.damage ?? event.Damage ?? 0));
         }
         break;
       }
@@ -309,5 +405,89 @@ export class MatchService {
       const playableCard = src.splice(index, 1)[0];
       dst.push(playableCard);
     }
+  }
+
+  setCombatAnimation(cardId: number, animation: string) {
+    this.combatAnimations.set(cardId, animation);
+  }
+
+  clearCombatAnimation(cardId: number) {
+    this.combatAnimations.delete(cardId);
+  }
+
+  getCombatAnimation(cardId: number): string | undefined {
+    return this.combatAnimations.get(cardId);
+  }
+
+  getPowerIconPulse(cardId: number): PowerIconPulse | undefined {
+    return this.powerIconPulses.get(cardId);
+  }
+
+  getStatFlashTick(cardId: number): number {
+    return this.statFlashTicks.get(cardId) ?? 0;
+  }
+
+  getCardAttack(card: PlayableCard): number {
+    this.ensurePlayableCardStats(card);
+    return card.attack ?? card.card.attack;
+  }
+
+  ensurePlayableCardStats(card: PlayableCard): void {
+    if (card.attack == null) {
+      card.attack = card.card?.attack ?? 0;
+    }
+  }
+
+  triggerPowerIconPulse(cardId: number, powerId: number): void {
+    const previous = this.powerIconPulses.get(cardId);
+    this.powerIconPulses.set(cardId, {
+      powerId,
+      tick: (previous?.tick ?? 0) + 1,
+    });
+  }
+
+  triggerStatFlash(cardId: number): void {
+    this.statFlashTicks.set(cardId, (this.statFlashTicks.get(cardId) ?? 0) + 1);
+  }
+
+  private initializeMatchStats(): void {
+    if (!this.match) {
+      return;
+    }
+
+    for (const playerData of [this.match.playerDataA, this.match.playerDataB]) {
+      for (const zone of [playerData.cardsPile, playerData.hand, playerData.battleField, playerData.graveyard]) {
+        for (const card of zone) {
+          this.ensurePlayableCardStats(card);
+        }
+      }
+    }
+  }
+
+  private findAttackerCardWithPower(powerId: number): PlayableCard | undefined {
+    const attacker = this.resolvePlayerData(this.lastActivationAttackerId);
+    return attacker?.battleField.find(card =>
+      card.card?.cardPowers?.some(cp => (cp.powerId ?? cp.power?.id) === powerId)
+    );
+  }
+
+  private applyChaosEffect(): void {
+    if (!this.match) {
+      return;
+    }
+
+    for (const playerData of [this.match.playerDataA, this.match.playerDataB]) {
+      for (const card of playerData.battleField) {
+        this.ensurePlayableCardStats(card);
+        const originalAttack = card.attack ?? card.card.attack;
+        card.attack = card.health;
+        card.health = originalAttack;
+        this.triggerStatFlash(card.id);
+      }
+    }
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

@@ -13,6 +13,7 @@ export interface Card {
     health: number;
     cost: number;
     imageUrl: string;
+    type?: string;
     rarity?: string;
     cardPowers: CardPower[];
 }
@@ -101,6 +102,7 @@ export interface PlayableCard {
     id: number;
     card: Card;
     health: number;
+    attack?: number;
 }
 
 export interface PlayerData {

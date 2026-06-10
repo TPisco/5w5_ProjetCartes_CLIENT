@@ -1,41 +1,51 @@
-<!-- <div class="row">
-    <h3 class="titre">Trier :</h3>
-    <select name="Champs" id="sortProperty" (change)="onSortPropertyChange($event)">
-        <option value="attack">Attaque</option>
-        <option value="health">Points de vie</option>
-        <option value="Mana">Mana</option>
-    </select>
-
-    <select name="Ordre" id="filterOrdre">
-        <option value="asc">Croissant</option>
-        <option value="desc">Décroissant</option>
-    </select>
-</div> -->
-
-<mat-form-field>
-    <mat-label>Trier par type</mat-label>
-    <mat-select [(ngModel)]="sortOrderProperty" (selectionChange)="onSortPropertyChange($event.value)">
-        <mat-option value="attack" default>Attaque</mat-option>
-        <mat-option value="health">Points de vie</mat-option>
-        <mat-option value="cost">Coût en Mana</mat-option>
+<div class="sort-toolbar">
+  <mat-form-field>
+    <mat-label>Type</mat-label>
+    <mat-select [(ngModel)]="filters.type" (selectionChange)="onFiltersChanged()">
+      <mat-option value="all">{{ typeLabels['all'] }}</mat-option>
+      <mat-option *ngFor="let type of availableTypes" [value]="type">{{ typeLabel(type) }}</mat-option>
     </mat-select>
-</mat-form-field>
+  </mat-form-field>
 
-<mat-form-field>
-    <mat-label>Ordre</mat-label>
-    <mat-select [(ngModel)]="sortOrder" (selectionChange)="onSortOrderChange($event.value)">
-        <mat-option value="asc" default>Croissant</mat-option>
-        <mat-option value="desc">Décroissant</mat-option>
-
+  <mat-form-field>
+    <mat-label>Force</mat-label>
+    <mat-select [(ngModel)]="filters.sortOrder" (selectionChange)="onFiltersChanged()">
+      <mat-option value="asc">Croissante</mat-option>
+      <mat-option value="desc">Décroissante</mat-option>
     </mat-select>
-</mat-form-field>
-
-<!-- Boucle ngFor affichage carte -->
-<div class="cards-container">
-
-
-    <div *ngFor="let card of cards" class="card-item">
-        <app-card [card]="card"></app-card>
-      </div>
-
+  </mat-form-field>
 </div>
+
+<p class="results-meta">
+  {{ view.totalItems }} cartes · page {{ view.page }} / {{ view.totalPages }}
+</p>
+
+<div class="cards-container" *ngIf="view.items.length; else emptyState">
+  <div *ngFor="let card of view.items" class="card-item">
+    <app-card [card]="card"></app-card>
+  </div>
+</div>
+
+<ng-template #emptyState>
+  <p class="empty-state">Aucune carte à afficher.</p>
+</ng-template>
+
+<nav class="pagination" *ngIf="view.totalPages > 1">
+  <button
+    type="button"
+    class="btn-pokemon btn-outline"
+    (click)="goToPage(view.page - 1)"
+    [disabled]="view.page <= 1"
+  >
+    ← Précédent
+  </button>
+  <span class="page-indicator">Page {{ view.page }} / {{ view.totalPages }}</span>
+  <button
+    type="button"
+    class="btn-pokemon btn-outline"
+    (click)="goToPage(view.page + 1)"
+    [disabled]="view.page >= view.totalPages"
+  >
+    Suivant →
+  </button>
+</nav>

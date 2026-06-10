@@ -13,11 +13,11 @@
         <div style="display: flex; flex-direction: column; gap: 0.4em; font-size: 1.6em; text-shadow: 2px 2px 2px black;">
           <div style="display: flex; align-items: center; gap: 0.3em;">
             <i class="fas fa-fist-raised"></i>
-            <span>{{ card?.attack }}</span>
+            <span class="stat-value" [class.stat-flash]="attackFlash">{{ displayAttack }}</span>
           </div>
           <div style="display: flex; align-items: center; gap: 0.3em;">
             <i class="fas fa-shield-alt"></i>
-            <span>{{ card?.health }}</span>
+            <span class="stat-value" [class.stat-flash]="healthFlash">{{ displayHealth }}</span>
           </div>
         </div>
 
@@ -25,7 +25,7 @@
         <div style="display: flex; flex-direction: column; gap: 0.4em; font-size: 1.6em; text-shadow: 2px 2px 2px black;">
           <div *ngFor="let cp of card?.cardPowers; let i = index"
                style="display: flex; align-items: center; gap: 0.3em;">
-            <span [@bounce]="bounceState[i]">{{ cp.power.icon }}</span>
+            <span class="power-icon" [@powerActivate]="powerAnimationState[i]">{{ cp.power.icon }}</span>
             <span>{{ cp.value }}</span>
           </div>
         </div>

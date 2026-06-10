@@ -1,24 +1,71 @@
 <div class="page-shell">
   <header class="page-header">
     <h1>Catalogue des cartes</h1>
-    <p>Toutes les cartes disponibles dans le jeu — collection complète.</p>
+    <p>Toutes les cartes disponibles dans le jeu — 20 Pokémon par page.</p>
   </header>
 
   <div class="filters">
-    <input type="text" placeholder="Rechercher une carte..." [(ngModel)]="search" (input)="applyFilters()" />
-    <select [(ngModel)]="rarityFilter" (change)="applyFilters()">
+    <input
+      type="text"
+      placeholder="Rechercher un Pokémon..."
+      [(ngModel)]="filters.search"
+      (input)="onFiltersChanged()"
+    />
+
+    <select [(ngModel)]="filters.type" (change)="onFiltersChanged()">
+      <option value="all">{{ typeLabels['all'] }}</option>
+      <option *ngFor="let type of availableTypes" [value]="type">{{ typeLabel(type) }}</option>
+    </select>
+
+    <select [(ngModel)]="filters.rarity" (change)="onFiltersChanged()">
       <option value="all">Toutes les raretés</option>
       <option value="common">Commune</option>
       <option value="rare">Rare</option>
       <option value="epic">Épique</option>
       <option value="legendary">Légendaire</option>
     </select>
+
+    <select [(ngModel)]="filters.sortOrder" (change)="onFiltersChanged()">
+      <option value="asc">Force croissante</option>
+      <option value="desc">Force décroissante</option>
+    </select>
   </div>
 
-  <div class="card-grid">
-    <div *ngFor="let card of filtered" class="catalog-card" [ngClass]="rarityClass(card)">
+  <p class="results-meta">
+    {{ view.totalItems }} Pokémon · page {{ view.page }} / {{ view.totalPages }}
+  </p>
+
+  <div class="card-grid" *ngIf="view.items.length; else emptyState">
+    <div *ngFor="let card of view.items" class="catalog-card" [ngClass]="rarityClass(card)">
       <app-card [card]="card"></app-card>
-      <span class="rarity-badge">{{ getRarityLabel(card) }}</span>
+      <div class="card-meta">
+        <span class="type-badge" *ngIf="card.type">{{ typeLabel(card.type) }}</span>
+        <span class="rarity-badge">{{ getRarityLabel(card) }}</span>
+      </div>
     </div>
   </div>
+
+  <ng-template #emptyState>
+    <p class="empty-state">Aucun Pokémon ne correspond à vos filtres.</p>
+  </ng-template>
+
+  <nav class="pagination" *ngIf="view.totalPages > 1">
+    <button
+      type="button"
+      class="btn-pokemon btn-outline"
+      (click)="goToPage(view.page - 1)"
+      [disabled]="view.page <= 1"
+    >
+      ← Précédent
+    </button>
+    <span class="page-indicator">Page {{ view.page }} / {{ view.totalPages }}</span>
+    <button
+      type="button"
+      class="btn-pokemon btn-outline"
+      (click)="goToPage(view.page + 1)"
+      [disabled]="view.page >= view.totalPages"
+    >
+      Suivant →
+    </button>
+  </nav>
 </div>
