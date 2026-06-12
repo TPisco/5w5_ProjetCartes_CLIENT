@@ -15,6 +15,7 @@ import { MatchService } from 'src/app/services/match.service';
 export class PlayerhandComponent implements OnInit {
 
   @Input() cards: PlayableCard[] = [];
+  @Input() readOnly = false;
     private hubConnection?: signalR.HubConnection;
 
   constructor(public matchService: MatchService, public hub: HubServiceService) { }
@@ -23,7 +24,7 @@ export class PlayerhandComponent implements OnInit {
   }
 
   click(playableCardId: any) {
-    if (!this.matchService.isCurrentPlayerTurn || this.matchService.isSpectator) {
+    if (this.readOnly || !this.matchService.isCurrentPlayerTurn || this.matchService.isSpectator) {
       return;
     }
     this.hub.playCard(playableCardId);

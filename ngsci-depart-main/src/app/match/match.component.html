@@ -12,7 +12,7 @@
       @if (matchService.playerData) {
         <app-battlefield [cards]="matchService.playerData.battleField" [dyingCardIds]="matchService.dyingCardIds"></app-battlefield>
         @if (isSpectator) {
-          <app-enemyhand [cards]="matchService.playerData.hand"></app-enemyhand>
+          <app-enemyhand [cards]="matchService.playerData.hand" anchor="bottom"></app-enemyhand>
         }
       }
     </div>
@@ -70,14 +70,16 @@
         [mana]="matchService.adversaryData.mana"
         [playername]="matchService.adversaryData.playerName"></app-health>
     </div>
-    <div class="match-controls spectator-controls">
-      <div class="hud-player-health">
-        <app-health
-          [maxhealth]="matchService.playerData.maxhealth"
-          [health]="matchService.playerData.health"
-          [mana]="matchService.playerData.mana"
-          [playername]="matchService.playerData.playerName"></app-health>
-      </div>
+    <div class="hud-spectator-player-health">
+      <app-health
+        [maxhealth]="matchService.playerData.maxhealth"
+        [health]="matchService.playerData.health"
+        [mana]="matchService.playerData.mana"
+        [playername]="matchService.playerData.playerName"></app-health>
+    </div>
+    <div class="spectator-bar">
+      <span class="spectator-badge">Mode spectateur</span>
+      <button mat-raised-button class="btn-pokemon btn-outline" (click)="leaveSpectator()">Quitter la partie</button>
     </div>
   }
 
@@ -99,6 +101,9 @@
           <strong>{{ user.email }}</strong>
           <span *ngIf="user.role === 'player'"> (Joueur)</span>
           <span *ngIf="user.role === 'spectator'"> (Spectateur)</span>
+          @if (!isSpectator && user.role === 'spectator') {
+            <button type="button" class="btn-kick" (click)="banSpectator(user.email)">Expulser</button>
+          }
         </li>
       </ul>
     </div>

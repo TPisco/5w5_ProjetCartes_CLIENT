@@ -17,7 +17,7 @@
   <span class="spacer"></span>
 
   @if (isLogged()) {
-    <mat-chip class="chip-gold">⚡ {{ gold }} gold</mat-chip>
+    <mat-chip class="chip-gold">⚡ {{ (ApiServices.gold$ | async) ?? 0 }} gold</mat-chip>
     <mat-chip class="chip-elo">🏆 {{ elo }}</mat-chip>
     <mat-chip>{{ getUsername() }}</mat-chip>
     <button mat-raised-button class="btn-pokemon btn-danger" (click)="logout()">Déconnexion</button>

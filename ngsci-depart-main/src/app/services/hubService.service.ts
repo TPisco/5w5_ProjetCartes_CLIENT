@@ -4,6 +4,7 @@ import { MatchData } from '../models/models';
 import { Router } from '@angular/router';
 import { MatchService } from './match.service';
 import { HttpClient } from '@angular/common/http';
+import { getMatchHubUrl } from '../utils/api-url.util';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class HubServiceService {
     }
 
     const token = sessionStorage.getItem("token");
-    this.hubConnection = new signalR.HubConnectionBuilder().withUrl('http://localhost:5276/matchHub',
+    this.hubConnection = new signalR.HubConnectionBuilder().withUrl(getMatchHubUrl(),
       {
         accessTokenFactory: () => token ?? ''
       }
@@ -104,6 +105,7 @@ export class HubServiceService {
 
   async joinMatch(matchId?: number) {
     try {
+      this.isSpectator = false;
       let hubC = await this.getConnection();
       await hubC.invoke('onJoinMatchAsync', matchId);
     } catch (error) {
@@ -113,11 +115,22 @@ export class HubServiceService {
 
   async watchMatch(matchId: number) {
     try {
+      this.isSpectator = true;
       const hubC = await this.getConnection();
       await hubC.invoke('WatchMatchAsync', matchId);
     } catch (error) {
       console.error("Failed to watch match:", error);
     }
+  }
+
+  async leaveMatchAsSpectator(matchId: number, userEmail: string): Promise<void> {
+    const hubC = await this.getConnection();
+    await hubC.invoke('LeaveMatch', matchId, userEmail);
+  }
+
+  async banSpectator(matchId: number, userEmail: string): Promise<void> {
+    const hubC = await this.getConnection();
+    await hubC.invoke('BanUser', matchId, userEmail);
   }
 
   async sendChatMessage(matchId: number, sender: string, message: string, role: string) {

@@ -4,6 +4,7 @@ import { Channel, UserEntry } from 'src/app/models/models';
 
 import * as signalR from "@microsoft/signalr"
 import { ApiService } from 'src/app/services/api.service';
+import { getApiBaseUrl } from 'src/app/utils/api-url.util';
 
 @Component({
   selector: 'app-chat',
@@ -11,7 +12,7 @@ import { ApiService } from 'src/app/services/api.service';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent {
-  baseUrl = "http://localhost:5276/";
+  baseUrl = getApiBaseUrl();
   accountBaseUrl = this.baseUrl + "Account/";
 
   message: string = "test";
@@ -36,7 +37,7 @@ export class ChatComponent {
   connectToHub() {
     // TODO On doit commencer par créer la connexion vers le Hub
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:5276/', { accessTokenFactory: () => sessionStorage.getItem("token")! })
+      .withUrl(this.baseUrl, { accessTokenFactory: () => sessionStorage.getItem("token")! })
       .build();
 
     // On peut commencer à écouter pour les messages que l'on va recevoir du serveur

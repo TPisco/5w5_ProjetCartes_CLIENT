@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { lastValueFrom } from 'rxjs';
+import { BehaviorSubject, lastValueFrom } from 'rxjs';
 import { Card, Deck, Player, Pack, PackPurchaseResult, PlayerStats, CardDistribution } from '../models/models';
 import { Router } from '@angular/router';
+import { getApiBaseUrl } from '../utils/api-url.util';
 
 
 
@@ -11,12 +12,20 @@ import { Router } from '@angular/router';
 })
 export class ApiService {
 
-  //serverUrl = "https://localhost:7179/";
-  serverUrl = "http://localhost:5276/";
+  serverUrl = getApiBaseUrl();
   Elo? : number;
+  readonly gold$ = new BehaviorSubject<number>(0);
 
 
   constructor(public http: HttpClient) { }
+
+  get gold(): number {
+    return this.gold$.value;
+  }
+
+  setGold(value: number): void {
+    this.gold$.next(value);
+  }
 
   async getAllCards(): Promise<Card[]> {    
     let token = sessionStorage.getItem("token");
@@ -63,8 +72,10 @@ export class ApiService {
 
   async buyPack(packId: number): Promise<PackPurchaseResult> {
     const raw = await lastValueFrom(this.http.post<any>(this.serverUrl + 'api/Pack/BuyPack?packId=' + packId, {}, { headers: this.authHeaders() }));
+    const goldRemaining = raw.goldRemaining ?? raw.GoldRemaining ?? this.gold;
+    this.setGold(goldRemaining);
     return {
-      goldRemaining: raw.goldRemaining ?? raw.GoldRemaining ?? 0,
+      goldRemaining,
       cards: (raw.cards ?? raw.Cards ?? []).map((c: any) => ({
         ...c,
         rarity: typeof c.rarity === 'number'
@@ -193,6 +204,7 @@ export class ApiService {
 
   async refreshGold(): Promise<number> {
     const result = await lastValueFrom(this.http.get<number>(this.serverUrl + 'api/Players/GetGold', { headers: this.authHeaders() }));
+    this.setGold(result);
     return result;
   }
 

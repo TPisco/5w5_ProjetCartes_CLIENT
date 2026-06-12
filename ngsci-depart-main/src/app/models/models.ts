@@ -1,6 +1,7 @@
 export interface Player {
     id: number;
     name: string;
+    userId?: string;
     gold?: number;
     wins?: number;
     losses?: number;
@@ -80,6 +81,8 @@ export interface MatchData {
     playerA: Player;
     playerB: Player;
     winningPlayerId: number;
+    isSpectator?: boolean;
+    spectatorKey?: string;
 }
 
 export interface Match {
@@ -89,7 +92,8 @@ export interface Match {
     playerDataA: PlayerData;
     playerDataB: PlayerData;
     spectatorsIds: string[];
-    
+    userAId?: string;
+    userBId?: string;
 }
 
 export interface ChatMessage {

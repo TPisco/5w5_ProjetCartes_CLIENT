@@ -3,6 +3,15 @@
   filter: grayscale(0.35);
 }
 
+.hand-row--readonly {
+  pointer-events: none;
+}
+
+.hand-row--readonly .container {
+  opacity: 1;
+  filter: none;
+}
+
 .card--disabled {
   cursor: not-allowed !important;
 }

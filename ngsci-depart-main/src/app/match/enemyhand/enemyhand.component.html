@@ -1,4 +1,4 @@
-<div class="enemy-hand">
+<div class="enemy-hand" [class.enemy-hand--bottom]="anchor === 'bottom'">
   <div class="container">
     @for (card of cards; track card) {
       <app-card [card]="card.card" [show]="'back'" class="card fadeIn"></app-card>

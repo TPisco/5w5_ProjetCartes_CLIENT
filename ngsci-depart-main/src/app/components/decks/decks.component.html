@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <h4>Cartes ({{ (d.deckCards?.length ?? 0) }}/{{ maxCardsPerDeck }})</h4>
+    <h4>Cartes ({{ d.deckCards.length }}/{{ maxCardsPerDeck }})</h4>
     <div class="cards-container">
       <mat-card *ngFor="let deckCard of d.deckCards ?? []" class="deck-card-item" (click)="removeCardFromDeck(deckCard.ownedCard.card.id, d.id!)">
         <img [src]="deckCard.ownedCard.card.imageUrl" [alt]="deckCard.ownedCard.card.name" />

@@ -13,6 +13,7 @@ import { CardComponent } from '../../components/card/card.component';
 export class EnemyhandComponent implements OnInit {
 
   @Input() cards: PlayableCard[] = [];
+  @Input() anchor: 'top' | 'bottom' = 'top';
 
   constructor() { }
 

@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from './services/api.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -19,13 +20,13 @@ import { ApiService } from './services/api.service';
     RouterOutlet,
     MatButtonModule,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    AsyncPipe
   ],
 })
 export class AppComponent implements OnInit {
   title = 'supercartesinfinies';
   public elo: number | null = null;
-  public gold = 0;
 
   constructor(
     public router: Router,
@@ -49,7 +50,7 @@ export class AppComponent implements OnInit {
     if (this.isLogged()) {
       await this.ApiServices.GetPlayerElo();
       this.elo = await this.ApiServices.updateElo();
-      this.gold = await this.ApiServices.refreshGold();
+      await this.ApiServices.refreshGold();
     }
   }
 

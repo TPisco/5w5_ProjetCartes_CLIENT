@@ -45,17 +45,30 @@
   bottom: auto;
 }
 
-.hud-enemy-health {
+.board-zone--player app-enemyhand {
+  pointer-events: none;
+}
+
+.hud-enemy-health,
+.hud-spectator-player-health {
   position: absolute;
-  top: 4.5rem;
   left: 0.75rem;
   width: 300px;
   z-index: 20;
   pointer-events: none;
 }
 
+.hud-enemy-health {
+  top: 4.5rem;
+}
+
+.hud-spectator-player-health {
+  bottom: 5.5rem;
+}
+
 .hud-enemy-health ::ng-deep .enemyhealth,
-.hud-player-health ::ng-deep .playerhealth {
+.hud-player-health ::ng-deep .playerhealth,
+.hud-spectator-player-health ::ng-deep .playerhealth {
   position: relative !important;
   top: auto !important;
   bottom: auto !important;
@@ -229,13 +242,40 @@
   margin: 0;
 }
 
-.spectator-controls {
-  flex-direction: column;
-  align-items: flex-start;
+.spectator-bar {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.92);
+  border: 2px solid var(--pk-yellow);
+  box-shadow: var(--pk-shadow);
 }
 
-.spectator-controls .hud-player-health {
-  margin-left: 0.75rem;
+.spectator-badge {
+  color: var(--pk-yellow);
+  font-weight: 700;
+}
+
+.btn-kick {
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--pk-danger);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--pk-danger);
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.btn-kick:hover {
+  background: rgba(248, 113, 113, 0.15);
 }
 
 @media (max-height: 720px) {

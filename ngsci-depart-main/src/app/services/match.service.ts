@@ -64,6 +64,7 @@ export class MatchService {
   playMatch(matchData: MatchData, currentPlayerId: number) {
     this.matchData = matchData;
     this.match = matchData.match;
+    this.normalizeMatchStructure(this.match);
     this.currentPlayerId = currentPlayerId;
     this.isSpectator = false;
 
@@ -88,6 +89,7 @@ export class MatchService {
   playMatchAsSpectator(matchData: MatchData) {
     this.matchData = matchData;
     this.match = matchData.match;
+    this.normalizeMatchStructure(this.match);
     this.currentPlayerId = -1;
     this.isSpectator = true;
     this.playerData = this.match.playerDataA!;
@@ -98,6 +100,15 @@ export class MatchService {
     this.playerData.maxhealth = this.playerData.health;
     this.adversaryData.maxhealth = this.adversaryData.health;
     this.initializeMatchStats();
+    this.hideDeckPilesForSpectator();
+  }
+
+  hideDeckPilesForSpectator(): void {
+    if (!this.playerData || !this.adversaryData) {
+      return;
+    }
+    this.playerData.cardsPile = [];
+    this.adversaryData.cardsPile = [];
   }
 
   async applyEvent(event: any) {
@@ -311,6 +322,10 @@ export class MatchService {
         await this.applyEvent(e);
       }
     }
+
+    if (this.isSpectator) {
+      this.hideDeckPilesForSpectator();
+    }
   }
 
   getPlayerData(playerId: any): PlayerData | null {
@@ -367,6 +382,32 @@ export class MatchService {
       }
     }
     return normalized;
+  }
+
+  getWinnerName(winningPlayerId: number | string | null | undefined): string {
+    if (winningPlayerId == null || winningPlayerId === '') {
+      return 'Inconnu';
+    }
+
+    const winnerId = Number(winningPlayerId);
+    const playerAId = Number(this.match?.playerDataA?.playerId ?? this.matchData?.playerA?.id);
+    const playerBId = Number(this.match?.playerDataB?.playerId ?? this.matchData?.playerB?.id);
+
+    if (winnerId === playerAId) {
+      return this.matchData?.playerA?.name ?? this.playerData?.playerName ?? 'Joueur A';
+    }
+    if (winnerId === playerBId) {
+      return this.matchData?.playerB?.name ?? this.adversaryData?.playerName ?? 'Joueur B';
+    }
+
+    if (this.playerData && winnerId === Number(this.playerData.playerId)) {
+      return this.playerData.playerName ?? 'Joueur';
+    }
+    if (this.adversaryData && winnerId === Number(this.adversaryData.playerId)) {
+      return this.adversaryData.playerName ?? 'Joueur';
+    }
+
+    return 'Inconnu';
   }
 
   syncTurnState(): void {
@@ -489,5 +530,30 @@ export class MatchService {
 
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private normalizeMatchStructure(match: Match): void {
+    this.normalizePlayerDataZones(match.playerDataA);
+    this.normalizePlayerDataZones(match.playerDataB);
+  }
+
+  private normalizePlayerDataZones(playerData: PlayerData): void {
+    const raw = playerData as unknown as Record<string, unknown>;
+    if (!playerData.hand && raw['Hand']) {
+      playerData.hand = raw['Hand'] as PlayerData['hand'];
+    }
+    if (!playerData.battleField && raw['BattleField']) {
+      playerData.battleField = raw['BattleField'] as PlayerData['battleField'];
+    }
+    if (!playerData.cardsPile && raw['CardsPile']) {
+      playerData.cardsPile = raw['CardsPile'] as PlayerData['cardsPile'];
+    }
+    if (!playerData.graveyard && raw['Graveyard']) {
+      playerData.graveyard = raw['Graveyard'] as PlayerData['graveyard'];
+    }
+    playerData.hand ??= [];
+    playerData.battleField ??= [];
+    playerData.cardsPile ??= [];
+    playerData.graveyard ??= [];
   }
 }

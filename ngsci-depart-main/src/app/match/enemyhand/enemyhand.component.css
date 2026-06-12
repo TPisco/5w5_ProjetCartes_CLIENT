@@ -5,6 +5,17 @@
   top: -250px;
 }
 
+.enemy-hand--bottom {
+  top: auto;
+  bottom: 0;
+  z-index: 3;
+}
+
+.enemy-hand--bottom .container {
+  transform: scale(0.62) translateY(-10px);
+  transform-origin: center bottom;
+}
+
 .container {
   position: relative;
   height: 300px;
